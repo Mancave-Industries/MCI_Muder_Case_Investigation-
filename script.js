@@ -672,3 +672,4 @@ function loopCarousel(el){
 }
 
 render();
+```
