@@ -1,11 +1,15 @@
 const app = document.getElementById("app");
 
 const ASSETS = {
-  frontpage: "assets/frontpage/frontpage .PNG",
+  frontpage: "assets/frontpage/frontpage.PNG",
   casefile: "assets/casefile/casefile.PNG",
   investigation: "assets/investigation/investigation.jpg",
   caseclosed: "assets/caseclosed/caseclosed.PNG"
 };
+
+const FEEDBACK_EMAIL = "mancaveman@icloud.com";
+const GAME_URL = "https://mancave-industries.github.io/MCI_Muder_Case_Investigation-/";
+const PROLOGUE_LENGTH = 16;
 
 const CARDS = {
   suspects: [
@@ -32,7 +36,7 @@ const CARDS = {
     ["chefs_table","Chef's Table","assets/rooms/chefs_table.jpg",["food","private","luxury","booked","staffed","social","water","after-hours"]],
     ["cinema","Cinema","assets/rooms/cinema.jpg",["dark","soundproof","screen","private","recreational","seated","low-light","soft"]],
     ["dressing","Dressing Room","assets/rooms/dressing.jpg",["private","mirrors","fashion","quiet","restricted","personal","soft","after-hours"]],
-    ["rooftop","Rooftop","assets/rooms/fooftop.jpg",["isolated","open-air","high","night","private","restricted","wind","low-light"]],
+    ["rooftop","Rooftop","assets/rooms/rooftop.jpg",["isolated","open-air","high","night","private","restricted","wind","low-light"]],
     ["gym","Gym","assets/rooms/gym.jpg",["wellness","equipment","physical","private","mirrors","after-hours","open","surveillance"]],
     ["kitchen","Smart Kitchen","assets/rooms/kitchen.jpg",["food","tech","water","screen","staffed","private","dining","surveillance"]],
     ["library","Library","assets/rooms/library.jpg",["quiet","knowledge","private","soft","night","prestige","restricted","valuable"]],
@@ -50,8 +54,8 @@ const CARDS = {
     ["chefs_knife","Chef's Knife","assets/weapons/chefs_knife.png",["sharp","kitchen","metal","professional","handheld","practical","fingerprintable","obvious"]],
     ["crystal_award","Crystal Award","assets/weapons/crystal_award.PNG",["blunt","fragile","decorative","luxury","heavy","collectible","fingerprintable","office"]],
     ["drone","Drone","assets/weapons/drone.png",["tech","remote","surveillance","modern","powered","mobile","black","fragile"]],
-    ["gold_dumbbell","Gold Dumbbell","assets/weapons/gold_dumbell.png",["blunt","heavy","luxury","gym","metal","obvious","fingerprintable","decorative"]],
-    ["keycard","Keycard","assets/weapons/keyvard.png",["access","tech","thin","corporate","concealable","plastic","small","everyday"]],
+    ["gold_dumbbell","Gold Dumbbell","assets/weapons/gold_dumbbell.png",["blunt","heavy","luxury","gym","metal","obvious","fingerprintable","decorative"]],
+    ["keycard","Keycard","assets/weapons/keycard.png",["access","tech","thin","corporate","concealable","plastic","small","everyday"]],
     ["luxury_pen","Luxury Pen","assets/weapons/luxury_pen.png",["sharp","luxury","small","concealable","professional","metal","office","fingerprintable"]],
     ["mangrenade_candle","Mangrenade Candle","assets/weapons/mangreneade_candle.png",["fire","brand","collectible","decorative","small","luxury","everyday","fragile"]],
     ["marble_bust","Marble Bust","assets/weapons/marble_bust.PNG",["blunt","heavy","decorative","luxury","art","solid","fingerprintable","office"]],
@@ -68,7 +72,7 @@ const CARDS = {
     ["blackmail","Blackmail","assets/motives/blackmail.png",["secret","control","planned","fear","money","leverage","long-term","corporate"]],
     ["career","Career","assets/motives/career.png",["professional","ambition","status","planned","reputation","competitive","long-term","public"]],
     ["cover_up","Cover Up","assets/motives/cover_up.png",["secret","planned","protective","corporate","fear","control","reputation","long-term"]],
-    ["debt_pressure","Debt Pressure","assets/motives/debt_pressue.png",["financial","desperate","pressure","fear","short-term","risk","long-term","control"]],
+    ["debt_pressure","Debt Pressure","assets/motives/debt_pressure.png",["financial","desperate","pressure","fear","short-term","risk","long-term","control"]],
     ["family_secret","Family Secret","assets/motives/family_secret.png",["family","secret","protective","long-term","shame","emotional","reputation","fear"]],
     ["financial_ruin","Financial Ruin","assets/motives/financial_ruin.png",["financial","desperate","status","fear","collapse","planned","public","reputation"]],
     ["inheritance","Inheritance","assets/motives/inheritance.png",["family","financial","planned","status","long-term","greed","secret","control"]],
@@ -83,642 +87,442 @@ const CARDS = {
   ]
 };
 
-const CASES = [
-  {
-    id:"MCI-001",
-    victim:"Velvet Kane",
-    victimImg:"assets/suspects/velvet_kane.JPG",
-    title:"The Art Vault Killing",
-    turns:6,
-    pool:{
-      suspect:["dorian_luxe","velvet_kane","gideon_pryce","harvey_slate","cleo_saint","nova_wilde","rex_branson","tilly_chrome"],
-      weapon:["marble_bust","crystal_award","gold_dumbbell","luxury_pen","mci_original_artwork","stiletto","champagne_sabre","keycard"],
-      room:["art_vault","library","wine_cellar","dressing","panic","billiard_room","lift","observ"],
-      motive:["professional_rivalry","career","reputation_protection","blackmail","revenge","financial_ruin","whistleblower_silence","jealousy"]
-    },
-    solution:{suspect:"dorian_luxe",weapon:"marble_bust",room:"art_vault",motive:"professional_rivalry"},
-    brief:"Velvet Kane has been found dead inside Blackwood Tower. Evidence suggests a confrontation took place shortly before her death. Identify the murderer, weapon, room and motive.",
-    den:"Dorian Luxe murdered Velvet Kane after a long-running professional rivalry escalated into a direct threat. Velvet had begun questioning the authenticity and ownership of valuable artwork linked to Dorian. The confrontation took place inside the Art Vault. During the argument, Dorian used the Marble Bust as an improvised weapon. The motive was Professional Rivalry."
-  },
-  {
-    id:"MCI-002",
-    victim:"Otis Blank",
-    victimImg:"assets/suspects/otis_blank.JPG",
-    title:"Dead Air",
-    turns:6,
-    pool:{
-      suspect:["milo_vale","otis_blank","jaxon_vale","tilly_chrome","gideon_pryce","cleo_saint","harvey_slate","bianca_frost"],
-      weapon:["smart_speaker","ring_light_stand","vr_headset","drone","chargeing_cable","smart_watch_cable","keycard","luxury_pen"],
-      room:["podstudio","observ","panic","lift","cinema","library","med_suite","kitchen"],
-      motive:["cover_up","whistleblower_silence","career","reputation_protection","blackmail","debt_pressure","mistaken_id","revenge"]
-    },
-    solution:{suspect:"milo_vale",weapon:"smart_speaker",room:"podstudio",motive:"cover_up"},
-    brief:"Otis Blank has been found dead after hours inside Blackwood Tower. Initial evidence points to locked doors, recorded audio and a system that should not have been active.",
-    den:"Milo Vale murdered Otis Blank inside the Podcast Studio. Otis had discovered evidence of a cover-up linked to MCI systems. Milo used the Smart Speaker as part of the method and tried to make the scene look like a technical accident. The motive was Cover Up."
-  },
-  {
-    id:"MCI-003",
-    victim:"India Gold",
-    victimImg:"assets/suspects/India_gold.JPG",
-    title:"A View From Above",
-    turns:6,
-    pool:{
-      suspect:["saffron_skye","india_gold","piper_bloom","sebastian_drift","nova_wilde","rex_branson","bianca_frost","jaxon_vale"],
-      weapon:["champagne_sabre","stiletto","luxury_pen","crystal_award","mangrenade_candle","drone","smart_watch_cable","keycard"],
-      room:["rooftop","pool","wine_cellar","billiard_room","cinema","chefs_table","dressing","lift"],
-      motive:["blackmail","affair","jealousy","obsession","rejection","reputation_protection","family_secret","revenge"]
-    },
-    solution:{suspect:"saffron_skye",weapon:"champagne_sabre",room:"rooftop",motive:"blackmail"},
-    brief:"India Gold has been found dead at Blackwood Tower. Witness statements place several people near the upper floors shortly before midnight. The evidence points to leverage, fear and a private confrontation.",
-    den:"Saffron Skye murdered India Gold on the Rooftop using the Champagne Sabre. India had information Saffron could not allow to surface. Their confrontation escalated when India threatened to expose the blackmail. The motive was Blackmail."
-  }
-];
-
-let state = {
-  screen:"home",
-  caseIndex:0,
-  guessesLeft:6,
-  selected:{},
-  locked:{},
-  wrong:{},
-  revealed:{},
-  evidence:{suspect:[],weapon:[],room:[],motive:[]},
-  lastFeedback:[],
-  lastScore:null,
-  history:[],
-  carouselIndex:{suspect:0,weapon:0,room:0,motive:0}
-};
+let CASES = [];
+let DATA_READY = false;
+let scrollMemory = {};
+let accusationPending = null;
 
 const player = {
-  rank:localStorage.getItem("mci_rank") || "Detective",
-  streak:Number(localStorage.getItem("mci_streak") || 0),
-  solved:Number(localStorage.getItem("mci_solved") || 0)
+  name: localStorage.getItem("mci_player_name") || "",
+  rank: localStorage.getItem("mci_rank") || "Detective",
+  streak: +(localStorage.getItem("mci_streak") || 0),
+  solved: +(localStorage.getItem("mci_solved") || 0),
+  lastSolvedDate: localStorage.getItem("mci_last_solved_date") || "",
+  haptics: localStorage.getItem("mci_haptics") !== "off"
 };
 
-function currentCase(){
-  return CASES[state.caseIndex];
-}
+let state = {
+  screen: player.name ? "home" : "name",
+  caseIndex: 0,
+  guessesLeft: 6,
+  selected: {},
+  locked: {},
+  wrong: {},
+  revealed: {},
+  evidence: { suspect: [], weapon: [], room: [], motive: [] },
+  feedback: [],
+  history: [],
+  lastScore: null,
+  lastAccusation: null,
+  loadingScore: null
+};
 
-function haptic(pattern){
-  if(navigator.vibrate) navigator.vibrate(pattern || 10);
-}
+loadCases();
 
-function bg(path){
-  return `style="background-image:url('${path}')"`;
-}
-
-function go(screen){
-  state.screen = screen;
+async function loadCases(){
+  try{
+    const res = await fetch("data/cases.json", { cache: "no-store" });
+    if(!res.ok) throw new Error("data/cases.json missing");
+    const data = await res.json();
+    CASES = normaliseCases(data.cases || []);
+  }catch(e){
+    console.warn(e);
+    CASES = fallbackCases();
+  }
+  DATA_READY = true;
+  state.caseIndex = getDailyCaseIndex();
+  resetForCase(state.caseIndex, true);
   render();
 }
 
-function cardList(type){
-  const c = currentCase();
-  const sourceKey = type === "suspect" ? "suspects" : type === "weapon" ? "weapons" : type === "room" ? "rooms" : "motives";
-  return c.pool[type].map(id => CARDS[sourceKey].find(card => card[0] === id)).filter(Boolean);
+function normaliseCases(cases){
+  return cases.map((c,i)=>({
+    id: c.id || `P${String(i+1).padStart(3,"0")}`,
+    title: c.title || "Untitled Case",
+    difficulty: c.difficulty || "Standard",
+    arc: c.arc || "Blackwood",
+    turns: 6,
+    victim: c.victim?.name || c.victim || "Unknown Victim",
+    victimId: c.victim?.id || "",
+    victimImg: imageFor("suspect", c.victim?.id),
+    solution: {
+      suspect: c.solution?.suspect?.id || c.murdererId || "",
+      room: c.solution?.room?.id || c.roomId || "",
+      weapon: c.solution?.weapon?.id || c.weaponId || "",
+      motive: c.solution?.motive?.id || c.motiveId || ""
+    },
+    narrative: {
+      opening: c.narrative?.opening || c.opening_text || "A body has been discovered inside Blackwood Tower.",
+      clues: c.narrative?.clues || [],
+      officialFindings: c.narrative?.officialFindings || "",
+      reconstruction: c.narrative?.reconstruction || c.den || "The investigation has concluded.",
+      aftermath: c.narrative?.aftermath || "",
+      informationEvent: c.narrative?.informationEvent || "",
+      tomorrowHook: c.narrative?.tomorrowHook || ""
+    },
+    canon: c.canon || {}
+  })).filter(c=>c.solution.suspect && c.solution.room && c.solution.weapon && c.solution.motive);
 }
 
-function getItem(type,id){
-  const sourceKey = type === "suspect" ? "suspects" : type === "weapon" ? "weapons" : type === "room" ? "rooms" : "motives";
-  return CARDS[sourceKey].find(card => card[0] === id);
+function fallbackCases(){
+  return [{
+    id:"P001", victim:"Bianca Frost", victimId:"bianca_frost", victimImg:imageFor("suspect","bianca_frost"), title:"The Missing Hour", turns:6, difficulty:"Easy", arc:"Parentage",
+    solution:{suspect:"harvey_slate", weapon:"luxury_pen", room:"library", motive:"family_secret"},
+    narrative:{opening:"Bianca Frost is dead. A single page appears to have been removed from her notebook shortly before her death.", clues:["A routine object may have been used in an unexpected way.","A location associated with knowledge becomes significant."], reconstruction:"Harvey Slate murdered Bianca Frost in the Library using the Luxury Pen. The motive was Family Secret.", aftermath:"", informationEvent:"", tomorrowHook:"The next death will ask a sharper question."},
+    canon:{}
+  }];
 }
 
-function displayName(type,id){
-  if(!id) return "Not selected";
-  const item = getItem(type,id);
-  return item ? item[1] : "Not selected";
+function getDailyCaseIndex(){
+  const saved = localStorage.getItem("mci_debug_case_index");
+  if(saved !== null && !Number.isNaN(+saved)) return Math.max(0, Math.min(CASES.length-1, +saved));
+  const start = new Date("2026-06-05T00:00:00");
+  const now = new Date();
+  const diff = Math.floor((stripTime(now) - stripTime(start)) / 86400000);
+  return Math.max(0, Math.min(CASES.length-1, diff));
 }
 
-function isRevealed(type,id,trait){
-  return state.revealed?.[type]?.[id]?.includes(trait);
+function stripTime(d){ return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+function todayKey(){ return new Date().toISOString().slice(0,10); }
+function currentCase(){ return CASES[state.caseIndex] || fallbackCases()[0]; }
+function bg(p){ return `style="background-image:url('${p}')"`; }
+function escapeHTML(s=""){ return String(s).replace(/[&<>"]/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[m])); }
+function para(text=""){ return String(text).split(/\n\n+/).filter(Boolean).map(x=>`<p>${escapeHTML(x).replace(/\n/g,"<br>")}</p>`).join(""); }
+function imageFor(type,id){ const it = item(type,id); return it ? it[2] : ""; }
+
+function haptic(p=10){
+  if(!player.haptics) return;
+  if(navigator.vibrate) navigator.vibrate(p);
 }
 
-function resetForCase(index){
-  state = {
-    screen:state.screen,
-    caseIndex:index,
-    guessesLeft:CASES[index].turns,
-    selected:{},
-    locked:{},
-    wrong:{},
-    revealed:{},
-    evidence:{suspect:[],weapon:[],room:[],motive:[]},
-    lastFeedback:[],
-    lastScore:null,
-    history:[],
-    carouselIndex:{suspect:0,weapon:0,room:0,motive:0}
-  };
+function saveScrolls(){
+  document.querySelectorAll(".carousel").forEach(e => scrollMemory[e.dataset.type] = e.scrollLeft);
 }
 
-function render(){
-  if(state.screen === "home") renderHome();
-  if(state.screen === "casefile") renderCaseFile();
-  if(state.screen === "investigation") renderInvestigation();
-  if(state.screen === "analysis") renderAnalysis();
-  if(state.screen === "solved") renderEnd(false);
-  if(state.screen === "failed") renderEnd(true);
-
-  requestAnimationFrame(() => {
-    updateLiveCards();
-    if(state.screen === "analysis") animateProgressBar();
-  });
-}
-
-function renderHome(){
-  app.innerHTML = `
-    <section class="screen" ${bg(ASSETS.frontpage)}>
-      <div class="content">
-        <h1>MCI</h1>
-        <h2>MURDER CASE INVESTIGATION</h2>
-
-        <div class="statgrid">
-          <div class="stat"><div class="label">Rank</div><div class="value">${player.rank}</div></div>
-          <div class="stat"><div class="label">Streak</div><div class="value">${player.streak}</div></div>
-          <div class="stat"><div class="label">Solved</div><div class="value">${player.solved}</div></div>
-        </div>
-
-        <div class="panel">
-          <h2>ONE VICTIM. ONE KILLER. FOUR TRUTHS.</h2>
-          <p>Open the case file. Study the evidence cards. Identify the suspect, weapon, room and motive before your accusations run out.</p>
-        </div>
-
-        <div class="panel">
-          <h2>MVP TEST DAYS</h2>
-          <div class="case-list">
-            ${CASES.map((c,i) => `<div class="case-pill ${i < state.caseIndex ? "done" : ""}"><b>${c.id}</b><br>${c.title}</div>`).join("")}
-          </div>
-        </div>
-
-        <button class="primary" onclick="openCase()">OPEN CASE FILE</button>
-        <button class="secondary" onclick="alert('Information Base comes next')">INFORMATION BASE</button>
-      </div>
-    </section>
-  `;
-}
-
-function openCase(){
-  resetForCase(state.caseIndex);
-  go("casefile");
-}
-
-function renderCaseFile(){
-  const c = currentCase();
-
-  app.innerHTML = `
-    <section class="screen" ${bg(ASSETS.casefile)}>
-      <div class="content">
-        <div class="panel">
-          <h2>VICTIM FILE OPENED</h2>
-          <h2>${c.victim}</h2>
-          <h3>${c.id} — ${c.title}</h3>
-          <p>${c.brief}</p>
-          <h2>${c.turns} ACCUSATIONS AUTHORISED</h2>
-        </div>
-
-        <button class="primary" onclick="go('investigation')">BEGIN INVESTIGATION</button>
-      </div>
-    </section>
-  `;
-}
-
-function renderTopHud(){
-  const c = currentCase();
-
-  return `
-    <div class="fixedhud">
-      <div class="hudrow">
-        <div>${player.rank}</div>
-        <div>${c.id}</div>
-        <div>${state.guessesLeft} left</div>
-      </div>
-      <div class="theory">
-        Suspect: ${displayName("suspect",state.selected.suspect)}
-        | Weapon: ${displayName("weapon",state.selected.weapon)}
-        | Room: ${displayName("room",state.selected.room)}
-        | Motive: ${displayName("motive",state.selected.motive)}
-        | ${Object.keys(state.locked).length}/4 confirmed
-      </div>
-    </div>
-  `;
-}
-
-function renderBottomHud(){
-  const labels = {
-    suspect:"SUSPECT",
-    weapon:"WEAPON",
-    room:"ROOM",
-    motive:"MOTIVE"
-  };
-
-  return `
-    <div class="bottomhud">
-      <div class="bottomgrid">
-        ${["suspect","weapon","room","motive"].map(type => `
-          <div class="evidence-mini">
-            <div class="evidence-mini-title">${labels[type]}</div>
-            ${
-              state.evidence[type].length
-              ? state.evidence[type].slice(-3).map(x => `<span class="evidence-chip">${x}</span>`).join("")
-              : `<span class="evidence-chip">none</span>`
-            }
-          </div>
-        `).join("")}
-      </div>
-      <button class="bottom-submit" onclick="accuse()">SUBMIT ACCUSATION</button>
-    </div>
-  `;
-}
-
-function renderInvestigation(){
-  app.innerHTML = `
-    ${renderTopHud()}
-    <section class="screen investigation" ${bg(ASSETS.investigation)}>
-      <div class="content">
-        ${carouselHTML("suspect","SUSPECTS")}
-        ${carouselHTML("weapon","WEAPONS")}
-        ${carouselHTML("room","ROOMS")}
-        ${carouselHTML("motive","MOTIVES")}
-      </div>
-    </section>
-    ${renderBottomHud()}
-  `;
-
-  requestAnimationFrame(() => {
-    ["suspect","weapon","room","motive"].forEach(type => {
-      scrollCarouselToIndex(type,state.carouselIndex[type] || 0,false);
+function restoreScrolls(){
+  requestAnimationFrame(()=>{
+    document.querySelectorAll(".carousel").forEach(e=>{
+      if(scrollMemory[e.dataset.type] != null) e.scrollLeft = scrollMemory[e.dataset.type];
+      if(state.selected[e.dataset.type]){
+        const c = e.querySelector(`[data-card-id="${state.selected[e.dataset.type]}"]`);
+        if(c) c.scrollIntoView({ inline:"center", block:"nearest", behavior:"auto" });
+      }
     });
-  });
-}
-
-function carouselHTML(type,title){
-  const items = cardList(type);
-  const locked = Boolean(state.locked[type]);
-
-  return `
-    <div class="carousel-block ${locked ? "locked" : ""}">
-      <div class="carousel-title">${title}${locked ? " — CONFIRMED" : ""}</div>
-      <div class="carousel ${locked ? "locked" : ""}" data-type="${type}">
-        ${items.map((item,index) => cardHTML(type,item,index)).join("")}
-      </div>
-    </div>
-  `;
-}
-
-function cardHTML(type,itemData,index){
-  const [id,name,img,traits] = itemData;
-
-  const classes = [
-    state.selected[type] === id ? "selected" : "",
-    state.locked[type] === id ? "correct" : "",
-    state.wrong[type]?.includes(id) ? "incorrect" : ""
-  ].join(" ");
-
-  const contain = id === "marble_bust" ? "contain" : "";
-
-  return `
-    <div class="card ${classes}" data-card-id="${id}" data-index="${index}" onclick="selectCard('${type}','${id}',${index})">
-      <img class="${contain}" src="${img}" onerror="this.style.opacity=.15">
-      <div class="card-name">${name}</div>
-      <div class="traits">
-        ${traits.slice(0,8).map(trait => `<span class="trait ${isRevealed(type,id,trait) ? "revealed" : ""}">${trait}</span>`).join("")}
-      </div>
-    </div>
-  `;
-}
-
-function selectCard(type,id,index){
-  if(state.locked[type]) return;
-
-  haptic(10);
-  state.selected[type] = id;
-  state.carouselIndex[type] = index;
-
-  render();
-
-  requestAnimationFrame(() => {
-    scrollCarouselToIndex(type,index,true);
-  });
-}
-
-function scrollCarouselToIndex(type,index,smooth){
-  const carousel = document.querySelector(`.carousel[data-type="${type}"]`);
-  if(!carousel) return;
-
-  const card = carousel.querySelector(`.card[data-index="${index}"]`);
-  if(!card) return;
-
-  const left = card.offsetLeft - (carousel.clientWidth / 2) + (card.clientWidth / 2);
-
-  carousel.scrollTo({
-    left,
-    behavior:smooth ? "smooth" : "auto"
+    updateLiveCards();
   });
 }
 
 function updateLiveCards(){
-  document.querySelectorAll(".carousel").forEach(carousel => {
-    const type = carousel.dataset.type;
-    const middle = carousel.getBoundingClientRect().left + carousel.clientWidth / 2;
-    let best = null;
-    let bestDistance = Infinity;
-    let bestIndex = 0;
-
-    carousel.querySelectorAll(".card").forEach(card => {
+  document.querySelectorAll(".carousel").forEach(car=>{
+    const mid = car.getBoundingClientRect().left + car.clientWidth/2;
+    let best = null, dist = Infinity;
+    car.querySelectorAll(".card").forEach(card=>{
       card.classList.remove("live");
-      const rect = card.getBoundingClientRect();
-      const cardMiddle = rect.left + rect.width / 2;
-      const distance = Math.abs(cardMiddle - middle);
-
-      if(distance < bestDistance){
-        bestDistance = distance;
-        best = card;
-        bestIndex = Number(card.dataset.index || 0);
-      }
+      const r = card.getBoundingClientRect();
+      const d = Math.abs((r.left + r.width/2) - mid);
+      if(d < dist){ dist = d; best = card; }
     });
-
     if(best) best.classList.add("live");
-
-    if(!state.locked[type]){
-      state.carouselIndex[type] = bestIndex;
-    }
   });
 }
 
-let scrollTimers = {};
+function render(){
+  if(!DATA_READY){ loadingHome(); return; }
+  saveScrolls();
+  if(state.screen === "name") nameScreen();
+  if(state.screen === "home") home();
+  if(state.screen === "how") howToPlay();
+  if(state.screen === "settings") settings();
+  if(state.screen === "casefile") casefile();
+  if(state.screen === "investigation") investigation();
+  if(state.screen === "solved") end(false);
+  if(state.screen === "failed") end(true);
+  restoreScrolls();
+}
 
-document.addEventListener("scroll", () => updateLiveCards(), true);
+function loadingHome(){
+  app.innerHTML = `<section class="screen" ${bg(ASSETS.frontpage)}><div class="content tight"><h1>MCI</h1><div class="panel"><h2>LOADING CASE FILES</h2><p>Preparing Blackwood Tower...</p></div></div></section>`;
+}
 
-document.addEventListener("touchend", () => {
-  document.querySelectorAll(".carousel").forEach(carousel => {
-    const type = carousel.dataset.type;
-    if(!type || state.locked[type]) return;
+function nameScreen(){
+  app.innerHTML = `<section class="screen" ${bg(ASSETS.frontpage)}><div class="content tight"><h1>MCI</h1><h2>MURDER CASE INVESTIGATION</h2><div class="panel dark"><h2>REGISTER DETECTIVE</h2><p>No login. No account. Your name is stored only on this device.</p><input id="playerName" class="name-input" maxlength="22" placeholder="Your name" autocomplete="off" /><button class="primary" onclick="savePlayerName()">BEGIN</button></div></div></section>`;
+}
 
-    clearTimeout(scrollTimers[type]);
-    scrollTimers[type] = setTimeout(() => {
-      updateLiveCards();
-      scrollCarouselToIndex(type,state.carouselIndex[type] || 0,true);
-    },80);
-  });
-}, true);
+function savePlayerName(){
+  const input = document.getElementById("playerName");
+  const name = (input?.value || "").trim();
+  if(!name){ haptic([20,40,20]); alert("Enter your detective name."); return; }
+  player.name = name;
+  localStorage.setItem("mci_player_name", name);
+  haptic(25);
+  go("home");
+}
+
+function home(){
+  const c = currentCase();
+  app.innerHTML = `<section class="screen" ${bg(ASSETS.frontpage)}><div class="content"><h1>MCI</h1><h2>MURDER CASE INVESTIGATION</h2><div class="statgrid"><div class="stat"><div class="label">Detective</div><div class="value">${escapeHTML(player.name)}</div></div><div class="stat"><div class="label">Streak</div><div class="value">${player.streak}</div></div><div class="stat"><div class="label">Solved</div><div class="value">${player.solved}</div></div></div><div class="panel"><h2>TODAY'S CASE</h2><h3>${c.id} — ${escapeHTML(c.title)}</h3><p>Victim: ${escapeHTML(c.victim)}</p><p class="small">Prologue case ${state.caseIndex+1} of ${Math.min(PROLOGUE_LENGTH, CASES.length)}</p></div><button class="primary" onclick="openCase()">OPEN CASE FILE</button><div class="button-row"><button class="secondary" onclick="go('how')">HOW TO PLAY</button><button class="secondary" onclick="go('settings')">SETTINGS</button></div></div></section>`;
+}
+
+function howToPlay(){
+  app.innerHTML = `<section class="screen" ${bg(ASSETS.casefile)}><div class="content tight"><div class="panel dark"><h2>HOW TO PLAY</h2><p>Each day there is one murder inside Blackwood Tower.</p><p>You must identify four truths:</p><ul><li>Murderer</li><li>Weapon</li><li>Room</li><li>Motive</li></ul><p>Choose one card from each category and submit an accusation.</p><p>The loading bar shows how many of the four categories are correct: red for zero, amber as you get closer, green for all four.</p><p>The bottom display compares your latest accusation with the true cards. For each wrong card, it reveals one matching trait and tells you how many traits matched in total.</p><p>Previously revealed traits remain highlighted on the cards.</p><button class="primary" onclick="go('home')">RETURN HOME</button></div></div></section>`;
+}
+
+function settings(){
+  app.innerHTML = `<section class="screen" ${bg(ASSETS.casefile)}><div class="content tight"><div class="panel dark"><h2>SETTINGS</h2><div class="toggle-row"><div><h3>Haptic Feedback</h3><p class="small">Small vibration taps on supported phones.</p></div><button class="switch ${player.haptics ? "on" : ""}" aria-label="Toggle haptics" onclick="toggleHaptics()"></button></div><div class="panel"><h3>Detective Name</h3><p>${escapeHTML(player.name)}</p><button class="ghost" onclick="renamePlayer()">CHANGE NAME</button></div><button class="primary" onclick="go('home')">RETURN HOME</button></div></div></section>`;
+}
+
+function toggleHaptics(){
+  player.haptics = !player.haptics;
+  localStorage.setItem("mci_haptics", player.haptics ? "on" : "off");
+  haptic(20);
+  render();
+}
+
+function renamePlayer(){
+  const name = prompt("Enter detective name", player.name || "");
+  if(!name) return;
+  player.name = name.trim().slice(0,22) || player.name;
+  localStorage.setItem("mci_player_name", player.name);
+  render();
+}
+
+function openCase(){ resetForCase(state.caseIndex); go("casefile"); }
+
+function resetForCase(i, keepScreen=false){
+  const nextScreen = keepScreen ? state.screen : state.screen;
+  state = {
+    ...state,
+    screen: nextScreen,
+    caseIndex: i,
+    guessesLeft: currentCase()?.turns || 6,
+    selected: {}, locked: {}, wrong: {}, revealed: {},
+    evidence: { suspect: [], weapon: [], room: [], motive: [] },
+    feedback: [], history: [], lastScore: null, lastAccusation: null, loadingScore: null
+  };
+  scrollMemory = {};
+}
+
+function casefile(){
+  const c = currentCase();
+  const clues = (c.narrative.clues || []).map(x=>`<li>${escapeHTML(x)}</li>`).join("");
+  app.innerHTML = `<section class="screen" ${bg(ASSETS.casefile)}><div class="content"><div class="panel dark"><h2>VICTIM FILE OPENED</h2><h2>${escapeHTML(c.victim)}</h2><h3>${c.id} — ${escapeHTML(c.title)}</h3><p class="small">Difficulty: ${escapeHTML(c.difficulty)} | Arc: ${escapeHTML(c.arc)}</p>${para(c.narrative.opening)}${clues ? `<h3>Initial Leads</h3><ul>${clues}</ul>` : ""}<h2>${c.turns} accusations authorised</h2></div><button class="primary" onclick="go('investigation')">BEGIN INVESTIGATION</button><button class="secondary" onclick="go('home')">RETURN HOME</button></div></section>`;
+}
+
+function investigation(){
+  const c = currentCase();
+  app.innerHTML = `<div class="topbar"><div class="hudrow"><div>${escapeHTML(player.name || player.rank)}</div><div>${c.id}</div><div>${state.guessesLeft} left</div></div><div class="theory">Murderer: ${name("suspects",state.selected.suspect)} | Weapon: ${name("weapons",state.selected.weapon)} | Room: ${name("rooms",state.selected.room)} | Motive: ${name("motives",state.selected.motive)} | ${Object.keys(state.locked).length}/4 locked</div></div><section class="screen investigation" ${bg(ASSETS.investigation)}><div class="content">${progressHTML()}${evidenceBoard()}${carousel("suspect","MURDERER",visibleCards("suspect"))}${carousel("weapon","WEAPON",visibleCards("weapon"))}${carousel("room","ROOM",visibleCards("room"))}${carousel("motive","MOTIVE",visibleCards("motive"))}<div class="panel"><h2>MAKE ACCUSATION</h2><p>Select one murderer, weapon, room and motive.</p><button class="primary" onclick="accuse()">SUBMIT ACCUSATION</button></div>${bottomHUD()}</div></section>${accusationPending ? loaderOverlay() : ""}`;
+  setTimeout(updateLiveCards,50);
+}
+
+function visibleCards(type){
+  const map = { suspect:"suspects", weapon:"weapons", room:"rooms", motive:"motives" };
+  const all = CARDS[map[type]];
+  const sol = currentCase().solution[type];
+  const chosen = new Set([sol]);
+  const seed = currentCase().id + type;
+  seededShuffle(all.map(x=>x[0]), seed).forEach(id=>{ if(chosen.size < 8) chosen.add(id); });
+  return all.filter(x=>chosen.has(x[0]));
+}
+
+function seededShuffle(arr, seed){
+  let h = 2166136261;
+  for(const ch of seed) h = Math.imul(h ^ ch.charCodeAt(0), 16777619);
+  const a = [...arr];
+  for(let i=a.length-1;i>0;i--){
+    h = Math.imul(h ^ (h >>> 15), 2246822507);
+    const j = Math.abs(h) % (i+1);
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function evidenceBoard(){
+  const labels = { suspect:"CHARACTERISTICS", weapon:"WEAPON FEATURES", room:"ROOM FEATURES", motive:"DRIVERS" };
+  return `<div class="panel"><h2>EVIDENCE BOARD</h2><div class="evidence-board">${["suspect","weapon","room","motive"].map(k=>`<div class="evidence-box"><h4>${labels[k]}</h4>${state.evidence[k].length ? state.evidence[k].map(x=>`<span class="evidence-tag">${escapeHTML(x)}</span>`).join("") : "<span class='evidence-tag'>Awaiting evidence</span>"}</div>`).join("")}</div></div>`;
+}
+
+function progressHTML(){
+  if(state.lastScore === null) return "";
+  const pct = [18,35,58,80,100][state.lastScore];
+  const col = ["var(--red)","var(--amber1)","var(--amber2)","var(--amber3)","var(--green)"][state.lastScore];
+  return `<div class="panel"><div class="progress-label">${state.lastScore}/4 CATEGORIES MATCH</div><div class="progress-shell"><div class="progress-bar" style="width:${pct}%;background:${col}"></div></div></div>`;
+}
+
+function carousel(type,title,items){
+  const loop = [...items, ...items, ...items];
+  return `<div class="carousel-block"><div class="carousel-title">${title}</div><div class="carousel" data-type="${type}" onscroll="loopCarousel(this);updateLiveCards()">${loop.map(item=>card(type,item)).join("")}</div></div>`;
+}
+
+function card(type,itemData){
+  const [id,n,img,traits] = itemData;
+  const cls = [state.selected[type] === id ? "selected" : "", state.locked[type] === id ? "correct" : "", state.wrong[type]?.includes(id) ? "incorrect" : ""].join(" ");
+  const contain = ["marble_bust","crystal_award","mci_original_artwork"].includes(id) ? "contain" : "";
+  return `<div class="card ${cls}" data-card-id="${id}" onclick="selectCard('${type}','${id}')"><img class="${contain}" src="${img}" alt="${escapeHTML(n)}" onerror="this.style.opacity=.15"><div class="card-name">${escapeHTML(n)}</div><div class="traits">${traits.slice(0,8).map(t=>`<span class="trait ${isRev(type,id,t) ? "revealed" : ""}">${escapeHTML(t)}</span>`).join("")}</div></div>`;
+}
+
+function selectCard(type,id){
+  if(state.locked[type]) return;
+  haptic(10);
+  state.selected[type] = id;
+  render();
+}
 
 function accuse(){
   const keys = ["suspect","weapon","room","motive"];
-  const c = currentCase();
-
-  if(!keys.every(key => state.selected[key])){
-    haptic([20,50,20]);
-    alert("Select one suspect, weapon, room and motive.");
-    return;
-  }
-
+  if(!keys.every(k=>state.selected[k])){ haptic([20,50,20]); alert("Select one murderer, weapon, room and motive."); return; }
   haptic(25);
+  const result = evaluateAccusation();
+  accusationPending = result;
+  state.loadingScore = result.correct;
+  render();
+  setTimeout(()=>{
+    applyAccusation(result);
+    accusationPending = null;
+    if(result.correct === 4){ markSolved(); haptic([60,90,60]); go("solved"); return; }
+    if(state.guessesLeft <= 0){ haptic([100,100,100]); go("failed"); return; }
+    render();
+  }, 1450);
+}
 
-  let correct = 0;
+function evaluateAccusation(){
+  const keys = ["suspect","weapon","room","motive"];
+  const c = currentCase();
   const feedback = [];
-  const shareRow = [];
-
-  keys.forEach(key => {
-    const guess = state.selected[key];
-    const solution = c.solution[key];
-    const isCorrect = guess === solution;
-
-    shareRow.push(isCorrect);
-
-    if(isCorrect){
-      correct++;
-      state.locked[key] = guess;
-      feedback.push({
-        type:key,
-        ok:true,
-        name:getItem(key,guess)[1],
-        disclosed:null,
-        hidden:0
-      });
-    } else {
-      if(!state.wrong[key]) state.wrong[key] = [];
-      if(!state.wrong[key].includes(guess)) state.wrong[key].push(guess);
-
-      const guessTraits = getItem(key,guess)[3];
-      const solutionTraits = getItem(key,solution)[3];
-      const matches = guessTraits.filter(trait => solutionTraits.includes(trait));
-      const disclosed = matches[0] || "none";
-      const hidden = disclosed === "none" ? 0 : Math.max(matches.length - 1,0);
-
-      if(!state.revealed[key]) state.revealed[key] = {};
-      if(!state.revealed[key][guess]) state.revealed[key][guess] = [];
-
-      if(disclosed !== "none" && !state.revealed[key][guess].includes(disclosed)){
-        state.revealed[key][guess].push(disclosed);
-      }
-
-      if(disclosed !== "none" && !state.evidence[key].includes(disclosed)){
-        state.evidence[key].push(disclosed);
-      }
-
-      feedback.push({
-        type:key,
-        ok:false,
-        name:getItem(key,guess)[1],
-        disclosed,
-        hidden
-      });
+  let correct = 0;
+  const row = [];
+  const snapshot = { ...state.selected };
+  keys.forEach(k=>{
+    const guess = state.selected[k], sol = c.solution[k], ok = guess === sol;
+    row.push(ok);
+    if(ok){ correct++; feedback.push({ type:k, ok:true, name:item(k,guess)[1], total:8, disclosed:"CONFIRMED" }); }
+    else{
+      const guessTraits = item(k,guess)?.[3] || [];
+      const solTraits = item(k,sol)?.[3] || [];
+      const matches = guessTraits.filter(t=>solTraits.includes(t));
+      const already = state.revealed[k]?.[guess] || [];
+      const disclosed = matches.find(t=>!already.includes(t)) || matches[0] || "No visible trait match";
+      feedback.push({ type:k, ok:false, name:item(k,guess)[1], disclosed, total:matches.length });
     }
   });
-
-  state.lastFeedback = feedback;
-  state.lastScore = correct;
-  state.history.push(shareRow);
-  state.guessesLeft--;
-
-  go("analysis");
+  return { correct, row, feedback, snapshot };
 }
 
-function renderAnalysis(){
-  const score = state.lastScore || 0;
-  const pct = [0,25,50,75,100][score];
-  const colour = ["var(--red)","var(--amber1)","var(--amber2)","var(--amber3)","var(--green)"][score];
-
-  app.innerHTML = `
-    <section class="screen analysis-screen" ${bg(ASSETS.caseclosed)}>
-      <div class="content">
-        <div class="analysis-card">
-          <div class="analysis-status">ACCUSATION ANALYSIS</div>
-          <div class="progress-label">${score}/4 CATEGORIES MATCH</div>
-          <div class="progress-shell">
-            <div class="progress-bar" id="analysisBar" data-width="${pct}" style="background:${colour}"></div>
-          </div>
-
-          <div class="feedback-grid">
-            ${state.lastFeedback.map(feedbackCardHTML).join("")}
-          </div>
-
-          ${analysisButtonHTML()}
-        </div>
-      </div>
-    </section>
-  `;
-}
-
-function animateProgressBar(){
-  const bar = document.getElementById("analysisBar");
-  if(!bar) return;
-
-  setTimeout(() => {
-    bar.style.width = `${bar.dataset.width}%`;
-  },180);
-}
-
-function feedbackCardHTML(f){
-  const labels = {
-    suspect:"SUSPECT",
-    weapon:"WEAPON",
-    room:"ROOM",
-    motive:"MOTIVE"
-  };
-
-  if(f.ok){
-    return `
-      <div class="feedback-card correct">
-        <h3>${labels[f.type]}</h3>
-        <p>${f.name}</p>
-        <p class="green">CONFIRMED</p>
-      </div>
-    `;
-  }
-
-  const noun = f.type === "suspect" ? "characteristic" : f.type === "motive" ? "driver" : "feature";
-
-  return `
-    <div class="feedback-card">
-      <h3>${labels[f.type]}</h3>
-      <p>${f.name}</p>
-      <p>Shared ${noun}:</p>
-      <p class="green">${f.disclosed}</p>
-      <p>+${f.hidden} hidden ${noun}${f.hidden === 1 ? "" : "s"}</p>
-    </div>
-  `;
-}
-
-function analysisButtonHTML(){
-  if(state.lastScore === 4){
-    return `<button class="primary" onclick="finishSolved()">CLOSE CASE</button>`;
-  }
-
-  if(state.guessesLeft <= 0){
-    return `<button class="primary" onclick="finishFailed()">REVEAL SOLUTION</button>`;
-  }
-
-  return `<button class="primary" onclick="go('investigation')">CONTINUE INVESTIGATION</button>`;
-}
-
-function finishSolved(){
-  player.solved++;
-  player.streak++;
-  localStorage.setItem("mci_solved",player.solved);
-  localStorage.setItem("mci_streak",player.streak);
-  haptic([60,90,60]);
-  go("solved");
-}
-
-function finishFailed(){
-  player.streak = 0;
-  localStorage.setItem("mci_streak",player.streak);
-  haptic([100,100,100]);
-  go("failed");
-}
-
-function renderEnd(failed){
+function applyAccusation(result){
+  state.feedback = [];
+  const keys = ["suspect","weapon","room","motive"];
   const c = currentCase();
-  const solution = c.solution;
-
-  app.innerHTML = `
-    <section class="screen" ${bg(ASSETS.caseclosed)}>
-      <div class="content">
-        <div class="end-title">${failed ? "THEY GOT AWAY WITH IT" : "CASE SOLVED"}</div>
-        <div class="subtitle">${failed ? "The case has gone cold." : "Great work, Detective."}</div>
-
-        <div class="panel">
-          <h2>VICTIM: ${c.victim}</h2>
-
-          <div class="result-stack">
-            ${resultCardHTML("MURDERER","suspect",solution.suspect)}
-            ${resultCardHTML("WEAPON","weapon",solution.weapon)}
-            ${resultCardHTML("ROOM","room",solution.room)}
-            ${resultCardHTML("MOTIVE","motive",solution.motive)}
-          </div>
-
-          <h2>RECONSTRUCTION</h2>
-          <p>${highlightSolution(c.den)}</p>
-
-          <button class="primary" onclick="shareResult(${failed})">SHARE RESULT</button>
-          ${
-            state.caseIndex < CASES.length - 1
-            ? `<button class="secondary" onclick="nextCase()">NEXT MVP DAY</button>`
-            : `<button class="secondary" onclick="go('home')">RETURN HOME</button>`
-          }
-        </div>
-      </div>
-    </section>
-  `;
-}
-
-function resultCardHTML(label,type,id){
-  const data = getItem(type,id);
-  const contain = id === "marble_bust" ? "contain" : "";
-
-  return `
-    <div class="result-card">
-      <img class="${contain}" src="${data[2]}" onerror="this.style.opacity=.15">
-      <h2>${label}</h2>
-      <p>${data[1]}</p>
-    </div>
-  `;
-}
-
-function highlightSolution(text){
-  const c = currentCase();
-  const solution = c.solution;
-
-  [
-    getItem("suspect",solution.suspect)[1],
-    getItem("weapon",solution.weapon)[1],
-    getItem("room",solution.room)[1],
-    getItem("motive",solution.motive)[1]
-  ].forEach(word => {
-    text = text.replaceAll(word,`<mark>${word}</mark>`);
+  keys.forEach(k=>{
+    const guess = result.snapshot[k], sol = c.solution[k];
+    const fb = result.feedback.find(x=>x.type === k);
+    if(guess === sol){
+      state.locked[k] = guess;
+    }else{
+      state.wrong[k] = state.wrong[k] || [];
+      if(!state.wrong[k].includes(guess)) state.wrong[k].push(guess);
+      if(fb.disclosed !== "No visible trait match"){
+        state.revealed[k] = state.revealed[k] || {};
+        state.revealed[k][guess] = state.revealed[k][guess] || [];
+        if(!state.revealed[k][guess].includes(fb.disclosed)) state.revealed[k][guess].push(fb.disclosed);
+        if(!state.evidence[k].includes(fb.disclosed)) state.evidence[k].push(fb.disclosed);
+      }
+    }
   });
-
-  return text;
+  state.feedback = result.feedback;
+  state.history.push(result.row);
+  state.lastScore = result.correct;
+  state.lastAccusation = result.snapshot;
+  state.guessesLeft--;
 }
 
-function shareResult(failed){
+function loaderOverlay(){
+  const score = state.loadingScore ?? 0;
+  const pct = [18,35,58,80,100][score];
+  const col = ["var(--red)","var(--amber1)","var(--amber2)","var(--amber3)","var(--green)"][score];
+  return `<div class="overlay"><div class="loader-card"><div class="loader-title">ANALYSING ACCUSATION</div><p class="loader-text">Comparing your theory against the Blackwood case file.</p><div class="progress-shell"><div class="progress-bar" style="width:${pct}%;background:${col}"></div></div><p class="loader-text">${score}/4 categories match</p></div></div>`;
+}
+
+function bottomHUD(){
+  if(!state.feedback.length) return `<div class="bottomhud"><h2>HEADS-UP DISPLAY</h2><p class="small">Submit an accusation to reveal trait evidence. Each wrong card can reveal one aligned trait and the total number of matching traits.</p></div>`;
+  return `<div class="bottomhud"><h2>LAST ACCUSATION FEEDBACK</h2><div class="feedback-grid">${state.feedback.map(f=>{
+    if(f.ok) return `<div class="feedback-line"><b>${labelFor(f.type)}</b><br><span class="green">CONFIRMED:</span> ${escapeHTML(f.name)}</div>`;
+    return `<div class="feedback-line"><b>${labelFor(f.type)}</b><br>${escapeHTML(f.name)} is wrong.<br><span class="green">Trait revealed:</span> ${escapeHTML(f.disclosed)}<br><span>${f.total} correct trait${f.total === 1 ? "" : "s"} matched the true card.</span></div>`;
+  }).join("")}</div></div>`;
+}
+
+function labelFor(type){ return ({ suspect:"MURDERER", weapon:"WEAPON", room:"ROOM", motive:"MOTIVE" })[type]; }
+
+function markSolved(){
+  const today = todayKey();
+  if(player.lastSolvedDate !== today){
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate()-1);
+    const yKey = yesterday.toISOString().slice(0,10);
+    player.streak = player.lastSolvedDate === yKey ? player.streak + 1 : 1;
+    player.solved++;
+    player.lastSolvedDate = today;
+    localStorage.setItem("mci_streak", player.streak);
+    localStorage.setItem("mci_solved", player.solved);
+    localStorage.setItem("mci_last_solved_date", player.lastSolvedDate);
+  }
+}
+
+function end(failed){
+  const c = currentCase(), s = c.solution;
+  const finalPrologue = state.caseIndex === Math.min(PROLOGUE_LENGTH, CASES.length) - 1;
+  app.innerHTML = `<section class="screen" ${bg(ASSETS.caseclosed)}><div class="content"><div class="end-title">${failed ? "THEY GOT AWAY WITH IT" : "CASE SOLVED"}</div><div class="subtitle">${failed ? "The killer walks free." : "Great work, Detective."}</div><div class="panel dark"><h2>VICTIM: ${escapeHTML(c.victim)}</h2><div class="result-grid">${res("MURDERER","suspect",s.suspect)}${res("WEAPON","weapon",s.weapon)}${res("ROOM","room",s.room)}${res("MOTIVE","motive",s.motive)}</div><h2>RECONSTRUCTION</h2>${para(highlight(c.narrative.reconstruction))}${c.narrative.aftermath ? `<h2>AFTERMATH</h2>${para(c.narrative.aftermath)}` : ""}${c.narrative.informationEvent ? `<h2>INFORMATION EVENT</h2>${para(c.narrative.informationEvent)}` : ""}${finalPrologue ? prologueEndHTML() : teaserHTML(c)}<button class="primary" onclick="share(${failed})">SHARE RESULT</button><button class="secondary" onclick="feedbackEmail()">EMAIL FEEDBACK</button><p class="email-note">Please share this with 10 friends.</p><button class="ghost" onclick="go('home')">RETURN HOME</button></div></div></section>`;
+}
+
+function teaserHTML(c){
+  if(!c.narrative.tomorrowHook) return "";
+  return `<div class="panel"><h2>TOMORROW</h2>${para(c.narrative.tomorrowHook)}</div>`;
+}
+
+function prologueEndHTML(){
+  return `<div class="panel prologue-banner"><h2>PROLOGUE COMPLETE</h2><p>Blackwood Tower has not given up its secrets. It has only shown you where the bodies are buried.</p><p>The full season of MCI is coming soon.</p><p>Season One will open the wider case file.</p></div>`;
+}
+
+function res(label,type,id){
+  const it = item(type,id);
+  if(!it) return "";
+  const contain = ["marble_bust","crystal_award","mci_original_artwork"].includes(id) ? "contain" : "";
+  return `<div class="result-card"><img class="${contain}" src="${it[2]}" alt="${escapeHTML(it[1])}"><h2>${label}</h2><p>${escapeHTML(it[1])}</p></div>`;
+}
+
+function highlight(txt){
+  let out = escapeHTML(txt || "");
+  const c = currentCase(), s = c.solution;
+  [item("suspect",s.suspect)?.[1], item("weapon",s.weapon)?.[1], item("room",s.room)?.[1], item("motive",s.motive)?.[1]].filter(Boolean).forEach(w=>{
+    out = out.replaceAll(escapeHTML(w), `<mark>${escapeHTML(w)}</mark>`);
+  });
+  return out;
+}
+
+function share(failed){
   const c = currentCase();
   const used = c.turns - state.guessesLeft;
-  const grid = state.history.map(row => row.map(x => x ? "🟩" : "⬛").join("")).join("\n") || "⬛⬛⬛⬛";
-
-  const text = `${c.id}
-${failed ? "X/6" : `${used}/6`}
-
-${grid}
-
-${failed ? "THEY GOT AWAY WITH IT" : "CASE SOLVED"}
-Rank: ${player.rank}
-https://mancave-industries.github.io/MCI_Muder_Case_Investigation-/`;
-
-  if(navigator.share){
-    navigator.share({text});
-  } else if(navigator.clipboard){
-    navigator.clipboard.writeText(text);
-    alert("Result copied.");
-  } else {
-    alert(text);
-  }
+  const grid = state.history.map(r=>r.map(x=>x ? "🟩" : "⬛").join("")).join("\n") || "⬛⬛⬛⬛";
+  const text = `MCI Prologue ${c.id}\n${c.title}\n\n${grid}\n\n${failed ? "They got away with it." : `Solved in ${used} accusation${used === 1 ? "" : "s"}.`}\nDetective: ${player.name || player.rank}\nDaily streak: ${player.streak}\nCases solved: ${player.solved}\n\nPlease share this with 10 friends.\n${GAME_URL}`;
+  if(navigator.share) navigator.share({ text });
+  else { navigator.clipboard.writeText(text); alert("Result copied."); }
 }
 
-function nextCase(){
-  const nextIndex = state.caseIndex + 1;
-  resetForCase(nextIndex);
+function feedbackEmail(){
+  const c = currentCase();
+  const subject = encodeURIComponent(`MCI Prologue Feedback — ${c.id}`);
+  const body = encodeURIComponent(`Thank you for playing MCI Prologue. We greatly value your feedback. Could you please answer these 10 questions with as much detail as possible?\n\n1. On a scale of 0 to 10, how likely are you to recommend MCI to a friend?\n\n2. Do you play other daily online puzzle games? Yes or No.\n\n3. If yes, please list the daily online puzzle games you play.\n\n4. What did you enjoy most about solving the daily cases?\n\n5. Were the trait clues clear and helpful in guiding your deductions?\n\n6. Was the accusation feedback easy to understand, including the revealed trait and total matching traits?\n\n7. How did you find the difficulty level of this case and the prologue overall?\n\n8. Did the story and narrative between cases make you want to return the next day?\n\n9. How would you improve the interface, card selection, or game flow?\n\n10. What features or improvements would you most like to see in the full season?\n\nOptional notes:\n\nCase played: ${c.id} — ${c.title}\nDetective name: ${player.name}\nDaily streak: ${player.streak}\nCases solved: ${player.solved}\n`);
+  window.location.href = `mailto:${FEEDBACK_EMAIL}?subject=${subject}&body=${body}`;
+}
+
+function nextCaseDebug(){
+  const n = Math.min(CASES.length-1, state.caseIndex + 1);
+  localStorage.setItem("mci_debug_case_index", n);
+  state.caseIndex = n;
+  resetForCase(n);
   go("casefile");
 }
 
-render();
+function go(x){ state.screen = x; render(); }
+function item(type,id){ return ({ suspect:CARDS.suspects, weapon:CARDS.weapons, room:CARDS.rooms, motive:CARDS.motives }[type] || []).find(x=>x[0] === id); }
+function name(group,id){ if(!id) return "Not selected"; return ({ suspects:CARDS.suspects, weapons:CARDS.weapons, rooms:CARDS.rooms, motives:CARDS.motives }[group] || []).find(x=>x[0] === id)?.[1] || "Not selected"; }
+function isRev(type,id,t){ return state.revealed?.[type]?.[id]?.includes(t); }
+function loopCarousel(el){ const third = el.scrollWidth/3; if(el.scrollLeft < third*.18) el.scrollLeft += third; if(el.scrollLeft > third*1.82) el.scrollLeft -= third; scrollMemory[el.dataset.type] = el.scrollLeft; }
