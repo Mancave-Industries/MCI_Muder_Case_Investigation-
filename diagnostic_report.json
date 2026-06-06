@@ -1,0 +1,14 @@
+{
+  "case_count_in_uploaded_json": 16,
+  "root_fix": [
+    "All 16 cases are now embedded into script.js as a fallback.",
+    "If data/cases.json 404s on GitHub Pages, the game still has P001-P016.",
+    "Prologue Complete now only triggers when the current case is P016 and P016 has been solved.",
+    "NEXT DAY shows on every result screen before P016, regardless of old completedCases pollution.",
+    "Console logs added: MCI CASE LOAD, MCI HOME, MCI NEXT DAY."
+  ],
+  "why_previous_build_could_fail": [
+    "If data/cases.json failed to load, old fallbackCases returned only P001.",
+    "hasCompletedPrologue used completedCases localStorage for all IDs, so polluted tester localStorage could make Case 1 look like the end."
+  ]
+}

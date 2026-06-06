@@ -1,0 +1,919 @@
+{
+  "schemaVersion": "mci.prologue.v1",
+  "source": "MCI_Prologue_Master_With_Narrative.csv",
+  "caseCount": 16,
+  "cases": [
+    {
+      "id": "P001",
+      "title": "The Missing Hour",
+      "difficulty": "Easy",
+      "openingType": "Recovered Document",
+      "caseFunction": "Secret Case",
+      "arc": "Parentage",
+      "informationEventId": "IE01",
+      "victim": {
+        "id": "bianca_frost",
+        "name": "Bianca Frost"
+      },
+      "solution": {
+        "suspect": {
+          "id": "harvey_slate",
+          "name": "Harvey Slate"
+        },
+        "room": {
+          "id": "library",
+          "name": "Library"
+        },
+        "weapon": {
+          "id": "luxury_pen",
+          "name": "Luxury Pen"
+        },
+        "motive": {
+          "id": "family_secret",
+          "name": "Family Secret"
+        }
+      },
+      "narrative": {
+        "opening": "Bianca Frost is dead.\n\nInvestigators recovered a notebook from her apartment.\n\nMost pages remain intact.\n\nOne page does not.\n\nA single sheet appears to have been removed shortly before her death.\n\nNo trace of the missing page has been found.\n\nResidents interviewed by investigators disagree about Bianca's behaviour during her final days.\n\nSome describe her as distracted.\n\nOthers insist she appeared unusually optimistic.\n\nSeveral report that she was pursuing something she believed to be important.\n\nNobody knows what she discovered.\n\nYour task is to determine:\n- Who committed the murder\n- Where the murder occurred\n- Which weapon was used\n- Why the victim was targeted\n\nThe investigation remains active.",
+        "clues": [
+          "The victim had recently become interested in information rather than people.",
+          "One resident appears unusually eager to assist investigators.",
+          "A routine object may have been used in an unexpected way.",
+          "A location associated with knowledge becomes significant."
+        ],
+        "officialFindings": "Murderer: Harvey Slate\nRoom: Library\nWeapon: Luxury Pen\nMotive: Family Secret",
+        "reconstruction": "Bianca's investigation brought her dangerously close to information that had remained hidden for years.\n\nThe secret itself was not new.\n\nHer discovery of it was.\n\nAs Bianca moved closer to confirmation, the risk to another resident increased dramatically.\n\nTheir final meeting took place inside the Library.\n\nWhat began as an attempt to control information became an attempt to prevent exposure.\n\nBy the time the meeting ended, Bianca Frost was dead.",
+        "aftermath": "Nova Wilde learns Bianca had been researching a subject unrelated to her public work.\n\nFor the first time, several residents begin wondering whether important information is being concealed inside Blackwood Tower.",
+        "informationEvent": "A fragment of the missing notebook page is discovered.\n\nOnly four words remain visible:\n\n\"It changes everything if...\"\n\nThe remainder is missing.",
+        "tomorrowHook": "Why was Velvet Kane requesting access to records that nobody else appeared interested in reviewing?",
+        "outcome": "The accusation has been checked against the Blackwood case file.",
+        "revealEvent": "",
+        "careerProgression": "Your case record has been upgraded."
+      },
+      "canon": {
+        "knowledgeChange": "Nova becomes aware that Bianca was investigating a hidden issue before her death.",
+        "relationshipChange": "Trust between several residents decreases as speculation spreads.",
+        "pressureChange": "Parentage Arc +3",
+        "canonImpact": "Parentage pressure introduced",
+        "futureDependency": "P002",
+        "sharedTrait": "Observant"
+      },
+      "turns": 6
+    },
+    {
+      "id": "P002",
+      "title": "A Question Too Far",
+      "difficulty": "Easy",
+      "openingType": "Missing Property",
+      "caseFunction": "Secret Case",
+      "arc": "Forgery",
+      "informationEventId": "IE02",
+      "victim": {
+        "id": "velvet_kane",
+        "name": "Velvet Kane"
+      },
+      "solution": {
+        "suspect": {
+          "id": "dorian_luxe",
+          "name": "Dorian Luxe"
+        },
+        "room": {
+          "id": "art_vault",
+          "name": "Art Vault"
+        },
+        "weapon": {
+          "id": "marble_bust",
+          "name": "Marble Bust"
+        },
+        "motive": {
+          "id": "professional_rivalry",
+          "name": "Professional Rivalry"
+        }
+      },
+      "narrative": {
+        "opening": "Velvet Kane is dead.\n\nInvestigators were called after staff reported an item missing from a secured collection.\n\nThe disappearance initially appeared unrelated.\n\nHours later, Velvet's body was discovered.\n\nThe missing object has still not been recovered.\n\nResidents interviewed by investigators provide conflicting explanations for why Velvet had recently become interested in the collection.\n\nSome believe it was routine research.\n\nOthers disagree.\n\nYour task is to determine:\n- Who committed the murder\n- Where the murder occurred\n- Which weapon was used\n- Why the victim was targeted\n\nThe investigation remains active.",
+        "clues": [
+          "The victim had become focused on establishing whether something was genuine.",
+          "A resident appeared unusually concerned by recent questions.",
+          "Status may be more important than truth.",
+          "The missing object may be more valuable than it appears."
+        ],
+        "officialFindings": "Murderer: Dorian Luxe\nRoom: Art Vault\nWeapon: Marble Bust\nMotive: Professional Rivalry",
+        "reconstruction": "Velvet's expertise allowed her to recognise inconsistencies others overlooked.\n\nWhat began as professional curiosity evolved into professional conflict.\n\nThe closer she came to proving her suspicions, the more dangerous the situation became.\n\nInside the Art Vault, the disagreement stopped being academic.\n\nFor one resident, reputation depended upon uncertainty surviving.\n\nVelvet represented certainty.\n\nShe never left the vault alive.",
+        "aftermath": "Jaxon Vale becomes interested in rumours surrounding Blackwood's most valuable collection.\n\nQuestions that once circulated privately begin spreading more widely.",
+        "informationEvent": "An unsigned authentication report is discovered inside a storage cabinet.\n\nSeveral pages are missing.",
+        "tomorrowHook": "Who commissioned a report that somebody worked so hard to conceal?",
+        "outcome": "The accusation has been checked against the Blackwood case file.",
+        "revealEvent": "",
+        "careerProgression": "Your case record has been upgraded."
+      },
+      "canon": {
+        "knowledgeChange": "Jaxon becomes aware that a dispute existed regarding authenticity.",
+        "relationshipChange": "Dorian becomes increasingly wary of residents asking questions.",
+        "pressureChange": "Forgery Arc +3",
+        "canonImpact": "Forgery pressure introduced",
+        "futureDependency": "P009",
+        "sharedTrait": "Disciplined"
+      },
+      "turns": 6
+    },
+    {
+      "id": "P003",
+      "title": "Pressure Point",
+      "difficulty": "Easy",
+      "openingType": "Witness Statement",
+      "caseFunction": "Pressure Case",
+      "arc": "Experiment",
+      "informationEventId": "IE03",
+      "victim": {
+        "id": "tilly_chrome",
+        "name": "Tilly Chrome"
+      },
+      "solution": {
+        "suspect": {
+          "id": "otis_blank",
+          "name": "Otis Blank"
+        },
+        "room": {
+          "id": "chefs_table",
+          "name": "Chef's Table"
+        },
+        "weapon": {
+          "id": "chefs_knife",
+          "name": "Chef Knife"
+        },
+        "motive": {
+          "id": "whistleblower_silence",
+          "name": "Whistleblower Silence"
+        }
+      },
+      "narrative": {
+        "opening": "Tilly Chrome is dead.\n\nInvestigators interviewed multiple residents who attended a private gathering shortly before her death.\n\nOne witness recalls an argument.\n\nA second insists no argument occurred.\n\nA third claims someone left the room visibly distressed.\n\nNo two accounts fully agree.\n\nInvestigators believe the truth lies somewhere between them.\n\nYour task is to determine:\n- Who committed the murder\n- Where the murder occurred\n- Which weapon was used\n- Why the victim was targeted\n\nThe investigation remains active.",
+        "clues": [
+          "The victim recently expressed concerns about another resident.",
+          "A disclosure may have been imminent.",
+          "A professional reputation was under threat.",
+          "Several witnesses appear reluctant to speak openly."
+        ],
+        "officialFindings": "Murderer: Otis Blank\nRoom: Chef's Table\nWeapon: Chef Knife\nMotive: Whistleblower Silence",
+        "reconstruction": "Tilly learned information that was never intended to become public.\n\nAt first she treated it as gossip.\n\nLater she realised it was something far more serious.\n\nThe decision to speak out created immediate pressure.\n\nInside the Chef's Table dining area, a confrontation took place between someone prepared to reveal information and someone determined to stop it.\n\nOnly one left the conversation alive.",
+        "aftermath": "Milo Vex learns Tilly had been planning to expose something significant.\n\nHe begins quietly searching for evidence.",
+        "informationEvent": "A deleted email is recovered from a backup server.\n\nThe draft was never sent.\n\nThe subject line reads:\n\n\"People deserve to know.\" ",
+        "tomorrowHook": "What information was important enough to kill for?",
+        "outcome": "The accusation has been checked against the Blackwood case file.",
+        "revealEvent": "",
+        "careerProgression": "Your case record has been upgraded."
+      },
+      "canon": {
+        "knowledgeChange": "Milo becomes aware that Tilly was preparing a disclosure.",
+        "relationshipChange": "Suspicion surrounding Otis increases.",
+        "pressureChange": "Experiment Arc +2",
+        "canonImpact": "Experiment arc seeded",
+        "futureDependency": "P012",
+        "sharedTrait": "Intelligent"
+      },
+      "turns": 6
+    },
+    {
+      "id": "P004",
+      "title": "What Nobody Noticed",
+      "difficulty": "Easy",
+      "openingType": "Deleted Photographs",
+      "caseFunction": "Character Case",
+      "arc": "Exposure",
+      "informationEventId": "IE04",
+      "victim": {
+        "id": "nova_wilde",
+        "name": "Nova Wilde"
+      },
+      "solution": {
+        "suspect": {
+          "id": "jaxon_vale",
+          "name": "Jaxon Vale"
+        },
+        "room": {
+          "id": "cinema",
+          "name": "Home Cinema"
+        },
+        "weapon": {
+          "id": "smart_speaker",
+          "name": "Smart Speaker"
+        },
+        "motive": {
+          "id": "reputation_protection",
+          "name": "Reputation Protection"
+        }
+      },
+      "narrative": {
+        "opening": "Nova Wilde is dead.\n\nInvestigators reviewing her camera equipment discovered that several photographs had been deleted shortly before her death.\n\nThe images cannot currently be recovered.\n\nNo one knows what they showed.\n\nFriends describe Nova as excited during her final days.\n\nInvestigators are attempting to determine whether the missing photographs are connected to her death.\n\nYour task is to determine:\n- Who committed the murder\n- Where the murder occurred\n- Which weapon was used\n- Why the victim was targeted\n\nThe investigation remains active.",
+        "clues": [
+          "The victim had recently witnessed something unexpected.",
+          "Public image may be relevant.",
+          "Missing digital evidence forms part of the investigation.",
+          "A resident appears unusually interested in the deleted files."
+        ],
+        "officialFindings": "Murderer: Jaxon Vale\nRoom: Home Cinema\nWeapon: Smart Speaker\nMotive: Reputation Protection",
+        "reconstruction": "Nova's habit of observing rather than participating frequently placed her in possession of information others missed.\n\nThis time, she captured something that threatened another resident's carefully maintained image.\n\nThe discovery itself was accidental.\n\nThe consequences were not.\n\nA private meeting inside the Home Cinema became an attempt to contain a growing problem.\n\nBy the end of the evening, Nova was dead and the photographs were gone.",
+        "aftermath": "Several residents begin questioning what Nova may have seen before her death.\n\nInterest in the missing photographs spreads rapidly.",
+        "informationEvent": "A damaged memory card is recovered from beneath a cinema seat.\n\nSpecialists believe partial data may still exist.",
+        "tomorrowHook": "What was important enough to delete from every device connected to the investigation?",
+        "outcome": "The accusation has been checked against the Blackwood case file.",
+        "revealEvent": "",
+        "careerProgression": "Your case record has been upgraded."
+      },
+      "canon": {
+        "knowledgeChange": "Cleo learns Nova was documenting something sensitive.",
+        "relationshipChange": "Trust within the tower continues to weaken.",
+        "pressureChange": "Exposure Arc +2",
+        "canonImpact": "Observation network introduced",
+        "futureDependency": "P005",
+        "sharedTrait": "Creative"
+      },
+      "turns": 6
+    },
+    {
+      "id": "P005",
+      "title": "The Third Witness",
+      "difficulty": "Easy",
+      "openingType": "Resident Gossip",
+      "caseFunction": "Relationship Case",
+      "arc": "Social",
+      "informationEventId": "IE05",
+      "victim": {
+        "id": "india_gold",
+        "name": "India Gold"
+      },
+      "solution": {
+        "suspect": {
+          "id": "cleo_saint",
+          "name": "Cleo Saint"
+        },
+        "room": {
+          "id": "dressing",
+          "name": "Dressing Room"
+        },
+        "weapon": {
+          "id": "stiletto",
+          "name": "Stiletto Heel"
+        },
+        "motive": {
+          "id": "jealousy",
+          "name": "Jealousy"
+        }
+      },
+      "narrative": {
+        "opening": "India Gold is dead.\n\nInvestigators have identified three residents who spoke with her shortly before her death.\n\nEach account differs.\n\nEach witness insists their version is accurate.\n\nThe timelines do not align.\n\nThe statements do not align.\n\nAt least one witness is lying.\n\nPossibly more.\n\nYour task is to determine:\n- Who committed the murder\n- Where the murder occurred\n- Which weapon was used\n- Why the victim was targeted\n\nThe investigation remains active.",
+        "clues": [
+          "A long-running rivalry existed beneath the surface.",
+          "The victim's popularity created resentment.",
+          "Appearance mattered to both victim and killer.",
+          "One witness appears more concerned with perception than truth."
+        ],
+        "officialFindings": "Murderer: Cleo Saint\nRoom: Dressing Room\nWeapon: Stiletto Heel\nMotive: Jealousy",
+        "reconstruction": "India and Cleo occupied similar social space within Blackwood Tower.\n\nBoth attracted attention.\n\nBoth understood influence.\n\nBoth valued status.\n\nWhat appeared friendly on the surface concealed years of comparison and resentment.\n\nInside the Dressing Room, an argument exposed frustrations that had remained hidden for far too long.\n\nBy the time emotions cooled, India Gold was dead.",
+        "aftermath": "Residents begin noticing rivalries that previously appeared harmless.\n\nSeveral relationships become noticeably strained.",
+        "informationEvent": "A deleted message thread is recovered.\n\nMost of the conversation is missing.\n\nOne surviving message reads:\n\n\"She's always one step ahead of me.\" ",
+        "tomorrowHook": "Who sent the message?",
+        "outcome": "The accusation has been checked against the Blackwood case file.",
+        "revealEvent": "",
+        "careerProgression": "Your case record has been upgraded."
+      },
+      "canon": {
+        "knowledgeChange": "Residents learn India and Cleo's relationship was less friendly than believed.",
+        "relationshipChange": "Social trust across the tower decreases.",
+        "pressureChange": "Social Pressure +2",
+        "canonImpact": "Social rivalry established",
+        "futureDependency": "P006",
+        "sharedTrait": "Charismatic"
+      },
+      "turns": 6
+    },
+    {
+      "id": "P006",
+      "title": "Unwanted Attention",
+      "difficulty": "Medium",
+      "openingType": "Security Review",
+      "caseFunction": "Secret Case",
+      "arc": "MCI",
+      "informationEventId": "IE06",
+      "victim": {
+        "id": "sebastian_drift",
+        "name": "Sebastian Drift"
+      },
+      "solution": {
+        "suspect": {
+          "id": "gideon_pryce",
+          "name": "Gideon Pryce"
+        },
+        "room": {
+          "id": "observ",
+          "name": "Observatory"
+        },
+        "weapon": {
+          "id": "keycard",
+          "name": "Keycard"
+        },
+        "motive": {
+          "id": "cover_up",
+          "name": "Corporate Cover-Up"
+        }
+      },
+      "narrative": {
+        "opening": "Sebastian Drift is dead.\n\nInvestigators reviewing building access records discovered unusual activity in the hours before his death.\n\nSeveral movements cannot be explained.\n\nOne resident appears in locations they later claimed not to have visited.\n\nThe discrepancies remain unresolved.\n\nYour task is to determine:\n- Who committed the murder\n- Where the murder occurred\n- Which weapon was used\n- Why the victim was targeted\n\nThe investigation remains active.",
+        "clues": [
+          "Historical records may be important.",
+          "The victim recently accessed archived material.",
+          "Someone feared old information becoming public.",
+          "Access privileges played a role."
+        ],
+        "officialFindings": "Murderer: Gideon Pryce\nRoom: Observatory\nWeapon: Keycard\nMotive: Corporate Cover-Up",
+        "reconstruction": "Sebastian's work as an archivist occasionally brought forgotten information back into circulation.\n\nThis time, what he found threatened to expose something that should have remained buried.\n\nAs his investigation progressed, another resident became increasingly concerned about the consequences.\n\nA meeting in the Observatory became an attempt to contain a problem.\n\nThe problem did not survive the night.\n\nNeither did Sebastian.",
+        "aftermath": "Interest in Blackwood's history increases.\n\nResidents begin searching old records for themselves.",
+        "informationEvent": "A storage archive contains a gap where one file should be.\n\nNo one can explain its disappearance.",
+        "tomorrowHook": "What was important enough to remove from the historical record?",
+        "outcome": "The accusation has been checked against the Blackwood case file.",
+        "revealEvent": "",
+        "careerProgression": "Your case record has been upgraded."
+      },
+      "canon": {
+        "knowledgeChange": "Rex becomes aware that Sebastian found something significant.",
+        "relationshipChange": "Trust between Gideon and Rex weakens.",
+        "pressureChange": "MCI Arc +2",
+        "canonImpact": "Historical record pressure introduced",
+        "futureDependency": "P007",
+        "sharedTrait": "Observant"
+      },
+      "turns": 6
+    },
+    {
+      "id": "P007",
+      "title": "A Matter Of Timing",
+      "difficulty": "Medium",
+      "openingType": "Unfinished Recording",
+      "caseFunction": "Pressure Case",
+      "arc": "MCI",
+      "informationEventId": "IE07",
+      "victim": {
+        "id": "jaxon_vale",
+        "name": "Jaxon Vale"
+      },
+      "solution": {
+        "suspect": {
+          "id": "harvey_slate",
+          "name": "Harvey Slate"
+        },
+        "room": {
+          "id": "podstudio",
+          "name": "Podcast Studio"
+        },
+        "weapon": {
+          "id": "chargeing_cable",
+          "name": "Charging Cable"
+        },
+        "motive": {
+          "id": "blackmail",
+          "name": "Blackmail"
+        }
+      },
+      "narrative": {
+        "opening": "Jaxon Vale is dead.\n\nInvestigators recovered an audio recording created shortly before his death.\n\nThe recording ends unexpectedly.\n\nNo explanation is provided.\n\nThe final sentence remains unfinished.\n\nExperts believe the interruption occurred moments before the murder.\n\nYour task is to determine:\n- Who committed the murder\n- Where the murder occurred\n- Which weapon was used\n- Why the victim was targeted\n\nThe investigation remains active.",
+        "clues": [
+          "The victim believed he possessed leverage.",
+          "A powerful resident felt threatened.",
+          "Information had become a bargaining tool.",
+          "The incomplete recording is central to the case."
+        ],
+        "officialFindings": "Murderer: Harvey Slate\nRoom: Podcast Studio\nWeapon: Charging Cable\nMotive: Blackmail",
+        "reconstruction": "Jaxon believed he had acquired information valuable enough to force concessions.\n\nRather than publish it, he attempted to use it.\n\nThe strategy created immediate danger.\n\nInside the Podcast Studio, a conversation intended to negotiate power instead became a struggle over it.\n\nThe recording stopped.\n\nJaxon's investigation stopped.\n\nEverything else continued.",
+        "aftermath": "Residents begin searching for copies of Jaxon's unpublished material.\n\nNobody knows how much he learned before his death.",
+        "informationEvent": "A second audio file is discovered.\n\nIt is password protected.",
+        "tomorrowHook": "What was Jaxon planning to reveal?",
+        "outcome": "The accusation has been checked against the Blackwood case file.",
+        "revealEvent": "",
+        "careerProgression": "Your case record has been upgraded."
+      },
+      "canon": {
+        "knowledgeChange": "Saffron learns Jaxon had leverage over someone.",
+        "relationshipChange": "Harvey and Saffron become increasingly opposed.",
+        "pressureChange": "Harvey Pressure +3",
+        "canonImpact": "Blackmail pressure escalates",
+        "futureDependency": "P008",
+        "sharedTrait": "Influential"
+      },
+      "turns": 6
+    },
+    {
+      "id": "P008",
+      "title": "The Shape Of Doubt",
+      "difficulty": "Medium",
+      "openingType": "Anonymous Tip",
+      "caseFunction": "Relationship Case",
+      "arc": "Security",
+      "informationEventId": "IE08",
+      "victim": {
+        "id": "piper_bloom",
+        "name": "Piper Bloom"
+      },
+      "solution": {
+        "suspect": {
+          "id": "rex_branson",
+          "name": "Rex Branson"
+        },
+        "room": {
+          "id": "lift",
+          "name": "Glass Lift"
+        },
+        "weapon": {
+          "id": "smart_watch_cable",
+          "name": "Smart Watch Cable"
+        },
+        "motive": {
+          "id": "obsession",
+          "name": "Obsession"
+        }
+      },
+      "narrative": {
+        "opening": "Piper Bloom is dead.\n\nHours after her death, investigators received an anonymous message.\n\nThe sender has not been identified.\n\nThe message contains building locations, times and access references.\n\nNo explanation accompanies the information.\n\nInvestigators are attempting to determine whether the sender witnessed something or participated in it.\n\nYour task is to determine:\n- Who committed the murder\n- Where the murder occurred\n- Which weapon was used\n- Why the victim was targeted\n\nThe investigation remains active.",
+        "clues": [
+          "Someone paid unusual attention to Piper's movements.",
+          "Access records matter.",
+          "The victim recently rejected a proposal.",
+          "Surveillance forms part of the investigation."
+        ],
+        "officialFindings": "Murderer: Rex Branson\nRoom: Glass Lift\nWeapon: Smart Watch Cable\nMotive: Obsession",
+        "reconstruction": "What began as admiration became fixation.\n\nWhat became fixation eventually became expectation.\n\nWhen Piper made clear she did not share Rex's feelings, reality collided with obsession.\n\nThe confrontation occurred inside the Glass Lift.\n\nThere was nowhere to walk away.\n\nNo way to escape the situation.\n\nOnly consequences.",
+        "aftermath": "Residents begin reviewing their own assumptions about personal relationships.\n\nSeveral become noticeably more guarded.",
+        "informationEvent": "An unexplained access-log anomaly is discovered near Piper's apartment.",
+        "tomorrowHook": "Why was Rex repeatedly visiting locations unrelated to his responsibilities?",
+        "outcome": "The accusation has been checked against the Blackwood case file.",
+        "revealEvent": "",
+        "careerProgression": "Your case record has been upgraded."
+      },
+      "canon": {
+        "knowledgeChange": "Gideon learns Rex had been monitoring Piper.",
+        "relationshipChange": "Gideon's trust in Rex declines.",
+        "pressureChange": "Surveillance Pressure +2",
+        "canonImpact": "Surveillance pressure introduced",
+        "futureDependency": "P009",
+        "sharedTrait": "Independent"
+      },
+      "turns": 6
+    },
+    {
+      "id": "P009",
+      "title": "Inherited Consequences",
+      "difficulty": "Medium",
+      "openingType": "Authentication Dispute",
+      "caseFunction": "Reveal Case",
+      "arc": "Forgery",
+      "informationEventId": "IE09",
+      "victim": {
+        "id": "dorian_luxe",
+        "name": "Dorian Luxe"
+      },
+      "solution": {
+        "suspect": {
+          "id": "velvet_kane",
+          "name": "Velvet Kane"
+        },
+        "room": {
+          "id": "wine_cellar",
+          "name": "Wine Cellar"
+        },
+        "weapon": {
+          "id": "crystal_award",
+          "name": "Crystal Award"
+        },
+        "motive": {
+          "id": "revenge",
+          "name": "Revenge"
+        }
+      },
+      "narrative": {
+        "opening": "Dorian Luxe is dead.\n\nThe investigation began with a disagreement.\n\nNot about murder.\n\nAbout authenticity.\n\nExperts reviewing a valuable item reached completely different conclusions.\n\nThe dispute attracted attention from multiple residents.\n\nWithin days, Dorian was dead.\n\nYour task is to determine:\n- Who committed the murder\n- Where the murder occurred\n- Which weapon was used\n- Why the victim was targeted\n\nThe investigation remains active.",
+        "clues": [
+          "Questions regarding authenticity became increasingly serious.",
+          "Professional credibility was at stake.",
+          "The victim had reason to fear certainty.",
+          "The murder weapon symbolised achievement and status."
+        ],
+        "officialFindings": "Murderer: Velvet Kane\nRoom: Wine Cellar\nWeapon: Crystal Award\nMotive: Revenge",
+        "reconstruction": "For months, Velvet believed Dorian had benefited from deception.\n\nEvery challenge was dismissed.\n\nEvery concern was ignored.\n\nAs evidence accumulated, so did resentment.\n\nThe final confrontation took place in the Wine Cellar.\n\nThe truth finally emerged.\n\nDorian never had the opportunity to respond to it.",
+        "aftermath": "Rumours surrounding forgery spread throughout Blackwood.\n\nThe issue can no longer be contained.",
+        "informationEvent": "An expert report surfaces anonymously.\n\nIts conclusions are explosive.",
+        "tomorrowHook": "If the report is genuine, what else inside Blackwood might be false?",
+        "outcome": "The accusation has been checked against the Blackwood case file.",
+        "revealEvent": "",
+        "careerProgression": "Your case record has been upgraded."
+      },
+      "canon": {
+        "knowledgeChange": "Bianca learns forgery allegations may be legitimate.",
+        "relationshipChange": "Supporters and critics of Dorian become divided.",
+        "pressureChange": "Forgery Arc +4",
+        "canonImpact": "Forgery arc escalates",
+        "futureDependency": "P010",
+        "sharedTrait": "Ethical"
+      },
+      "turns": 6
+    },
+    {
+      "id": "P010",
+      "title": "The Wrong Record",
+      "difficulty": "Medium",
+      "openingType": "Lawyer's Letter",
+      "caseFunction": "Secret Case",
+      "arc": "Parentage",
+      "informationEventId": "IE10",
+      "victim": {
+        "id": "cleo_saint",
+        "name": "Cleo Saint"
+      },
+      "solution": {
+        "suspect": {
+          "id": "harvey_slate",
+          "name": "Harvey Slate"
+        },
+        "room": {
+          "id": "rooftop",
+          "name": "Roof Terrace"
+        },
+        "weapon": {
+          "id": "champagne_sabre",
+          "name": "Champagne Sabre"
+        },
+        "motive": {
+          "id": "inheritance",
+          "name": "Inheritance Dispute"
+        }
+      },
+      "narrative": {
+        "opening": "Cleo Saint is dead.\n\nInvestigators recovered a legal document delivered shortly before her death.\n\nThe letter references ownership, entitlement and a previously unknown discrepancy.\n\nSeveral pages are missing.\n\nNo one knows whether Cleo received the complete document.\n\nThe missing pages have not been found.\n\nYour task is to determine:\n- Who committed the murder\n- Where the murder occurred\n- Which weapon was used\n- Why the victim was targeted\n\nThe investigation remains active.",
+        "clues": [
+          "A dispute existed before the murder occurred.",
+          "The victim recently became unusually confident.",
+          "Legacy and ownership are central to the case.",
+          "The weapon was intended for celebration rather than violence."
+        ],
+        "officialFindings": "Murderer: Harvey Slate\nRoom: Roof Terrace\nWeapon: Champagne Sabre\nMotive: Inheritance Dispute",
+        "reconstruction": "Cleo believed she had discovered information capable of changing an important inheritance outcome.\n\nIf true, the consequences would extend far beyond money.\n\nThe discovery threatened existing expectations and future plans.\n\nThe discussion moved to the Roof Terrace.\n\nNeither resident left with what they wanted.\n\nOnly one left alive.",
+        "aftermath": "Questions regarding ownership and legacy begin circulating throughout Blackwood.\n\nSeveral residents quietly review historical records.",
+        "informationEvent": "A sealed envelope addressed to Cleo is discovered inside a safe.\n\nIt has never been opened.",
+        "tomorrowHook": "Who sent the envelope, and why was it hidden?",
+        "outcome": "The accusation has been checked against the Blackwood case file.",
+        "revealEvent": "",
+        "careerProgression": "Your case record has been upgraded."
+      },
+      "canon": {
+        "knowledgeChange": "Saffron becomes aware of a possible inheritance conflict.",
+        "relationshipChange": "Harvey and Saffron become increasingly opposed.",
+        "pressureChange": "Parentage Arc +2",
+        "canonImpact": "Inheritance pressure introduced",
+        "futureDependency": "P011",
+        "sharedTrait": "Strategic"
+      },
+      "turns": 6
+    },
+    {
+      "id": "P011",
+      "title": "Collateral Damage",
+      "difficulty": "Medium",
+      "openingType": "Missing Briefcase",
+      "caseFunction": "Pressure Case",
+      "arc": "MCI",
+      "informationEventId": "IE11",
+      "victim": {
+        "id": "saffron_skye",
+        "name": "Saffron Skye"
+      },
+      "solution": {
+        "suspect": {
+          "id": "dorian_luxe",
+          "name": "Dorian Luxe"
+        },
+        "room": {
+          "id": "panic",
+          "name": "Panic Room"
+        },
+        "weapon": {
+          "id": "ring_light_stand",
+          "name": "Ring Light Stand"
+        },
+        "motive": {
+          "id": "career",
+          "name": "Career Advancement"
+        }
+      },
+      "narrative": {
+        "opening": "Saffron Skye is dead.\n\nA briefcase known to belong to the victim cannot be located.\n\nInvestigators believe it disappeared before the murder.\n\nNo witness can confirm its contents.\n\nSeveral residents appear unusually interested in whether it is recovered.\n\nYour task is to determine:\n- Who committed the murder\n- Where the murder occurred\n- Which weapon was used\n- Why the victim was targeted\n\nThe investigation remains active.",
+        "clues": [
+          "The victim was pursuing an investigation.",
+          "Ambition and opportunity both played a role.",
+          "Missing documents may be more important than the murder itself.",
+          "The crime scene was designed for protection and secrecy."
+        ],
+        "officialFindings": "Murderer: Dorian Luxe\nRoom: Panic Room\nWeapon: Ring Light Stand\nMotive: Career Advancement",
+        "reconstruction": "Saffron's investigation threatened to elevate one resident while damaging another.\n\nAs opportunities shifted, pressure increased.\n\nThe missing briefcase became a symbol of what was at stake.\n\nInside the Panic Room, a confrontation about the future became a fight over it.\n\nThe winner inherited the opportunity.\n\nThe loser became the victim.",
+        "aftermath": "Residents begin questioning whether the briefcase mattered more than the murder.",
+        "informationEvent": "A confidential file index is recovered.\n\nThe files themselves remain missing.",
+        "tomorrowHook": "What was important enough to disappear twice?",
+        "outcome": "The accusation has been checked against the Blackwood case file.",
+        "revealEvent": "",
+        "careerProgression": "Your case record has been upgraded."
+      },
+      "canon": {
+        "knowledgeChange": "Harvey learns Saffron had gathered evidence.",
+        "relationshipChange": "Harvey and Dorian become uneasy allies.",
+        "pressureChange": "MCI Arc +3",
+        "canonImpact": "MCI evidence displaced",
+        "futureDependency": "P012",
+        "sharedTrait": "Influential"
+      },
+      "turns": 6
+    },
+    {
+      "id": "P012",
+      "title": "What Was Overheard",
+      "difficulty": "Medium",
+      "openingType": "Financial Audit",
+      "caseFunction": "Secret Case",
+      "arc": "Experiment",
+      "informationEventId": "IE12",
+      "victim": {
+        "id": "milo_vale",
+        "name": "Milo Vex"
+      },
+      "solution": {
+        "suspect": {
+          "id": "otis_blank",
+          "name": "Otis Blank"
+        },
+        "room": {
+          "id": "kitchen",
+          "name": "Smart Kitchen"
+        },
+        "weapon": {
+          "id": "sous_vide_weight",
+          "name": "Sous Vide Weight"
+        },
+        "motive": {
+          "id": "debt_pressure",
+          "name": "Debt Pressure"
+        }
+      },
+      "narrative": {
+        "opening": "Milo Vex is dead.\n\nInvestigators discovered that he had recently been examining financial records unrelated to his professional responsibilities.\n\nNobody knows why.\n\nThe records appear incomplete.\n\nSeveral transactions remain unexplained.\n\nYour task is to determine:\n- Who committed the murder\n- Where the murder occurred\n- Which weapon was used\n- Why the victim was targeted\n\nThe investigation remains active.",
+        "clues": [
+          "Financial pressure is central to the case.",
+          "The victim learned something unexpectedly.",
+          "Several transactions lack supporting records.",
+          "A preparation tool became a weapon."
+        ],
+        "officialFindings": "Murderer: Otis Blank\nRoom: Smart Kitchen\nWeapon: Sous Vide Weight\nMotive: Debt Pressure",
+        "reconstruction": "Milo's curiosity led him into someone else's problems.\n\nThe deeper he looked, the worse those problems appeared.\n\nFinancial pressure became fear.\n\nFear became desperation.\n\nInside the Smart Kitchen, an uncomfortable conversation became an irreversible decision.",
+        "aftermath": "Financial concerns begin attracting attention across the tower.\n\nResidents become noticeably defensive when questioned about money.",
+        "informationEvent": "An encrypted spreadsheet is discovered among Milo's files.\n\nNobody has accessed it.",
+        "tomorrowHook": "Why was Milo tracking payments that had nothing to do with him?",
+        "outcome": "The accusation has been checked against the Blackwood case file.",
+        "revealEvent": "",
+        "careerProgression": "Your case record has been upgraded."
+      },
+      "canon": {
+        "knowledgeChange": "Nova learns Milo was investigating financial irregularities.",
+        "relationshipChange": "Confidence in Otis begins to weaken.",
+        "pressureChange": "Experiment Arc +3",
+        "canonImpact": "Experiment financial links introduced",
+        "futureDependency": "P013",
+        "sharedTrait": "Analytical"
+      },
+      "turns": 6
+    },
+    {
+      "id": "P013",
+      "title": "Lines In The Sand",
+      "difficulty": "Hard",
+      "openingType": "Timeline Discrepancy",
+      "caseFunction": "Relationship Case",
+      "arc": "Security",
+      "informationEventId": "IE13",
+      "victim": {
+        "id": "rex_branson",
+        "name": "Rex Branson"
+      },
+      "solution": {
+        "suspect": {
+          "id": "gideon_pryce",
+          "name": "Gideon Pryce"
+        },
+        "room": {
+          "id": "billiard_room",
+          "name": "Billiard Room"
+        },
+        "weapon": {
+          "id": "gold_dumbbell",
+          "name": "Gold Dumbbell"
+        },
+        "motive": {
+          "id": "mistaken_id",
+          "name": "Mistaken Identity"
+        }
+      },
+      "narrative": {
+        "opening": "Rex Branson is dead.\n\nInvestigators have reconstructed the final hours before his death.\n\nThe timeline makes no sense.\n\nOne key witness places Rex in two different locations within minutes of each other.\n\nAt least one account is wrong.\n\nPossibly all of them.\n\nYour task is to determine:\n- Who committed the murder\n- Where the murder occurred\n- Which weapon was used\n- Why the victim was targeted\n\nThe investigation remains active.",
+        "clues": [
+          "The killer acted on certainty.",
+          "The certainty was misplaced.",
+          "The victim may have been mistaken for somebody else.",
+          "Witness confidence exceeds witness reliability."
+        ],
+        "officialFindings": "Murderer: Gideon Pryce\nRoom: Billiard Room\nWeapon: Gold Dumbbell\nMotive: Mistaken Identity",
+        "reconstruction": "Gideon became convinced Rex was responsible for something he had not done.\n\nThe evidence appeared convincing.\n\nThe conclusion appeared obvious.\n\nBoth were wrong.\n\nBy the time the mistake became clear, events had moved beyond correction.\n\nRex died because certainty arrived before truth.",
+        "aftermath": "Several residents begin questioning conclusions they previously accepted without evidence.",
+        "informationEvent": "A new witness comes forward.\n\nTheir statement contradicts almost everything investigators currently believe.",
+        "tomorrowHook": "If Rex wasn't the target, who was?",
+        "outcome": "The accusation has been checked against the Blackwood case file.",
+        "revealEvent": "",
+        "careerProgression": "Your case record has been upgraded."
+      },
+      "canon": {
+        "knowledgeChange": "Residents learn the murder may have targeted the wrong person.",
+        "relationshipChange": "Trust in Gideon's judgement collapses.",
+        "pressureChange": "Trust Crisis +2",
+        "canonImpact": "Security confidence damaged",
+        "futureDependency": "P014",
+        "sharedTrait": "Observant"
+      },
+      "turns": 6
+    },
+    {
+      "id": "P014",
+      "title": "The Weight Of Silence",
+      "difficulty": "Hard",
+      "openingType": "Personal Diary",
+      "caseFunction": "Reveal Case",
+      "arc": "Parentage",
+      "informationEventId": "IE14",
+      "victim": {
+        "id": "harvey_slate",
+        "name": "Harvey Slate"
+      },
+      "solution": {
+        "suspect": {
+          "id": "bianca_frost",
+          "name": "Bianca Frost"
+        },
+        "room": {
+          "id": "med_suite",
+          "name": "Meditation Suite"
+        },
+        "weapon": {
+          "id": "mangrenade_candle",
+          "name": "Mangrenade Candle"
+        },
+        "motive": {
+          "id": "affair",
+          "name": "Hidden Affair"
+        }
+      },
+      "narrative": {
+        "opening": "Harvey Slate is dead.\n\nInvestigators recovered a diary containing references to meetings, locations and initials.\n\nNames were never written.\n\nThe final entry ends mid-sentence.\n\nNo explanation follows.\n\nYour task is to determine:\n- Who committed the murder\n- Where the murder occurred\n- Which weapon was used\n- Why the victim was targeted\n\nThe investigation remains active.",
+        "clues": [
+          "A private relationship played a role.",
+          "The victim concealed significant aspects of his life.",
+          "Several diary entries reference the same unidentified person.",
+          "An object associated with identity became important."
+        ],
+        "officialFindings": "Murderer: Bianca Frost\nRoom: Meditation Suite\nWeapon: Mangrenade Candle\nMotive: Hidden Affair",
+        "reconstruction": "A hidden relationship remained concealed for years.\n\nThe truth eventually emerged.\n\nWhat followed was not a sudden conflict but the release of years of frustration, disappointment and deception.\n\nThe final conversation took place in the Meditation Suite.\n\nA room designed for peace.\n\nIt achieved the opposite.",
+        "aftermath": "Residents begin wondering how many other private relationships remain hidden.",
+        "informationEvent": "A photograph is recovered from inside Harvey's diary.\n\nOne face has been deliberately removed.",
+        "tomorrowHook": "Who was standing beside Harvey?",
+        "outcome": "The accusation has been checked against the Blackwood case file.",
+        "revealEvent": "",
+        "careerProgression": "Your case record has been upgraded."
+      },
+      "canon": {
+        "knowledgeChange": "Nova learns Harvey maintained a secret personal life.",
+        "relationshipChange": "Trust throughout the tower deteriorates further.",
+        "pressureChange": "Parentage Arc +4",
+        "canonImpact": "Hidden relationship pressure escalates",
+        "futureDependency": "P015",
+        "sharedTrait": "Curious"
+      },
+      "turns": 6
+    },
+    {
+      "id": "P015",
+      "title": "The Beginning Of Trouble",
+      "difficulty": "Hard",
+      "openingType": "Bank Statement",
+      "caseFunction": "Pressure Case",
+      "arc": "Experiment",
+      "informationEventId": "IE15",
+      "victim": {
+        "id": "otis_blank",
+        "name": "Otis Blank"
+      },
+      "solution": {
+        "suspect": {
+          "id": "milo_vale",
+          "name": "Milo Vex"
+        },
+        "room": {
+          "id": "gym",
+          "name": "Home Gym"
+        },
+        "weapon": {
+          "id": "vr_headset",
+          "name": "VR Headset"
+        },
+        "motive": {
+          "id": "financial_ruin",
+          "name": "Financial Ruin"
+        }
+      },
+      "narrative": {
+        "opening": "Otis Blank is dead.\n\nInvestigators recovered financial documents showing a pattern of unexplained activity.\n\nThe records raise questions.\n\nThey answer none.\n\nSeveral transactions appear designed to conceal their true purpose.\n\nYour task is to determine:\n- Who committed the murder\n- Where the murder occurred\n- Which weapon was used\n- Why the victim was targeted\n\nThe investigation remains active.",
+        "clues": [
+          "Financial collapse appeared increasingly likely.",
+          "The victim had become desperate.",
+          "A technology-based distraction became important.",
+          "The investigation extends beyond simple debt."
+        ],
+        "officialFindings": "Murderer: Milo Vex\nRoom: Home Gym\nWeapon: VR Headset\nMotive: Financial Ruin",
+        "reconstruction": "As financial pressure increased, so did conflict.\n\nMilo came to believe Otis was responsible for a chain of events threatening his future.\n\nThe consequences became impossible to ignore.\n\nInside the Home Gym, frustration finally overwhelmed restraint.\n\nNeither resident escaped the outcome.",
+        "aftermath": "Financial stability becomes one of Blackwood's most discussed subjects.",
+        "informationEvent": "An offshore account linked to the investigation is discovered.\n\nIts owner remains unknown.",
+        "tomorrowHook": "Who controlled the account?",
+        "outcome": "The accusation has been checked against the Blackwood case file.",
+        "revealEvent": "",
+        "careerProgression": "Your case record has been upgraded."
+      },
+      "canon": {
+        "knowledgeChange": "Saffron learns Otis faced severe financial problems.",
+        "relationshipChange": "Remaining trust in Otis disappears.",
+        "pressureChange": "Financial Pressure +3",
+        "canonImpact": "Financial pressure escalates",
+        "futureDependency": "P016",
+        "sharedTrait": "Intelligent"
+      },
+      "turns": 6
+    },
+    {
+      "id": "P016",
+      "title": "The Final Question",
+      "difficulty": "Hard",
+      "openingType": "Anonymous Message",
+      "caseFunction": "Endgame Case",
+      "arc": "MCI",
+      "informationEventId": "IE16",
+      "victim": {
+        "id": "gideon_pryce",
+        "name": "Gideon Pryce"
+      },
+      "solution": {
+        "suspect": {
+          "id": "saffron_skye",
+          "name": "Saffron Skye"
+        },
+        "room": {
+          "id": "pool",
+          "name": "Indoor Pool"
+        },
+        "weapon": {
+          "id": "drone",
+          "name": "Drone"
+        },
+        "motive": {
+          "id": "rejection",
+          "name": "Romantic Rejection"
+        }
+      },
+      "narrative": {
+        "opening": "Gideon Pryce is dead.\n\nHours before his death, multiple residents received the same anonymous message.\n\nThe sender remains unidentified.\n\nThe message contained only one sentence.\n\nNo explanation.\n\nNo threat.\n\nNo demand.\n\nJust a statement.\n\nInvestigators believe the message is connected to Gideon's death.\n\nYour task is to determine:\n- Who committed the murder\n- Where the murder occurred\n- Which weapon was used\n- Why the victim was targeted\n\nThe investigation remains active.",
+        "clues": [
+          "Personal disappointment became something darker.",
+          "The victim underestimated the impact of a decision.",
+          "A surveillance device became a weapon.",
+          "The anonymous message matters."
+        ],
+        "officialFindings": "Murderer: Saffron Skye\nRoom: Indoor Pool\nWeapon: Drone\nMotive: Romantic Rejection",
+        "reconstruction": "Not every motive begins with hatred.\n\nSome begin with hope.\n\nA rejection that might have ended as disappointment instead evolved into resentment.\n\nResentment became obsession.\n\nObsession became action.\n\nThe final confrontation occurred beside the Indoor Pool.\n\nThe consequences reached far beyond two residents.",
+        "aftermath": "The Prologue ends.\n\nBlackwood Tower remains standing.\n\nIts residents remain unaware of how much they still do not know.",
+        "informationEvent": "The anonymous message is finally revealed:\n\n\"You still don't know the whole story.\" ",
+        "tomorrowHook": "MCI SEASON ONE COMING SOON\n\n- What is Harvey Slate hiding?\n- What is the truth behind the Forgery Arc?\n- What happened in the Experiment?\n- What is MCI protecting?\n- Who sent the anonymous message?",
+        "outcome": "The accusation has been checked against the Blackwood case file.",
+        "revealEvent": "",
+        "careerProgression": "Your case record has been upgraded."
+      },
+      "canon": {
+        "knowledgeChange": "Multiple residents receive the same warning.",
+        "relationshipChange": "The entire tower becomes more suspicious.",
+        "pressureChange": "MCI +5",
+        "canonImpact": "Season One triggered",
+        "futureDependency": "MCI Season One",
+        "sharedTrait": "Independent"
+      },
+      "turns": 6
+    }
+  ]
+}
