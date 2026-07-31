@@ -11,6 +11,10 @@ const FEEDBACK_EMAIL = "mancaveman@icloud.com";
 const GAME_URL = "https://mancave-industries.github.io/MCI_Muder_Case_Investigation-/";
 const PROLOGUE_LENGTH = 16;
 
+// TODO: set this to the confirmed Season One launch date before shipping.
+// Case PROLOGUE_LENGTH+1 (P017) unlocks on this date, one further case unlocks per day after.
+const SEASON_START_DATE = "2026-12-01T00:00:00Z";
+
 const EMBEDDED_CASES = [
   {
     "id": "P001",
@@ -1130,7 +1134,10 @@ const player = {
   solved: +(localStorage.getItem("mci_solved") || 0),
   sleuthIndex: +(localStorage.getItem("mci_sleuth_index") || 0),
   lastSolvedDate: localStorage.getItem("mci_last_solved_date") || "",
-  haptics: localStorage.getItem("mci_haptics") !== "off"
+  haptics: localStorage.getItem("mci_haptics") !== "off",
+  // Placeholder until real subscription/payment integration lands. Grants catch-up on missed Season One days only —
+  // it never lifts the seasonMaxUnlockedIndex() ceiling, so it cannot get anyone ahead of the daily release.
+  isSubscriber: localStorage.getItem("mci_subscriber") === "yes"
 };
 
 let state = {
@@ -1158,14 +1165,14 @@ async function loadCases() {
   let loadedFrom = "embedded";
 
   try {
-    const res = await fetch("data/cases.json", { cache: "no-store" });
-    if (!res.ok) throw new Error(`data/cases.json missing: ${res.status}`);
+    const res = await fetch("cases.json", { cache: "no-store" });
+    if (!res.ok) throw new Error(`cases.json missing: ${res.status}`);
     const data = await res.json();
     const sourceCases = data.cases || data || [];
     CASES = normaliseCases(sourceCases);
-    loadedFrom = "data/cases.json";
+    loadedFrom = "cases.json";
   } catch (e) {
-    console.warn("MCI case JSON failed. Falling back to embedded 16-case prologue.", e);
+    console.warn("MCI case JSON (cases.json) failed to load. Falling back to embedded 16-case prologue.", e);
     CASES = normaliseCases(EMBEDDED_CASES);
   }
 
@@ -1178,7 +1185,7 @@ async function loadCases() {
   }
 
   DATA_READY = true;
-  state.caseIndex = Math.max(0, Math.min(Math.min(PROLOGUE_LENGTH, CASES.length) - 1, state.caseIndex));
+  state.caseIndex = Math.max(0, Math.min(CASES.length - 1, state.caseIndex));
   console.log("MCI CASE LOAD", {
     loadedFrom,
     caseCount: CASES.length,
@@ -1436,18 +1443,74 @@ function savePlayerName() {
 }
 
 function home() {
-  const c = currentCase();
-  const prologueComplete = hasCompletedPrologue();
+  if (hasCompletedPrologue()) {
+    seasonHome();
+    return;
+  }
 
-  app.innerHTML = `<section class="screen home-screen" ${bg(ASSETS.frontpage)}><div class="content"><div class="home-spacer"></div><h2>MURDER CASE INVESTIGATION</h2><div class="statgrid"><div class="stat"><div class="label">Detective Rank</div><div class="value">${escapeHTML(player.rank)}</div></div><div class="stat"><div class="label">Current Streak</div><div class="value">${player.streak}</div></div><div class="stat"><div class="label">Cases Solved</div><div class="value">${player.solved}</div></div><div class="stat"><div class="label">Sleuth Index</div><div class="value">${player.sleuthIndex}</div></div></div><div class="panel"><h2>TODAY'S CASE</h2><h3>${c.id} — ${escapeHTML(c.title)}</h3><p>Victim: ${escapeHTML(c.victim)}</p><p class="small">Prologue case ${state.caseIndex + 1} of ${Math.min(PROLOGUE_LENGTH, CASES.length)}</p>${prologueComplete ? "<p class='green'>Prologue complete. Season One is coming soon.</p>" : ""}</div><button class="primary" onclick="openCase()">OPEN CASE FILE</button><button class="secondary" onclick="go('information')">INFORMATION BASE</button><div class="button-row"><button class="secondary" onclick="go('how')">HOW TO PLAY</button><button class="secondary" onclick="go('settings')">SETTINGS</button></div></div></section>`;
+  const c = currentCase();
+
+  app.innerHTML = `<section class="screen home-screen" ${bg(ASSETS.frontpage)}><div class="content"><div class="home-spacer"></div><h2>MURDER CASE INVESTIGATION</h2><div class="statgrid"><div class="stat"><div class="label">Detective Rank</div><div class="value">${escapeHTML(player.rank)}</div></div><div class="stat"><div class="label">Current Streak</div><div class="value">${player.streak}</div></div><div class="stat"><div class="label">Cases Solved</div><div class="value">${player.solved}</div></div><div class="stat"><div class="label">Sleuth Index</div><div class="value">${player.sleuthIndex}</div></div></div><div class="panel"><h2>TODAY'S CASE</h2><h3>${c.id} — ${escapeHTML(c.title)}</h3><p>Victim: ${escapeHTML(c.victim)}</p><p class="small">Prologue case ${state.caseIndex + 1} of ${Math.min(PROLOGUE_LENGTH, CASES.length)}</p></div><button class="primary" onclick="openCase()">OPEN CASE FILE</button><button class="secondary" onclick="go('information')">INFORMATION BASE</button><div class="button-row"><button class="secondary" onclick="go('how')">HOW TO PLAY</button><button class="secondary" onclick="go('settings')">SETTINGS</button></div></div></section>`;
 
   console.log("MCI HOME", {
     caseIndex: state.caseIndex,
     caseId: c.id,
     totalCases: CASES.length,
     completedCases: state.completedCases,
-    prologueComplete
+    prologueComplete: false
   });
+}
+
+function seasonHome() {
+  const total = seasonCaseCount();
+  const unlocked = seasonUnlockedCount();
+
+  const statgrid = `<div class="statgrid"><div class="stat"><div class="label">Detective Rank</div><div class="value">${escapeHTML(player.rank)}</div></div><div class="stat"><div class="label">Current Streak</div><div class="value">${player.streak}</div></div><div class="stat"><div class="label">Cases Solved</div><div class="value">${player.solved}</div></div><div class="stat"><div class="label">Sleuth Index</div><div class="value">${player.sleuthIndex}</div></div></div>`;
+
+  if (!unlocked) {
+    const launchDate = new Date(SEASON_START_DATE).toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
+    app.innerHTML = `<section class="screen home-screen" ${bg(ASSETS.frontpage)}><div class="content"><div class="home-spacer"></div><h2>MURDER CASE INVESTIGATION</h2>${statgrid}<div class="panel prologue-banner"><h2>PROLOGUE COMPLETE</h2><p class="green">Season One launches ${escapeHTML(launchDate)}. One new case unlocks every day — come back then.</p></div><button class="secondary" onclick="go('information')">INFORMATION BASE</button><div class="button-row"><button class="secondary" onclick="go('how')">HOW TO PLAY</button><button class="secondary" onclick="go('settings')">SETTINGS</button></div></div></section>`;
+    return;
+  }
+
+  const todayIdx = todaysSeasonIndex();
+  const todayCase = CASES[todayIdx];
+  const todaySolved = state.completedCases.includes(todayCase.id);
+  const dayNumber = todayIdx - PROLOGUE_LENGTH + 1;
+  const missed = missedSeasonIndexes();
+
+  const todayPanel = todaySolved
+    ? `<div class="panel"><h2>TODAY'S CASE</h2><h3>${todayCase.id} — ${escapeHTML(todayCase.title)}</h3><p class="green">Case closed. The next case unlocks tomorrow.</p></div>`
+    : `<div class="panel"><h2>TODAY'S CASE</h2><h3>${todayCase.id} — ${escapeHTML(todayCase.title)}</h3><p>Victim: ${escapeHTML(todayCase.victim)}</p><p class="small">Season One, Day ${dayNumber} of ${total}</p></div><button class="primary" onclick="openSeasonCase(${todayIdx})">OPEN CASE FILE</button>`;
+
+  let catchUpPanel = "";
+  if (missed.length && player.isSubscriber) {
+    const rows = missed.map(i => `<button class="secondary season-case-row" onclick="openSeasonCase(${i})">${CASES[i].id} — ${escapeHTML(CASES[i].title)}</button>`).join("");
+    catchUpPanel = `<div class="panel dark"><h2>CATCH UP</h2><p class="small">Missed cases stay open to subscribers. You can never get ahead of today's release, only catch up on the past.</p><div class="season-list">${rows}</div></div>`;
+  } else if (missed.length) {
+    catchUpPanel = `<div class="panel dark"><h2>CATCH UP</h2><p>You have ${missed.length} missed case${missed.length === 1 ? "" : "s"} waiting.</p><p class="small">Subscribers can catch up on missed days. Nobody can ever play ahead of today's release.</p><button class="ghost" onclick="go('settings')">SUBSCRIBER ACCESS</button></div>`;
+  }
+
+  app.innerHTML = `<section class="screen home-screen" ${bg(ASSETS.frontpage)}><div class="content"><div class="home-spacer"></div><h2>MURDER CASE INVESTIGATION</h2>${statgrid}${todayPanel}${catchUpPanel}<button class="secondary" onclick="go('information')">INFORMATION BASE</button><div class="button-row"><button class="secondary" onclick="go('how')">HOW TO PLAY</button><button class="secondary" onclick="go('settings')">SETTINGS</button></div></div></section>`;
+
+  console.log("MCI SEASON HOME", {
+    todayIdx,
+    todayCaseId: todayCase.id,
+    todaySolved,
+    missed,
+    isSubscriber: player.isSubscriber
+  });
+}
+
+function openSeasonCase(i) {
+  if (!canPlayCase(i)) {
+    haptic([20, 40, 20]);
+    alert("That case isn't available yet.");
+    return;
+  }
+
+  resetForCase(i);
+  go("casefile");
 }
 
 function howToPlay() {
@@ -1455,12 +1518,19 @@ function howToPlay() {
 }
 
 function settings() {
-  app.innerHTML = `<section class="screen" ${bg(ASSETS.casefile)}><div class="content tight"><div class="panel dark"><h2>SETTINGS</h2><div class="toggle-row"><div><h3>Haptic Feedback</h3><p class="small">Small vibration taps on supported phones.</p></div><button class="switch ${player.haptics ? "on" : ""}" aria-label="Toggle haptics" onclick="toggleHaptics()"></button></div><div class="panel"><h3>Detective Name</h3><p>${escapeHTML(player.name)}</p><button class="ghost" onclick="renamePlayer()">CHANGE NAME</button></div><button class="primary" onclick="go('home')">RETURN HOME</button></div></div></section>`;
+  app.innerHTML = `<section class="screen" ${bg(ASSETS.casefile)}><div class="content tight"><div class="panel dark"><h2>SETTINGS</h2><div class="toggle-row"><div><h3>Haptic Feedback</h3><p class="small">Small vibration taps on supported phones.</p></div><button class="switch ${player.haptics ? "on" : ""}" aria-label="Toggle haptics" onclick="toggleHaptics()"></button></div><div class="toggle-row"><div><h3>Season Catch-Up Access</h3><p class="small">Test toggle only — this stands in for real subscription checkout. It only unlocks missed past days, never today's ceiling.</p></div><button class="switch ${player.isSubscriber ? "on" : ""}" aria-label="Toggle subscriber access" onclick="toggleSubscriber()"></button></div><div class="panel"><h3>Detective Name</h3><p>${escapeHTML(player.name)}</p><button class="ghost" onclick="renamePlayer()">CHANGE NAME</button></div><button class="primary" onclick="go('home')">RETURN HOME</button></div></div></section>`;
 }
 
 function toggleHaptics() {
   player.haptics = !player.haptics;
   localStorage.setItem("mci_haptics", player.haptics ? "on" : "off");
+  haptic(20);
+  render();
+}
+
+function toggleSubscriber() {
+  player.isSubscriber = !player.isSubscriber;
+  localStorage.setItem("mci_subscriber", player.isSubscriber ? "yes" : "no");
   haptic(20);
   render();
 }
@@ -1571,7 +1641,7 @@ function openCase() {
 
 function resetForCase(i, keepScreen = false) {
   const nextScreen = keepScreen ? state.screen : state.screen;
-  const lastIndex = Math.min(PROLOGUE_LENGTH, CASES.length) - 1;
+  const lastIndex = CASES.length - 1;
   state = {
     ...state,
     screen: nextScreen,
@@ -1936,18 +2006,71 @@ function todayKey() {
 }
 
 function hasCompletedPrologue() {
-  const lastIndex = Math.min(PROLOGUE_LENGTH, CASES.length) - 1;
-  const c = currentCase();
-  return state.caseIndex === lastIndex && !!c && state.completedCases.includes(c.id);
+  const prologueLast = CASES[Math.min(PROLOGUE_LENGTH, CASES.length) - 1];
+  return !!prologueLast && state.completedCases.includes(prologueLast.id);
+}
+
+// Season One cases (index >= PROLOGUE_LENGTH) unlock one per day from SEASON_START_DATE.
+// This ceiling is absolute: nobody, subscriber or not, can ever play past it.
+function seasonCaseCount() {
+  return Math.max(0, CASES.length - PROLOGUE_LENGTH);
+}
+
+function seasonDaysElapsed() {
+  const start = new Date(SEASON_START_DATE).getTime();
+  return Math.floor((Date.now() - start) / 86400000);
+}
+
+// Number of season cases unlocked so far (0 = season hasn't started yet).
+function seasonUnlockedCount() {
+  const total = seasonCaseCount();
+  if (!total) return 0;
+  return Math.max(0, Math.min(total, seasonDaysElapsed() + 1));
+}
+
+// Highest CASES index anyone is currently allowed to play, or -1 if season hasn't started.
+function seasonMaxUnlockedIndex() {
+  const unlocked = seasonUnlockedCount();
+  return unlocked ? PROLOGUE_LENGTH + unlocked - 1 : -1;
+}
+
+// Today's case is always the most recently unlocked one.
+function todaysSeasonIndex() {
+  return seasonMaxUnlockedIndex();
+}
+
+// Season indices between PROLOGUE_LENGTH and today's that the player hasn't solved yet.
+function missedSeasonIndexes() {
+  const todayIdx = todaysSeasonIndex();
+  if (todayIdx < 0) return [];
+
+  const missed = [];
+  for (let i = PROLOGUE_LENGTH; i < todayIdx; i++) {
+    if (!state.completedCases.includes(CASES[i]?.id)) missed.push(i);
+  }
+  return missed;
+}
+
+// Single gate every season case-open goes through: today's case is open to everyone,
+// earlier missed cases are catch-up only for subscribers, nothing beyond today's is ever playable.
+function canPlayCase(i) {
+  if (i < PROLOGUE_LENGTH) return true;
+
+  const maxUnlocked = seasonMaxUnlockedIndex();
+  if (maxUnlocked < 0 || i > maxUnlocked) return false;
+  if (i === maxUnlocked) return true;
+
+  return !!player.isSubscriber;
 }
 
 function end(failed) {
   const c = currentCase();
   const s = c.solution;
   const lastIndex = Math.min(PROLOGUE_LENGTH, CASES.length) - 1;
+  const isPrologueCase = state.caseIndex < PROLOGUE_LENGTH;
   const isLastPrologueCase = state.caseIndex === lastIndex;
   const finalPrologue = !failed && isLastPrologueCase && state.completedCases.includes(c.id);
-  const nextButton = !isLastPrologueCase
+  const nextButton = isPrologueCase && !isLastPrologueCase
     ? `<button class="secondary" onclick="nextCase()">NEXT DAY</button>`
     : "";
 

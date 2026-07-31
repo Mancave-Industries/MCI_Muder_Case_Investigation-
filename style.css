@@ -675,6 +675,17 @@ label {
   background: linear-gradient(180deg, rgba(234, 212, 125, 0.13), rgba(0, 0, 0, 0.75));
 }
 
+.season-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.season-case-row {
+  text-align: left;
+}
+
 .info-tabs {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
