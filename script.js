@@ -11,9 +11,12 @@ const FEEDBACK_EMAIL = "mancaveman@icloud.com";
 const GAME_URL = "https://mancave-industries.github.io/MCI_Muder_Case_Investigation-/";
 const PROLOGUE_LENGTH = 16;
 
-// TODO: set this to the confirmed Season One launch date before shipping.
-// Case PROLOGUE_LENGTH+1 (P017) unlocks on this date, one further case unlocks per day after.
-const SEASON_START_DATE = "2026-12-01T00:00:00Z";
+// Season One launch date. Case PROLOGUE_LENGTH+1 (P017) unlocks on this date,
+// one further case unlocks per day after. A 240-case season starting here runs
+// 2026-10-01 -> 2027-05-28, covering Halloween (day 31), Thanksgiving (day 57),
+// Christmas (day 86), New Year (day 93), Valentine's (day 137) and beyond —
+// case content for those day numbers should be written to match the date.
+const SEASON_START_DATE = "2026-10-01T00:00:00Z";
 
 const EMBEDDED_CASES = [
   {
