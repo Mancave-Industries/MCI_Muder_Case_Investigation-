@@ -1326,7 +1326,11 @@ const player = {
   // Placeholder until real subscription/payment integration lands. Grants catch-up on missed Season One days only —
   // it never lifts the seasonMaxUnlockedIndex() ceiling, so it cannot get anyone ahead of the daily release.
   isSubscriber: localStorage.getItem("mci_subscriber") === "yes",
-  vault: JSON.parse(localStorage.getItem("mci_vault") || "[]")
+  vault: JSON.parse(localStorage.getItem("mci_vault") || "[]"),
+  // Device-local playtesting switch. Bypasses the date lock (see seasonUnlockedCount)
+  // for this browser only -- SEASON_START_DATE itself is never touched, so it's safe
+  // to leave this code shipped and simply keep the toggle off by default.
+  testMode: localStorage.getItem("mci_test_mode") === "on"
 };
 
 let state = {
@@ -1670,6 +1674,16 @@ function seasonHome() {
   const dayNumber = todayIdx - PROLOGUE_LENGTH + 1;
   const missed = missedSeasonIndexes();
 
+  if (player.testMode) {
+    const rows = [];
+    for (let i = PROLOGUE_LENGTH; i < CASES.length; i++) {
+      const solved = state.completedCases.includes(CASES[i].id);
+      rows.push(`<button class="secondary season-case-row" onclick="openSeasonCase(${i})">${solved ? "✓ " : ""}${CASES[i].id} — ${escapeHTML(CASES[i].title)}</button>`);
+    }
+    app.innerHTML = `<section class="screen home-screen" ${bg(ASSETS.frontpage)}><div class="content"><div class="home-spacer"></div><h2>MURDER CASE INVESTIGATION</h2>${statgrid}<div class="panel dark"><h2>TEST MODE</h2><p class="small">All ${total} Season One cases are browsable in order, ignoring the real launch date. Turn this off in Settings before sharing a link with anyone else.</p></div><div class="panel"><h3>All Cases</h3><div class="season-list">${rows.join("")}</div></div><button class="secondary" onclick="go('information')">INFORMATION BASE</button><button class="secondary" onclick="go('vault')">VAULT</button><div class="button-row"><button class="secondary" onclick="go('how')">HOW TO PLAY</button><button class="secondary" onclick="go('settings')">SETTINGS</button></div></div></section>`;
+    return;
+  }
+
   const todayPanel = todaySolved
     ? `<div class="panel"><h2>TODAY'S CASE</h2><h3>${todayCase.id} — ${escapeHTML(todayCase.title)}</h3><p class="green">Case closed. The next case unlocks tomorrow.</p></div>`
     : `<div class="panel"><h2>TODAY'S CASE</h2><h3>${todayCase.id} — ${escapeHTML(todayCase.title)}</h3><p>Victim: ${escapeHTML(todayCase.victim)}</p><p class="small">Day ${dayNumber} of ${total}</p></div><button class="primary" onclick="openSeasonCase(${todayIdx})">OPEN CASE FILE</button>`;
@@ -1709,7 +1723,7 @@ function howToPlay() {
 }
 
 function settings() {
-  app.innerHTML = `<section class="screen" ${bg(ASSETS.casefile)}><div class="content tight"><div class="panel dark"><h2>SETTINGS</h2><div class="toggle-row"><div><h3>Haptic Feedback</h3><p class="small">Small vibration taps on supported phones.</p></div><button class="switch ${player.haptics ? "on" : ""}" aria-label="Toggle haptics" onclick="toggleHaptics()"></button></div><div class="toggle-row"><div><h3>Season Catch-Up Access</h3><p class="small">Test toggle only — this stands in for real subscription checkout. It only unlocks missed past days, never today's ceiling.</p></div><button class="switch ${player.isSubscriber ? "on" : ""}" aria-label="Toggle subscriber access" onclick="toggleSubscriber()"></button></div><div class="panel"><h3>Detective Name</h3><p>${escapeHTML(player.name)}</p><button class="ghost" onclick="renamePlayer()">CHANGE NAME</button></div><div class="panel"><h3>Reset Progress</h3><p class="small">Wipes rank, streak, Sleuth Index and case history on this device. Use before launch to clear dry-run testing data.</p><button class="ghost" onclick="resetProgress()">RESET PROGRESS</button></div><button class="primary" onclick="go('home')">RETURN HOME</button></div></div></section>`;
+  app.innerHTML = `<section class="screen" ${bg(ASSETS.casefile)}><div class="content tight"><div class="panel dark"><h2>SETTINGS</h2><div class="toggle-row"><div><h3>Haptic Feedback</h3><p class="small">Small vibration taps on supported phones.</p></div><button class="switch ${player.haptics ? "on" : ""}" aria-label="Toggle haptics" onclick="toggleHaptics()"></button></div><div class="toggle-row"><div><h3>Season Catch-Up Access</h3><p class="small">Test toggle only — this stands in for real subscription checkout. It only unlocks missed past days, never today's ceiling.</p></div><button class="switch ${player.isSubscriber ? "on" : ""}" aria-label="Toggle subscriber access" onclick="toggleSubscriber()"></button></div><div class="toggle-row"><div><h3>Test Mode</h3><p class="small">Playtesting only. Unlocks every Season One case for browsing on this device, ignoring the real launch date entirely. Leave off — this never changes the date lock for anyone else.</p></div><button class="switch ${player.testMode ? "on" : ""}" aria-label="Toggle test mode" onclick="toggleTestMode()"></button></div><div class="panel"><h3>Detective Name</h3><p>${escapeHTML(player.name)}</p><button class="ghost" onclick="renamePlayer()">CHANGE NAME</button></div><div class="panel"><h3>Reset Progress</h3><p class="small">Wipes rank, streak, Sleuth Index and case history on this device. Use before launch to clear dry-run testing data.</p><button class="ghost" onclick="resetProgress()">RESET PROGRESS</button></div><button class="primary" onclick="go('home')">RETURN HOME</button></div></div></section>`;
 }
 
 function resetProgress() {
@@ -1725,6 +1739,13 @@ function resetProgress() {
 function toggleHaptics() {
   player.haptics = !player.haptics;
   localStorage.setItem("mci_haptics", player.haptics ? "on" : "off");
+  haptic(20);
+  render();
+}
+
+function toggleTestMode() {
+  player.testMode = !player.testMode;
+  localStorage.setItem("mci_test_mode", player.testMode ? "on" : "off");
   haptic(20);
   render();
 }
@@ -2319,9 +2340,13 @@ function seasonDaysElapsed() {
 }
 
 // Number of season cases unlocked so far (0 = season hasn't started yet).
+// Test Mode bypasses the date math entirely for this device only -- it never
+// touches SEASON_START_DATE, so the real launch-day lock is untouched for
+// everyone else regardless of whether a tester has this switched on.
 function seasonUnlockedCount() {
   const total = seasonCaseCount();
   if (!total) return 0;
+  if (player.testMode) return total;
   return Math.max(0, Math.min(total, seasonDaysElapsed() + 1));
 }
 
@@ -2357,7 +2382,7 @@ function canPlayCase(i) {
   if (maxUnlocked < 0 || i > maxUnlocked) return false;
   if (i === maxUnlocked) return true;
 
-  return !!player.isSubscriber;
+  return !!player.isSubscriber || !!player.testMode;
 }
 
 function end(failed) {
