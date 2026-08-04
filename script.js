@@ -1241,6 +1241,51 @@ function caseScore(difficulty, accusationsUsed, failed) {
   return Math.round(base * multiplier);
 }
 
+// One certificate image per rank. Detective and Detective II share an asset --
+// no dedicated art exists for Detective II, and they're adjacent tiers.
+const RANK_CERTIFICATE_IMAGES = {
+  "Police Officer": "assets/promotion/po.jpg",
+  "Detective": "assets/promotion/detective.jpg",
+  "Detective II": "assets/promotion/detective.jpg",
+  "Detective Sergeant": "assets/promotion/ds.jpg",
+  "Lieutenant": "assets/promotion/ltnt.jpg",
+  "Captain": "assets/promotion/captain.jpg",
+  "Deputy Chief": "assets/promotion/dep_chf.jpg",
+  "Assistant Chief": "assets/promotion/ast_chf.jpg",
+  "Chief of Detectives": "assets/promotion/chief_dik.jpg",
+  "Police Commissioner": "assets/promotion/commisioner.jpg"
+};
+
+// Streak milestones, matched to the reward art that actually exists in the repo.
+const STREAK_REWARD_DAYS = [10, 25, 75, 100, 125, 150, 175, 200, 240];
+
+function streakRewardImage(days) {
+  return `assets/rewards/${days}.PNG`;
+}
+
+// Awarded as a set the moment the prologue is completed -- the game's only
+// batch reward, marking "founding" detectives who played before Season One.
+const FOUNDING_REWARDS = [
+  "assets/rewards/mci_screener_reward.PNG",
+  "assets/rewards/mci_screener_reward_2.PNG",
+  "assets/rewards/mci_mangrenade_screener_reward.PNG",
+  "assets/rewards/mci_mangrenade_2_screener_reward.PNG",
+  "assets/rewards/mci_mangrenade_3_screener_reward.PNG",
+  "assets/rewards/mci_mangrenade_4_screener_reward.PNG",
+  "assets/rewards/mci_mangrenade_5_screener_reward.PNG"
+];
+
+function hasVaultItem(key) {
+  return player.vault.includes(key);
+}
+
+function unlockVaultItem(key) {
+  if (player.vault.includes(key)) return false;
+  player.vault.push(key);
+  localStorage.setItem("mci_vault", JSON.stringify(player.vault));
+  return true;
+}
+
 const player = {
   name: localStorage.getItem("mci_player_name") || "",
   rank: localStorage.getItem("mci_rank") || "Police Officer",
@@ -1254,7 +1299,8 @@ const player = {
   haptics: localStorage.getItem("mci_haptics") !== "off",
   // Placeholder until real subscription/payment integration lands. Grants catch-up on missed Season One days only —
   // it never lifts the seasonMaxUnlockedIndex() ceiling, so it cannot get anyone ahead of the daily release.
-  isSubscriber: localStorage.getItem("mci_subscriber") === "yes"
+  isSubscriber: localStorage.getItem("mci_subscriber") === "yes",
+  vault: JSON.parse(localStorage.getItem("mci_vault") || "[]")
 };
 
 let state = {
@@ -1273,6 +1319,7 @@ let state = {
   lastScore: null,
   lastAccusation: null,
   loadingScore: null,
+  justPromoted: null,
   expandedInfo: {}
 };
 
@@ -1523,6 +1570,7 @@ function render() {
   if (state.screen === "home") home();
   if (state.screen === "how") howToPlay();
   if (state.screen === "settings") settings();
+  if (state.screen === "vault") vault();
   if (state.screen === "information") informationBase();
   if (state.screen === "audit") dataAudit();
   if (state.screen === "casefile") casefile();
@@ -1567,7 +1615,7 @@ function home() {
 
   const c = currentCase();
 
-  app.innerHTML = `<section class="screen home-screen" ${bg(ASSETS.frontpage)}><div class="content"><div class="home-spacer"></div><h2>MURDER CASE INVESTIGATION</h2><div class="statgrid"><div class="stat"><div class="label">Detective Rank</div><div class="value">${escapeHTML(player.rank)}</div></div><div class="stat"><div class="label">Current Streak</div><div class="value">${player.streak}</div></div><div class="stat"><div class="label">Cases Solved</div><div class="value">${player.solved}</div></div><div class="stat"><div class="label">Sleuth Index</div><div class="value">${player.sleuthIndex}</div></div></div><div class="panel"><h2>TODAY'S CASE</h2><h3>${c.id} — ${escapeHTML(c.title)}</h3><p>Victim: ${escapeHTML(c.victim)}</p><p class="small">Prologue case ${state.caseIndex + 1} of ${Math.min(PROLOGUE_LENGTH, CASES.length)}</p></div><button class="primary" onclick="openCase()">OPEN CASE FILE</button><button class="secondary" onclick="go('information')">INFORMATION BASE</button><div class="button-row"><button class="secondary" onclick="go('how')">HOW TO PLAY</button><button class="secondary" onclick="go('settings')">SETTINGS</button></div></div></section>`;
+  app.innerHTML = `<section class="screen home-screen" ${bg(ASSETS.frontpage)}><div class="content"><div class="home-spacer"></div><h2>MURDER CASE INVESTIGATION</h2><div class="statgrid"><div class="stat"><div class="label">Detective Rank</div><div class="value">${escapeHTML(player.rank)}</div></div><div class="stat"><div class="label">Current Streak</div><div class="value">${player.streak}</div></div><div class="stat"><div class="label">Cases Solved</div><div class="value">${player.solved}</div></div><div class="stat"><div class="label">Sleuth Index</div><div class="value">${player.sleuthIndex}</div></div></div><div class="panel"><h2>TODAY'S CASE</h2><h3>${c.id} — ${escapeHTML(c.title)}</h3><p>Victim: ${escapeHTML(c.victim)}</p><p class="small">Prologue case ${state.caseIndex + 1} of ${Math.min(PROLOGUE_LENGTH, CASES.length)}</p></div><button class="primary" onclick="openCase()">OPEN CASE FILE</button><button class="secondary" onclick="go('information')">INFORMATION BASE</button><button class="secondary" onclick="go('vault')">VAULT</button><div class="button-row"><button class="secondary" onclick="go('how')">HOW TO PLAY</button><button class="secondary" onclick="go('settings')">SETTINGS</button></div></div></section>`;
 
   console.log("MCI HOME", {
     caseIndex: state.caseIndex,
@@ -1586,7 +1634,7 @@ function seasonHome() {
 
   if (!unlocked) {
     const launchDate = new Date(SEASON_START_DATE).toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
-    app.innerHTML = `<section class="screen home-screen" ${bg(ASSETS.frontpage)}><div class="content"><div class="home-spacer"></div><h2>MURDER CASE INVESTIGATION</h2>${statgrid}<div class="panel prologue-banner"><h2>PROLOGUE COMPLETE</h2><p class="green">The next case file opens ${escapeHTML(launchDate)}. One new case unlocks every day — come back then.</p></div><button class="secondary" onclick="go('information')">INFORMATION BASE</button><div class="button-row"><button class="secondary" onclick="go('how')">HOW TO PLAY</button><button class="secondary" onclick="go('settings')">SETTINGS</button></div></div></section>`;
+    app.innerHTML = `<section class="screen home-screen" ${bg(ASSETS.frontpage)}><div class="content"><div class="home-spacer"></div><h2>MURDER CASE INVESTIGATION</h2>${statgrid}<div class="panel prologue-banner"><h2>PROLOGUE COMPLETE</h2><p class="green">The next case file opens ${escapeHTML(launchDate)}. One new case unlocks every day — come back then.</p></div><button class="secondary" onclick="go('information')">INFORMATION BASE</button><button class="secondary" onclick="go('vault')">VAULT</button><div class="button-row"><button class="secondary" onclick="go('how')">HOW TO PLAY</button><button class="secondary" onclick="go('settings')">SETTINGS</button></div></div></section>`;
     return;
   }
 
@@ -1608,7 +1656,7 @@ function seasonHome() {
     catchUpPanel = `<div class="panel dark"><h2>CATCH UP</h2><p>You have ${missed.length} missed case${missed.length === 1 ? "" : "s"} waiting.</p><p class="small">Subscribers can catch up on missed days. Nobody can ever play ahead of today's release.</p><button class="ghost" onclick="go('settings')">SUBSCRIBER ACCESS</button></div>`;
   }
 
-  app.innerHTML = `<section class="screen home-screen" ${bg(ASSETS.frontpage)}><div class="content"><div class="home-spacer"></div><h2>MURDER CASE INVESTIGATION</h2>${statgrid}${todayPanel}${catchUpPanel}<button class="secondary" onclick="go('information')">INFORMATION BASE</button><div class="button-row"><button class="secondary" onclick="go('how')">HOW TO PLAY</button><button class="secondary" onclick="go('settings')">SETTINGS</button></div></div></section>`;
+  app.innerHTML = `<section class="screen home-screen" ${bg(ASSETS.frontpage)}><div class="content"><div class="home-spacer"></div><h2>MURDER CASE INVESTIGATION</h2>${statgrid}${todayPanel}${catchUpPanel}<button class="secondary" onclick="go('information')">INFORMATION BASE</button><button class="secondary" onclick="go('vault')">VAULT</button><div class="button-row"><button class="secondary" onclick="go('how')">HOW TO PLAY</button><button class="secondary" onclick="go('settings')">SETTINGS</button></div></div></section>`;
 
   console.log("MCI SEASON HOME", {
     todayIdx,
@@ -1668,6 +1716,46 @@ function renamePlayer() {
   player.name = name.trim().slice(0, 22) || player.name;
   localStorage.setItem("mci_player_name", player.name);
   render();
+}
+
+function vault() {
+  const certRow = RANKS.map(r => {
+    const unlocked = hasVaultItem(`cert:${r.name}`);
+    const img = RANK_CERTIFICATE_IMAGES[r.name] || "assets/promotion/promotion.jpg";
+    return `<div class="vault-item ${unlocked ? "" : "locked"}">
+      <img src="${unlocked ? img : ASSETS.casefile}" alt="${escapeHTML(r.name)}" onerror="imageFallback(this)">
+      <p>${escapeHTML(r.name)}</p>
+      ${unlocked ? "" : "<span class='vault-lock'>LOCKED</span>"}
+    </div>`;
+  }).join("");
+
+  const streakRow = STREAK_REWARD_DAYS.map(days => {
+    const unlocked = hasVaultItem(`streak:${days}`);
+    return `<div class="vault-item ${unlocked ? "" : "locked"}">
+      <img src="${unlocked ? streakRewardImage(days) : ASSETS.casefile}" alt="${days}-day streak" onerror="imageFallback(this)">
+      <p>${days}-Day Streak</p>
+      ${unlocked ? "" : "<span class='vault-lock'>LOCKED</span>"}
+    </div>`;
+  }).join("");
+
+  const foundingUnlocked = hasVaultItem("founding:0");
+  const foundingRow = FOUNDING_REWARDS.map((img, i) => `<div class="vault-item ${foundingUnlocked ? "" : "locked"}">
+    <img src="${foundingUnlocked ? img : ASSETS.casefile}" alt="Founding Detective reward ${i + 1}" onerror="imageFallback(this)">
+    ${foundingUnlocked ? "" : "<span class='vault-lock'>LOCKED</span>"}
+  </div>`).join("");
+
+  app.innerHTML = `<section class="screen information-screen" ${bg(ASSETS.casefile)}>
+    <div class="sticky-return"><button class="secondary" onclick="go('home')">RETURN HOME</button></div>
+    <div class="content info-content">
+      <div class="panel dark">
+        <h2>REWARD VAULT</h2>
+        <p>Rewards are earned, never purchased. Everything here stays unlocked permanently once you've earned it.</p>
+      </div>
+      <div class="panel"><h3>Promotion Certificates</h3><div class="vault-grid">${certRow}</div></div>
+      <div class="panel"><h3>Streak Rewards</h3><div class="vault-grid">${streakRow}</div></div>
+      <div class="panel"><h3>Founding Detective Collection</h3><p class="small">Awarded for completing the prologue.</p><div class="vault-grid">${foundingRow}</div></div>
+    </div>
+  </section>`;
 }
 
 function informationBase() {
@@ -1786,6 +1874,7 @@ function resetForCase(i, keepScreen = false) {
     lastScore: null,
     lastAccusation: null,
     loadingScore: null,
+    justPromoted: null,
     expandedInfo: state.expandedInfo || {}
   };
 
@@ -2133,7 +2222,18 @@ function markSolved(failed) {
     player.streak = 0;
   }
 
+  const rankBefore = player.rank;
   evaluateRankChange();
+  state.justPromoted = player.rank !== rankBefore ? player.rank : null;
+  if (state.justPromoted) unlockVaultItem(`cert:${state.justPromoted}`);
+
+  if (!failed && STREAK_REWARD_DAYS.includes(player.streak)) {
+    unlockVaultItem(`streak:${player.streak}`);
+  }
+
+  if (!failed && id === CASES[Math.min(PROLOGUE_LENGTH, CASES.length) - 1]?.id) {
+    FOUNDING_REWARDS.forEach((_, i) => unlockVaultItem(`founding:${i}`));
+  }
 
   localStorage.setItem("mci_streak", player.streak);
   localStorage.setItem("mci_solved", player.solved);
@@ -2245,11 +2345,49 @@ function end(failed) {
     ? `<button class="secondary" onclick="nextCase()">NEXT DAY</button>`
     : "";
 
-  app.innerHTML = `<section class="screen result-screen" ${bg(ASSETS.caseclosed)}><div class="content"><div class="end-title">${failed ? "THEY GOT AWAY WITH IT" : "CASE SOLVED"}</div><div class="subtitle">${failed ? "The suspect walks free." : "Great work, Detective."}</div><div class="panel dark"><h2>VICTIM: ${escapeHTML(c.victim)}</h2><div class="result-grid">${res("SUSPECT", "suspect", s.suspect)}${res("WEAPON", "weapon", s.weapon)}${res("ROOM", "room", s.room)}${res("MOTIVE", "motive", s.motive)}</div>${narrativeOutcomeHTML(c, failed)}${finalPrologue ? prologueEndHTML() : teaserHTML(c)}<div class="end-buttons"><button class="primary" onclick="share(${failed})">SHARE RESULT</button><button class="secondary" onclick="feedbackEmail()">EMAIL FEEDBACK</button><p class="email-note">Help Blackwood Tower grow. Share your result with 10 friends.</p>${nextButton}<button class="ghost" onclick="go('home')">RETURN HOME</button></div></div></div></section>`;
+  app.innerHTML = `<section class="screen result-screen" ${bg(ASSETS.caseclosed)}><div class="content"><div class="end-title">${failed ? "THEY GOT AWAY WITH IT" : "CASE SOLVED"}</div><div class="subtitle">${failed ? "The suspect walks free." : "Great work, Detective."}</div><div class="panel dark"><h2>VICTIM: ${escapeHTML(c.victim)}</h2><div class="result-grid">${res("SUSPECT", "suspect", s.suspect)}${res("WEAPON", "weapon", s.weapon)}${res("ROOM", "room", s.room)}${res("MOTIVE", "motive", s.motive)}</div>${promotionHTML()}${streakRewardHTML()}${foundingRewardHTML(finalPrologue)}${narrativeOutcomeHTML(c, failed)}${finalPrologue ? prologueEndHTML() : teaserHTML(c)}<div class="end-buttons"><button class="primary" onclick="share(${failed})">SHARE RESULT</button><button class="secondary" onclick="feedbackEmail()">EMAIL FEEDBACK</button><p class="email-note">Help Blackwood Tower grow. Share your result with 10 friends.</p>${nextButton}<button class="ghost" onclick="go('home')">RETURN HOME</button></div></div></div></section>`;
 
   requestAnimationFrame(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
   });
+}
+
+function promotionHTML() {
+  if (!state.justPromoted) return "";
+
+  const certImg = RANK_CERTIFICATE_IMAGES[state.justPromoted] || "assets/promotion/promotion.jpg";
+  const issueDate = new Date().toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" });
+
+  return `<div class="panel prologue-banner promotion-panel">
+    <h2>PROMOTED</h2>
+    <img class="certificate-img" src="${certImg}" alt="${escapeHTML(state.justPromoted)} certificate" onerror="imageFallback(this)">
+    <h3>${escapeHTML(state.justPromoted)}</h3>
+    <p>This certifies that</p>
+    <p class="certificate-name">${escapeHTML(player.name || "Detective")}</p>
+    <p>has been promoted to the rank of ${escapeHTML(state.justPromoted)}, Blackwood Tower Division.</p>
+    <p class="small">Issued ${issueDate} — Mark Middleton, Mayor</p>
+  </div>`;
+}
+
+function streakRewardHTML() {
+  if (!STREAK_REWARD_DAYS.includes(player.streak)) return "";
+
+  return `<div class="panel prologue-banner">
+    <h2>STREAK REWARD UNLOCKED</h2>
+    <img class="certificate-img" src="${streakRewardImage(player.streak)}" alt="${player.streak}-day streak reward" onerror="imageFallback(this)">
+    <p>${player.streak}-day streak. Added to your Vault.</p>
+    <button class="ghost" onclick="go('vault')">VIEW VAULT</button>
+  </div>`;
+}
+
+function foundingRewardHTML(finalPrologue) {
+  if (!finalPrologue) return "";
+
+  return `<div class="panel prologue-banner">
+    <h2>FOUNDING DETECTIVE COLLECTION UNLOCKED</h2>
+    <p>You played before the season began. ${FOUNDING_REWARDS.length} collectibles have been added to your Vault.</p>
+    <button class="ghost" onclick="go('vault')">VIEW VAULT</button>
+  </div>`;
 }
 
 function narrativeOutcomeHTML(c, failed) {
