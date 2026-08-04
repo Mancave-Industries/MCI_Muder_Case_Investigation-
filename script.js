@@ -1353,6 +1353,7 @@ let state = {
   expandedInfo: {}
 };
 
+applyTestModeFromURL();
 loadCases();
 
 async function loadCases() {
@@ -1723,7 +1724,7 @@ function howToPlay() {
 }
 
 function settings() {
-  app.innerHTML = `<section class="screen" ${bg(ASSETS.casefile)}><div class="content tight"><div class="panel dark"><h2>SETTINGS</h2><div class="toggle-row"><div><h3>Haptic Feedback</h3><p class="small">Small vibration taps on supported phones.</p></div><button class="switch ${player.haptics ? "on" : ""}" aria-label="Toggle haptics" onclick="toggleHaptics()"></button></div><div class="toggle-row"><div><h3>Season Catch-Up Access</h3><p class="small">Test toggle only — this stands in for real subscription checkout. It only unlocks missed past days, never today's ceiling.</p></div><button class="switch ${player.isSubscriber ? "on" : ""}" aria-label="Toggle subscriber access" onclick="toggleSubscriber()"></button></div><div class="toggle-row"><div><h3>Test Mode</h3><p class="small">Playtesting only. Unlocks every Season One case for browsing on this device, ignoring the real launch date entirely. Leave off — this never changes the date lock for anyone else.</p></div><button class="switch ${player.testMode ? "on" : ""}" aria-label="Toggle test mode" onclick="toggleTestMode()"></button></div><div class="panel"><h3>Detective Name</h3><p>${escapeHTML(player.name)}</p><button class="ghost" onclick="renamePlayer()">CHANGE NAME</button></div><div class="panel"><h3>Reset Progress</h3><p class="small">Wipes rank, streak, Sleuth Index and case history on this device. Use before launch to clear dry-run testing data.</p><button class="ghost" onclick="resetProgress()">RESET PROGRESS</button></div><button class="primary" onclick="go('home')">RETURN HOME</button></div></div></section>`;
+  app.innerHTML = `<section class="screen" ${bg(ASSETS.casefile)}><div class="content tight"><div class="panel dark"><h2>SETTINGS</h2><div class="toggle-row"><div><h3>Haptic Feedback</h3><p class="small">Small vibration taps on supported phones.</p></div><button class="switch ${player.haptics ? "on" : ""}" aria-label="Toggle haptics" onclick="toggleHaptics()"></button></div><div class="toggle-row"><div><h3>Season Catch-Up Access</h3><p class="small">Test toggle only — this stands in for real subscription checkout. It only unlocks missed past days, never today's ceiling.</p></div><button class="switch ${player.isSubscriber ? "on" : ""}" aria-label="Toggle subscriber access" onclick="toggleSubscriber()"></button></div><div class="panel"><h3>Detective Name</h3><p>${escapeHTML(player.name)}</p><button class="ghost" onclick="renamePlayer()">CHANGE NAME</button></div><div class="panel"><h3>Reset Progress</h3><p class="small">Wipes rank, streak, Sleuth Index and case history on this device. Use before launch to clear dry-run testing data.</p><button class="ghost" onclick="resetProgress()">RESET PROGRESS</button></div><button class="primary" onclick="go('home')">RETURN HOME</button></div></div></section>`;
 }
 
 function resetProgress() {
@@ -1743,11 +1744,15 @@ function toggleHaptics() {
   render();
 }
 
-function toggleTestMode() {
-  player.testMode = !player.testMode;
+// Test Mode has no visible toggle -- flip it with ?testmode=on or ?testmode=off
+// in the URL once, and it persists on that device from then on. Anyone just
+// browsing Settings normally will never see it exists.
+function applyTestModeFromURL() {
+  const params = new URLSearchParams(location.search);
+  if (!params.has("testmode")) return;
+
+  player.testMode = params.get("testmode") === "on";
   localStorage.setItem("mci_test_mode", player.testMode ? "on" : "off");
-  haptic(20);
-  render();
 }
 
 function toggleSubscriber() {
