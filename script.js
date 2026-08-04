@@ -1123,6 +1123,82 @@ const CARDS = {
   ]
 };
 
+const SEASON_CARDS = {
+  suspects: [
+    ["bianca_frost", "Bianca Frost", "assets/suspects/bianca_frost.JPG", ["female", "black", "dark hair", "long hair", "wavy hair", "no glasses", "athletic", "fashionable", "wealthy", "influencer", "extrovert"]],
+    ["cleo_saint", "Cleo Saint", "assets/suspects/cleo_saint.JPG", ["female", "medium skin", "dark hair", "wavy hair", "glasses", "earrings", "fashionable", "wealthy"]],
+    ["dorian_luxe", "Dorian Luxe", "assets/suspects/dorian_luxe.JPG", ["male", "black", "dark hair", "glasses", "beard", "fashionable", "wealthy"]],
+    ["gideon_pryce", "Gideon Pryce", "assets/suspects/gideon_pryce.JPG", ["male", "dark hair", "no glasses", "fashionable", "wealthy", "aggressive", "cold"]],
+    ["harvey_slate", "Harvey Slate", "assets/suspects/harvey_slate.JPG", ["male", "beard", "no glasses", "fashionable", "wealthy", "aggressive"]],
+    ["india_gold", "India Gold", "assets/suspects/India_gold.JPG", ["female", "dark hair", "long hair", "wavy hair", "no glasses", "earrings", "fashionable", "wealthy", "influencer", "extrovert"]],
+    ["jaxon_vale", "Jaxon Vale", "assets/suspects/jaxon_vale.JPG", ["male", "medium skin", "dark hair", "beard", "no glasses", "athletic", "fashionable", "wealthy", "tech"]],
+    ["milo_vex", "Milo Vex", "assets/suspects/milo-vale.JPG", ["male", "dark hair", "glasses", "tech", "introvert", "intelligent"]],
+    ["nova_wilde", "Nova Wilde", "assets/suspects/nova_wilde.JPG", ["female", "dark hair", "wavy hair", "glasses", "earrings", "creative", "introvert", "calm"]],
+    ["otis_blank", "Otis Blank", "assets/suspects/otis_blank.JPG", ["male", "glasses", "wealthy", "tech", "cold", "calm"]],
+    ["piper_bloom", "Piper Bloom", "assets/suspects/piper_bloom.JPG", ["female", "blonde hair", "wavy hair", "no glasses", "earrings", "fashionable", "calm", "wellness"]],
+    ["rex_branson", "Rex Branson", "assets/suspects/rex_branson.JPG", ["male", "dark hair", "beard", "no glasses", "athletic", "aggressive", "extrovert"]],
+    ["saffron_skye", "Saffron Skye", "assets/suspects/saffron_skye.JPG", ["female", "blonde hair", "long hair", "wavy hair", "glasses", "fashionable", "wealthy", "calm", "wellness"]],
+    ["sebastian_drift", "Sebastian Drift", "assets/suspects/sebastian_drift.JPG", ["male", "medium skin", "dark hair", "glasses", "athletic", "tech"]],
+    ["tilly_chrome", "Tilly Chrome", "assets/suspects/tilly_chrome.JPG", ["female", "dark hair", "fashionable", "creative", "extrovert"]],
+    ["velvet_kane", "Velvet Kane", "assets/suspects/velvet_kane.JPG", ["female", "dark hair", "glasses", "wealthy", "intelligent"]],
+  ],
+  rooms: [
+    ["art_vault", "Art Vault", "assets/rooms/art_vault.jpg", ["medium", "vault door", "artwork", "no windows", "stone", "cold lighting", "minimal", "security", "luxury finish", "secluded"]],
+    ["billiard_room", "Billiard Room", "assets/rooms/billiard_room.jpg", ["large", "carpet", "artwork", "seating", "no windows", "classic style", "low lighting", "entertainment", "luxury finish"]],
+    ["chefs_table", "Chef's Table", "assets/rooms/chefs_table.jpg", ["medium", "dining", "rug", "no windows", "low lighting", "modern", "luxury finish"]],
+    ["cinema_room", "Cinema Room", "assets/rooms/cinema.jpg", ["screen", "seating", "rug", "no windows", "low lighting", "strip lighting", "modern", "entertainment", "soundproofed"]],
+    ["dressing_room", "Dressing Room", "assets/rooms/dressing.jpg", ["medium", "mirrors", "seating", "rug", "no windows", "strip lighting", "low lighting", "luxury finish"]],
+    ["glass_lift", "Glass Lift", "assets/rooms/lift.jpg", ["small", "glass walls", "metal", "strip lighting", "all floors", "transparent", "modern", "elevated"]],
+    ["home_gym", "Home Gym", "assets/rooms/gym.jpg", ["medium", "mirrors", "screen", "fitness", "no windows", "strip lighting", "modern", "technology"]],
+    ["indoor_pool", "Indoor Pool", "assets/rooms/pool.jpg", ["large", "water", "mirrors", "plants", "windows", "strip lighting", "modern", "wellness", "luxury finish"]],
+    ["library", "Library", "assets/rooms/library.jpg", ["large", "classic style", "seating", "rug", "windows", "low lighting", "wood", "luxury finish"]],
+    ["meditation_suite", "Meditation Suite", "assets/rooms/med-suite.jpg", ["medium", "wood", "plants", "outdoor", "open plan", "wellness", "natural light", "calm"]],
+    ["observatory", "Observatory", "assets/rooms/observ.jpg", ["glass walls", "windows", "carpet", "seating", "modern", "elevated", "open plan"]],
+    ["panic_room", "Panic Room", "assets/rooms/panic.jpg", ["small", "vault door", "concrete", "screen", "no windows", "soundproofed", "strip lighting", "security", "secluded"]],
+    ["podcast_studio", "Podcast Studio", "assets/rooms/podstudio.jpg", ["small", "seating", "carpet", "screen", "soundproofed", "low lighting", "strip lighting", "technology", "entertainment"]],
+    ["rooftop_terrace", "Rooftop Terrace", "assets/rooms/fooftop.jpg", ["outdoor", "glass walls", "plants", "seating", "wood", "fire", "windows", "strip lighting", "elevated", "luxury finish"]],
+    ["smart_kitchen", "Smart Kitchen", "assets/rooms/kitchen.jpg", ["large", "open plan", "screen", "sink", "dining", "windows", "strip lighting", "modern", "technology", "luxury finish"]],
+    ["wine_cellar", "Wine Cellar", "assets/rooms/wine_cellar.jpg", ["stone", "underground", "vault door", "storage", "no windows", "security", "cold lighting", "secluded"]],
+  ],
+  weapons: [
+    ["champagne_saber", "Champagne Sabre", "assets/weapons/champagne_sabre.png", ["sharp", "silver", "black", "metal", "handheld", "medium", "luxury"]],
+    ["charging_cable", "Charging Cable", "assets/weapons/chargeing_cable.png", ["black", "silver", "flexible", "wired", "technology", "lightweight", "small"]],
+    ["chefs_knife", "Chef's Knife", "assets/weapons/chefs_knife.png", ["sharp", "silver", "black", "metal", "handheld", "kitchen", "medium"]],
+    ["crystal_award", "Crystal Award", "assets/weapons/crystal_award.png", ["glass", "reflective", "medium", "blunt", "luxury", "decorative"]],
+    ["drone", "Drone", "assets/weapons/drone.png", ["black", "silver", "powered", "battery", "technology", "small", "electronic", "lightweight"]],
+    ["gold_dumbbell", "Gold Dumbbell", "assets/weapons/gold_dumbbell.png", ["gold", "round", "blunt", "handheld", "metal", "fitness", "medium", "heavy"]],
+    ["key_card", "Keycard", "assets/weapons/keycard.png", ["black", "gold", "small", "sharp", "plastic", "security", "lightweight"]],
+    ["luxury_pen", "Luxury Pen", "assets/weapons/luxury_pen.png", ["black", "gold", "sharp", "small", "luxury", "handheld", "metal"]],
+    ["mangrenade_candle", "ManGrenade Candle", "assets/weapons/mangreneade_candle.png", ["black", "blunt", "small", "handheld", "luxury", "masculine"]],
+    ["marble_bust", "Marble Bust", "assets/weapons/marble_bust.png", ["large", "heavy", "blunt", "stone", "decorative", "classical"]],
+    ["ring_light_stand", "Ring Light Stand", "assets/weapons/ring_light_stand.png", ["metal", "powered", "wired", "blunt", "medium", "influencer", "technology"]],
+    ["smart_speaker", "Smart Speaker", "assets/weapons/smart_speaker.png", ["black", "powered", "wired", "blunt", "small", "technology", "electronic"]],
+    ["smartwatch_cable", "Smartwatch Cable", "assets/weapons/smart_watch_cable.png", ["white", "plastic", "flexible", "wired", "technology", "lightweight", "small"]],
+    ["sous_vide_weight", "Sous Vide Weight", "assets/weapons/sous_vide_weight.png", ["silver", "round", "handheld", "blunt", "kitchen", "metal", "heavy", "small"]],
+    ["stiletto_heel", "Stiletto Heel", "assets/weapons/stiletto.png", ["black", "fabric", "sharp", "medium", "fashion", "lightweight", "handheld"]],
+    ["vr_headset", "VR Headset", "assets/weapons/vr_headset.png", ["black", "powered", "wired", "blunt", "medium", "technology", "electronic", "wearable"]],
+    ["mci_original_artwork", "MCI Original Artwork", "assets/weapons/mci_original_artwork.PNG", ["heavy", "fragile", "luxury", "collectible", "decorative", "custom", "blunt", "fingerprintable"]],
+  ],
+  motives: [
+    ["blackmail", "BLACKMAIL", "assets/motives/blackmail.png", ["exposure", "secrecy", "reputation", "manipulation", "control", "influence", "money", "pressure"]],
+    ["revenge", "REVENGE", "assets/motives/revenge.png", ["betrayal", "humiliation", "resentment", "rivalry", "justice", "violence", "pressure", "fixation"]],
+    ["greed", "GREED", "assets/motives/greed.png", ["money", "luxury", "status", "power", "influence", "wealth", "possession", "acquisition"]],
+    ["jealousy", "JEALOUSY", "assets/motives/jealousy.png", ["rivalry", "attention", "betrayal", "desire", "humiliation", "status", "resentment", "insecurity"]],
+    ["cover_up", "COVER-UP", "assets/motives/cover_up.png", ["secrecy", "exposure", "pressure", "manipulation", "control", "reputation", "suppression", "concealment"]],
+    ["desperation", "DESPERATION", "assets/motives/desperation.png", ["survival", "pressure", "dependency", "shame", "secrecy", "money", "panic", "scarcity"]],
+    ["obsession", "OBSESSION", "assets/motives/obsession.png", ["dependency", "desire", "manipulation", "control", "attention", "isolation", "compulsion", "fixation"]],
+    ["corruption", "CORRUPTION", "assets/motives/corruption.png", ["power", "influence", "money", "control", "secrecy", "bribery", "manipulation", "coercion"]],
+    ["ego", "EGO", "assets/motives/ego.png", ["status", "attention", "reputation", "luxury", "humiliation", "power", "vanity", "pride"]],
+    ["inheritance", "INHERITANCE", "assets/motives/inheritance.png", ["family", "legacy", "money", "resentment", "betrayal", "status", "succession", "wealth"]],
+    ["silencing", "SILENCING", "assets/motives/silencing.png", ["secrecy", "exposure", "control", "influence", "violence", "manipulation", "suppression", "intimidation"]],
+    ["ideology", "IDEOLOGY", "assets/motives/ideology.png", ["justice", "rebellion", "technology", "resentment", "power", "influence", "extremism", "doctrine"]],
+    ["addiction", "ADDICTION", "assets/motives/addiction.png", ["dependency", "shame", "secrecy", "survival", "pressure", "compulsion", "risk", "escapism"]],
+    ["romance", "ROMANCE", "assets/motives/romance.png", ["desire", "betrayal", "attention", "dependency", "humiliation", "secrecy", "rivalry", "intimacy"]],
+    ["fear", "FEAR", "assets/motives/fear.png", ["exposure", "secrecy", "pressure", "survival", "control", "panic", "manipulation", "paranoia"]],
+    ["ambition", "AMBITION", "assets/motives/ambition.png", ["power", "status", "rivalry", "influence", "manipulation", "reputation", "success", "sacrifice"]],
+  ]
+};
+
 let CASES = [];
 let DATA_READY = false;
 let scrollMemory = {};
@@ -1472,7 +1548,7 @@ function seasonHome() {
 
   if (!unlocked) {
     const launchDate = new Date(SEASON_START_DATE).toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
-    app.innerHTML = `<section class="screen home-screen" ${bg(ASSETS.frontpage)}><div class="content"><div class="home-spacer"></div><h2>MURDER CASE INVESTIGATION</h2>${statgrid}<div class="panel prologue-banner"><h2>PROLOGUE COMPLETE</h2><p class="green">Season One launches ${escapeHTML(launchDate)}. One new case unlocks every day — come back then.</p></div><button class="secondary" onclick="go('information')">INFORMATION BASE</button><div class="button-row"><button class="secondary" onclick="go('how')">HOW TO PLAY</button><button class="secondary" onclick="go('settings')">SETTINGS</button></div></div></section>`;
+    app.innerHTML = `<section class="screen home-screen" ${bg(ASSETS.frontpage)}><div class="content"><div class="home-spacer"></div><h2>MURDER CASE INVESTIGATION</h2>${statgrid}<div class="panel prologue-banner"><h2>PROLOGUE COMPLETE</h2><p class="green">The next case file opens ${escapeHTML(launchDate)}. One new case unlocks every day — come back then.</p></div><button class="secondary" onclick="go('information')">INFORMATION BASE</button><div class="button-row"><button class="secondary" onclick="go('how')">HOW TO PLAY</button><button class="secondary" onclick="go('settings')">SETTINGS</button></div></div></section>`;
     return;
   }
 
@@ -1484,7 +1560,7 @@ function seasonHome() {
 
   const todayPanel = todaySolved
     ? `<div class="panel"><h2>TODAY'S CASE</h2><h3>${todayCase.id} — ${escapeHTML(todayCase.title)}</h3><p class="green">Case closed. The next case unlocks tomorrow.</p></div>`
-    : `<div class="panel"><h2>TODAY'S CASE</h2><h3>${todayCase.id} — ${escapeHTML(todayCase.title)}</h3><p>Victim: ${escapeHTML(todayCase.victim)}</p><p class="small">Season One, Day ${dayNumber} of ${total}</p></div><button class="primary" onclick="openSeasonCase(${todayIdx})">OPEN CASE FILE</button>`;
+    : `<div class="panel"><h2>TODAY'S CASE</h2><h3>${todayCase.id} — ${escapeHTML(todayCase.title)}</h3><p>Victim: ${escapeHTML(todayCase.victim)}</p><p class="small">Day ${dayNumber} of ${total}</p></div><button class="primary" onclick="openSeasonCase(${todayIdx})">OPEN CASE FILE</button>`;
 
   let catchUpPanel = "";
   if (missed.length && player.isSubscriber) {
@@ -1575,10 +1651,11 @@ function setInfoTab(tab) {
 }
 
 function infoItemsForTab(tab) {
-  if (tab === "residents") return CARDS.suspects.map(x => ({ type: "suspect", data: x }));
-  if (tab === "rooms") return CARDS.rooms.map(x => ({ type: "room", data: x }));
-  if (tab === "weapons") return CARDS.weapons.map(x => ({ type: "weapon", data: x }));
-  return CARDS.motives.map(x => ({ type: "motive", data: x }));
+  const cards = hasCompletedPrologue() ? SEASON_CARDS : CARDS;
+  if (tab === "residents") return cards.suspects.map(x => ({ type: "suspect", data: x }));
+  if (tab === "rooms") return cards.rooms.map(x => ({ type: "room", data: x }));
+  if (tab === "weapons") return cards.weapons.map(x => ({ type: "weapon", data: x }));
+  return cards.motives.map(x => ({ type: "motive", data: x }));
 }
 
 function renderInfoEntry(entry) {
@@ -1717,7 +1794,7 @@ function accusationGrid() {
 
 function visibleCards(type) {
   const map = { suspect: "suspects", weapon: "weapons", room: "rooms", motive: "motives" };
-  const all = CARDS[map[type]];
+  const all = activeCards()[map[type]];
   const sol = currentCase().solution[type];
   const chosen = new Set([sol]);
   const seed = currentCase().id + type;
@@ -2120,7 +2197,7 @@ function teaserHTML(c) {
 }
 
 function prologueEndHTML() {
-  return `<div class="panel prologue-banner"><h2>PROLOGUE COMPLETE</h2><p>Blackwood Tower has not given up its secrets. It has only shown you where the bodies are buried.</p><p>The full season of MCI is coming soon.</p><p>Season One will open the wider case file.</p></div>`;
+  return `<div class="panel prologue-banner"><h2>PROLOGUE COMPLETE</h2><p>Blackwood Tower has not given up its secrets. It has only shown you where the bodies are buried.</p><p>The full case archive is coming soon.</p><p>It will open onto the wider investigation.</p></div>`;
 }
 
 function res(label, type, id) {
@@ -2193,23 +2270,32 @@ function go(screen) {
   });
 }
 
+// Prologue cases (index < PROLOGUE_LENGTH) use the original CARDS pool.
+// Season One cases use the canon SEASON_CARDS pool -- the two are deliberately
+// separate card databases, matching the prologue's "non-canon" status.
+function activeCards() {
+  return state.caseIndex >= PROLOGUE_LENGTH ? SEASON_CARDS : CARDS;
+}
+
 function item(type, id) {
+  const cards = activeCards();
   return ({
-    suspect: CARDS.suspects,
-    weapon: CARDS.weapons,
-    room: CARDS.rooms,
-    motive: CARDS.motives
+    suspect: cards.suspects,
+    weapon: cards.weapons,
+    room: cards.rooms,
+    motive: cards.motives
   }[type] || []).find(x => x[0] === id);
 }
 
 function name(group, id) {
   if (!id) return "Not selected";
 
+  const cards = activeCards();
   return ({
-    suspects: CARDS.suspects,
-    weapons: CARDS.weapons,
-    rooms: CARDS.rooms,
-    motives: CARDS.motives
+    suspects: cards.suspects,
+    weapons: cards.weapons,
+    rooms: cards.rooms,
+    motives: cards.motives
   }[group] || []).find(x => x[0] === id)?.[1] || "Not selected";
 }
 
