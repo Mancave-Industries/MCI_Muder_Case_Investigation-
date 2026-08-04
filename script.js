@@ -1206,12 +1206,50 @@ let pageScrollBeforeSelection = 0;
 let accusationPending = null;
 let lastLiveCard = {};
 
+// Detective rank ladder, per the Gameplay Logic Book. Sleuth Index is a rolling
+// average of the player's last 15 case scores (not cumulative), and accusations
+// available per case are tied to current rank, not to the individual case.
+const RANKS = [
+  { name: "Police Officer", min: 0, max: 49, accusations: 8 },
+  { name: "Detective", min: 50, max: 64, accusations: 7 },
+  { name: "Detective II", min: 65, max: 74, accusations: 7 },
+  { name: "Detective Sergeant", min: 75, max: 84, accusations: 6 },
+  { name: "Lieutenant", min: 85, max: 94, accusations: 6 },
+  { name: "Captain", min: 95, max: 104, accusations: 5 },
+  { name: "Deputy Chief", min: 105, max: 114, accusations: 5 },
+  { name: "Assistant Chief", min: 115, max: 124, accusations: 4 },
+  { name: "Chief of Detectives", min: 125, max: 134, accusations: 4 },
+  { name: "Police Commissioner", min: 135, max: Infinity, accusations: 4 }
+];
+
+const PROMOTION_COOLDOWN_DAYS = 15;
+const DEMOTION_COOLDOWN_DAYS = 10;
+const MAX_RECENT_SCORES = 15;
+const MAX_STREAK_BONUS = 10;
+
+const DIFFICULTY_MULTIPLIER = { Easy: 1.00, Medium: 1.10, Hard: 1.25, Expert: 1.50, Master: 2.00 };
+const BASE_SCORE_BY_ACCUSATIONS = [null, 100, 95, 90, 85, 80, 75, 70, 65];
+
+function accusationsForRank(rankName) {
+  return RANKS.find(r => r.name === rankName)?.accusations || 8;
+}
+
+function caseScore(difficulty, accusationsUsed, failed) {
+  if (failed) return 0;
+  const base = BASE_SCORE_BY_ACCUSATIONS[Math.min(accusationsUsed, 8)] ?? 65;
+  const multiplier = DIFFICULTY_MULTIPLIER[difficulty] ?? 1.0;
+  return Math.round(base * multiplier);
+}
+
 const player = {
   name: localStorage.getItem("mci_player_name") || "",
-  rank: localStorage.getItem("mci_rank") || "Detective",
+  rank: localStorage.getItem("mci_rank") || "Police Officer",
   streak: +(localStorage.getItem("mci_streak") || 0),
   solved: +(localStorage.getItem("mci_solved") || 0),
   sleuthIndex: +(localStorage.getItem("mci_sleuth_index") || 0),
+  recentScores: JSON.parse(localStorage.getItem("mci_recent_scores") || "[]"),
+  lastPromotionDate: localStorage.getItem("mci_last_promotion_date") || "",
+  lastDemotionDate: localStorage.getItem("mci_last_demotion_date") || "",
   lastSolvedDate: localStorage.getItem("mci_last_solved_date") || "",
   haptics: localStorage.getItem("mci_haptics") !== "off",
   // Placeholder until real subscription/payment integration lands. Grants catch-up on missed Season One days only —
@@ -1597,7 +1635,17 @@ function howToPlay() {
 }
 
 function settings() {
-  app.innerHTML = `<section class="screen" ${bg(ASSETS.casefile)}><div class="content tight"><div class="panel dark"><h2>SETTINGS</h2><div class="toggle-row"><div><h3>Haptic Feedback</h3><p class="small">Small vibration taps on supported phones.</p></div><button class="switch ${player.haptics ? "on" : ""}" aria-label="Toggle haptics" onclick="toggleHaptics()"></button></div><div class="toggle-row"><div><h3>Season Catch-Up Access</h3><p class="small">Test toggle only — this stands in for real subscription checkout. It only unlocks missed past days, never today's ceiling.</p></div><button class="switch ${player.isSubscriber ? "on" : ""}" aria-label="Toggle subscriber access" onclick="toggleSubscriber()"></button></div><div class="panel"><h3>Detective Name</h3><p>${escapeHTML(player.name)}</p><button class="ghost" onclick="renamePlayer()">CHANGE NAME</button></div><button class="primary" onclick="go('home')">RETURN HOME</button></div></div></section>`;
+  app.innerHTML = `<section class="screen" ${bg(ASSETS.casefile)}><div class="content tight"><div class="panel dark"><h2>SETTINGS</h2><div class="toggle-row"><div><h3>Haptic Feedback</h3><p class="small">Small vibration taps on supported phones.</p></div><button class="switch ${player.haptics ? "on" : ""}" aria-label="Toggle haptics" onclick="toggleHaptics()"></button></div><div class="toggle-row"><div><h3>Season Catch-Up Access</h3><p class="small">Test toggle only — this stands in for real subscription checkout. It only unlocks missed past days, never today's ceiling.</p></div><button class="switch ${player.isSubscriber ? "on" : ""}" aria-label="Toggle subscriber access" onclick="toggleSubscriber()"></button></div><div class="panel"><h3>Detective Name</h3><p>${escapeHTML(player.name)}</p><button class="ghost" onclick="renamePlayer()">CHANGE NAME</button></div><div class="panel"><h3>Reset Progress</h3><p class="small">Wipes rank, streak, Sleuth Index and case history on this device. Use before launch to clear dry-run testing data.</p><button class="ghost" onclick="resetProgress()">RESET PROGRESS</button></div><button class="primary" onclick="go('home')">RETURN HOME</button></div></div></section>`;
+}
+
+function resetProgress() {
+  if (!confirm("Reset all progress on this device? This cannot be undone.")) return;
+
+  Object.keys(localStorage)
+    .filter(k => k.startsWith("mci_"))
+    .forEach(k => localStorage.removeItem(k));
+
+  location.reload();
 }
 
 function toggleHaptics() {
@@ -1726,7 +1774,8 @@ function resetForCase(i, keepScreen = false) {
     ...state,
     screen: nextScreen,
     caseIndex: Math.max(0, Math.min(lastIndex, i)),
-    guessesLeft: CASES[i]?.turns || 6,
+    guessesLeft: accusationsForRank(player.rank),
+    initialGuesses: accusationsForRank(player.rank),
     selected: {},
     locked: {},
     wrong: {},
@@ -1747,7 +1796,7 @@ function resetForCase(i, keepScreen = false) {
 function casefile() {
   const c = currentCase();
 
-  app.innerHTML = `<section class="screen" ${bg(ASSETS.casefile)}><div class="content"><div class="panel dark"><h2>CASE FILE OPENED</h2><h2>${escapeHTML(c.victim)}</h2><h3>${c.id} — ${escapeHTML(c.title)}</h3>${para(c.narrative.opening)}<h2>${c.turns} accusations authorised</h2></div><button class="primary" onclick="go('investigation')">BEGIN INVESTIGATION</button><button class="secondary" onclick="go('home')">RETURN HOME</button></div></section>`;
+  app.innerHTML = `<section class="screen" ${bg(ASSETS.casefile)}><div class="content"><div class="panel dark"><h2>CASE FILE OPENED</h2><h2>${escapeHTML(c.victim)}</h2><h3>${c.id} — ${escapeHTML(c.title)}</h3>${para(c.narrative.opening)}<h2>${accusationsForRank(player.rank)} accusations authorised</h2></div><button class="primary" onclick="go('investigation')">BEGIN INVESTIGATION</button><button class="secondary" onclick="go('home')">RETURN HOME</button></div></section>`;
 }
 
 function investigation() {
@@ -1909,13 +1958,14 @@ function accuse() {
     accusationPending = null;
 
     if (result.correct === 4) {
-      markSolved();
+      markSolved(false);
       haptic([60, 90, 60]);
       go("solved");
       return;
     }
 
     if (state.guessesLeft <= 0) {
+      markSolved(true);
       haptic([100, 100, 100]);
       go("failed");
       return;
@@ -2045,40 +2095,81 @@ function labelFor(type) {
   return ({ suspect: "SUSPECT", weapon: "WEAPON", room: "ROOM", motive: "MOTIVE" })[type];
 }
 
-function markSolved() {
-  const id = currentCase().id;
+// Called once per case resolution -- on a 4/4 solve (failed=false) or once
+// accusations run out (failed=true). Failed cases still feed the rolling
+// Sleuth Index (Case Failed = 0) but are never added to completedCases, so
+// they remain available to retry/catch-up later rather than being locked out.
+function markSolved(failed) {
+  const c = currentCase();
+  const id = c.id;
 
-  if (!state.completedCases.includes(id)) {
+  if (!failed) {
+    if (state.completedCases.includes(id)) return;
     state.completedCases.push(id);
     saveCompletedCases();
-
     player.solved++;
-    player.sleuthIndex += 10 + Math.max(0, state.guessesLeft) * 2;
-    player.rank = rankFromIndex(player.sleuthIndex);
+  }
 
-    const today = todayKey();
+  const initialGuesses = state.initialGuesses || accusationsForRank(player.rank);
+  const accusationsUsed = initialGuesses - state.guessesLeft;
+  const score = caseScore(c.difficulty, accusationsUsed, failed);
+
+  player.recentScores.push(score);
+  if (player.recentScores.length > MAX_RECENT_SCORES) player.recentScores.shift();
+
+  const avg = player.recentScores.reduce((a, b) => a + b, 0) / player.recentScores.length;
+  const streakBonus = Math.min(MAX_STREAK_BONUS, Math.floor(player.streak / 5));
+  player.sleuthIndex = Math.round(avg + streakBonus);
+
+  const today = todayKey();
+
+  if (!failed) {
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     const yKey = yesterday.toISOString().slice(0, 10);
-
     player.streak = player.lastSolvedDate === yKey ? player.streak + 1 : Math.max(player.streak, 1);
     player.lastSolvedDate = today;
-
-    localStorage.setItem("mci_streak", player.streak);
-    localStorage.setItem("mci_solved", player.solved);
-    localStorage.setItem("mci_sleuth_index", player.sleuthIndex);
-    localStorage.setItem("mci_rank", player.rank);
-    localStorage.setItem("mci_last_solved_date", player.lastSolvedDate);
+  } else {
+    player.streak = 0;
   }
+
+  evaluateRankChange();
+
+  localStorage.setItem("mci_streak", player.streak);
+  localStorage.setItem("mci_solved", player.solved);
+  localStorage.setItem("mci_sleuth_index", player.sleuthIndex);
+  localStorage.setItem("mci_rank", player.rank);
+  localStorage.setItem("mci_last_solved_date", player.lastSolvedDate);
+  localStorage.setItem("mci_recent_scores", JSON.stringify(player.recentScores));
+  localStorage.setItem("mci_last_promotion_date", player.lastPromotionDate);
+  localStorage.setItem("mci_last_demotion_date", player.lastDemotionDate);
 }
 
-function rankFromIndex(index) {
-  if (index >= 220) return "Superintendent";
-  if (index >= 160) return "Chief Inspector";
-  if (index >= 100) return "Inspector";
-  if (index >= 50) return "Senior Detective";
-  if (index >= 15) return "Detective";
-  return "Trainee Detective";
+// Promotion needs Sleuth Index past the next rank's threshold AND a 15-day
+// cooldown since the last promotion. Demotion needs the index below the
+// current rank's floor AND a 10-day cooldown since the last demotion.
+// Evaluated after every case, per the Gameplay Logic Book -- neither happens
+// automatically just because a threshold is crossed mid-cooldown.
+function evaluateRankChange() {
+  const today = todayKey();
+  const daysSince = dateStr => dateStr ? Math.floor((Date.now() - new Date(dateStr).getTime()) / 86400000) : Infinity;
+  const idx = RANKS.findIndex(r => r.name === player.rank);
+  if (idx === -1) return;
+
+  const current = RANKS[idx];
+  const next = RANKS[idx + 1];
+
+  if (next && player.sleuthIndex >= next.min && daysSince(player.lastPromotionDate) >= PROMOTION_COOLDOWN_DAYS) {
+    player.rank = next.name;
+    player.lastPromotionDate = today;
+    return;
+  }
+
+  const prev = RANKS[idx - 1];
+  if (prev && player.sleuthIndex < current.min && daysSince(player.lastDemotionDate) >= DEMOTION_COOLDOWN_DAYS) {
+    player.rank = prev.name;
+    player.lastDemotionDate = today;
+  }
 }
 
 function todayKey() {
@@ -2222,9 +2313,9 @@ function highlight(text) {
 
 function share(failed) {
   const c = currentCase();
-  const used = c.turns - state.guessesLeft;
+  const used = (state.initialGuesses || accusationsForRank(player.rank)) - state.guessesLeft;
   const grid = state.history.map(r => r.map(x => x ? "🟩" : "⬛").join("")).join("\n") || "⬛⬛⬛⬛";
-  const text = `MCI Prologue ${c.id}\n${c.title}\n\n${grid}\n\n${failed ? "The suspect walked free." : `Solved in ${used} accusation${used === 1 ? "" : "s"}.`}\nDetective: ${player.name || player.rank}\nRank: ${player.rank}\nDaily streak: ${player.streak}\nCases solved: ${player.solved}\nSleuth Index: ${player.sleuthIndex}\n\nHelp Blackwood Tower grow. Share your result with 10 friends.\n${GAME_URL}`;
+  const text = `MCI ${c.id}\n${c.title}\n\n${grid}\n\n${failed ? "The suspect walked free." : `Solved in ${used} accusation${used === 1 ? "" : "s"}.`}\nDetective: ${player.name || player.rank}\nRank: ${player.rank}\nDaily streak: ${player.streak}\nCases solved: ${player.solved}\nSleuth Index: ${player.sleuthIndex}\n\nHelp Blackwood Tower grow. Share your result with 10 friends.\n${GAME_URL}`;
 
   if (navigator.share) navigator.share({ text });
   else {
