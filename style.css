@@ -675,6 +675,17 @@ label {
   background: linear-gradient(180deg, rgba(234, 212, 125, 0.13), rgba(0, 0, 0, 0.75));
 }
 
+.season-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.season-case-row {
+  text-align: left;
+}
+
 .info-tabs {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -718,6 +729,70 @@ label {
 .info-entry img.contain {
   object-fit: contain;
   padding: 5px;
+}
+
+.vault-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.vault-item {
+  position: relative;
+  border: 1px solid rgba(234, 212, 125, 0.28);
+  border-radius: 14px;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+
+.vault-item img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 10px;
+  background: #000;
+}
+
+.vault-item p {
+  font-size: 11px;
+  margin: 6px 0 0;
+  color: var(--muted);
+}
+
+.vault-item.locked img {
+  opacity: 0.25;
+  filter: grayscale(1);
+}
+
+.vault-lock {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.promotion-panel {
+  text-align: center;
+}
+
+.certificate-img {
+  width: 100%;
+  max-width: 260px;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 14px;
+  margin: 10px auto;
+  display: block;
+  border: 2px solid var(--gold);
+}
+
+.certificate-name {
+  font-size: clamp(22px, 6vw, 30px);
+  color: var(--gold);
+  margin: 4px 0;
 }
 
 .info-entry h3 {

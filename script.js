@@ -11,6 +11,13 @@ const FEEDBACK_EMAIL = "mancaveman@icloud.com";
 const GAME_URL = "https://mancave-industries.github.io/MCI_Muder_Case_Investigation-/";
 const PROLOGUE_LENGTH = 16;
 
+// Season One launch date. Case PROLOGUE_LENGTH+1 (P017) unlocks on this date,
+// one further case unlocks per day after. A 240-case season starting here runs
+// 2026-10-01 -> 2027-05-28, covering Halloween (day 31), Thanksgiving (day 57),
+// Christmas (day 86), New Year (day 93), Valentine's (day 137) and beyond —
+// case content for those day numbers should be written to match the date.
+const SEASON_START_DATE = "2026-10-01T00:00:00Z";
+
 const EMBEDDED_CASES = [
   {
     "id": "P001",
@@ -981,7 +988,8 @@ const INFO_DESCRIPTIONS = {
     saffron_skye: "A lawyer and investigator focused on accountability. Saffron brings legal pressure into places that prefer secrecy.",
     sebastian_drift: "An archivist and historian who understands the power of records. Sebastian knows that memory can become evidence.",
     tilly_chrome: "A chef, entrepreneur and performer under constant pressure to succeed. Tilly’s ambition makes her visible and vulnerable.",
-    cleo_saint: "An heir and social strategist shaped by legacy, inheritance and power. Cleo understands the value of reputation."
+    cleo_saint: "An heir and social strategist shaped by legacy, inheritance and power. Cleo understands the value of reputation.",
+    milo_vex: "A technologist fascinated by systems, data and hidden patterns. Milo trusts logic more than people, and rarely lets a puzzle go unsolved."
   },
   rooms: {
     art_vault: "A secure gallery space where value, status and authenticity intersect.",
@@ -999,7 +1007,18 @@ const INFO_DESCRIPTIONS = {
     panic: "A secure hidden space designed for protection, confinement and secrecy.",
     podstudio: "A recording space where voice, exposure and evidence can become dangerous.",
     pool: "A luxury wellness space where calm surfaces can hide risk.",
-    wine_cellar: "A restricted private space suited to confession, leverage and trust."
+    wine_cellar: "A restricted private space suited to confession, leverage and trust.",
+    cinema_room: "A dark, soundproofed screening room built for privacy, projection and observation.",
+    dressing_room: "A mirrored preparation space tied to image, performance and vulnerability.",
+    glass_lift: "A transparent transit space where access, timing and observation become crucial.",
+    home_gym: "A private training room where routine, movement and opportunity intersect.",
+    indoor_pool: "A luxury wellness space where calm surfaces can hide risk.",
+    meditation_suite: "A calm, open-plan retreat associated with reflection, vulnerability and emotional pressure.",
+    observatory: "An elevated, glass-walled room built for distance, perspective and discovery.",
+    panic_room: "A secure, soundproofed space designed for protection, confinement and secrecy.",
+    podcast_studio: "A soundproofed recording space where voice, exposure and evidence can become dangerous.",
+    rooftop_terrace: "An exposed open-air space where privacy, danger and spectacle can collide.",
+    smart_kitchen: "A high-spec, technology-driven kitchen where preparation, access and control matter."
   },
   weapons: {
     champagne_sabre: "A ceremonial luxury object where status and violence sit uncomfortably close.",
@@ -1018,7 +1037,11 @@ const INFO_DESCRIPTIONS = {
     smart_watch_cable: "A small everyday technology item associated with opportunity and improvisation.",
     sous_vide_weight: "A kitchen object built for control, weight and preparation.",
     stiletto: "A fashion object associated with status, concealment and improvisation.",
-    vr_headset: "A technology object connected to distraction, isolation and altered perception."
+    vr_headset: "A technology object connected to distraction, isolation and altered perception.",
+    champagne_saber: "A ceremonial luxury blade where status and violence sit uncomfortably close.",
+    key_card: "A small access object representing privilege, movement and control.",
+    smartwatch_cable: "A slim, everyday technology item whose usefulness makes it easy to overlook.",
+    stiletto_heel: "A fashion object associated with status, concealment and improvisation."
   },
   motives: {
     affair: "A motive driven by exposure risk, secrecy and emotional consequence.",
@@ -1036,7 +1059,17 @@ const INFO_DESCRIPTIONS = {
     rejection: "A motive driven by humiliation, emotion and personal resentment.",
     reputation_protection: "A motive centred on preserving image, credibility and public standing.",
     revenge: "A motive driven by remembered harm, anger and the desire for retribution.",
-    whistleblower_silence: "A motive focused on stopping exposure before truth becomes public."
+    whistleblower_silence: "A motive focused on stopping exposure before truth becomes public.",
+    greed: "A motive driven by accumulation, status and the desire for more than enough.",
+    desperation: "A motive rooted in survival, scarcity and a shrinking sense of options.",
+    corruption: "A motive built on power, secrecy and the quiet erosion of principle.",
+    ego: "A motive centred on pride, status and the refusal to be diminished.",
+    silencing: "A motive focused on stopping exposure by any means necessary.",
+    ideology: "A motive driven by conviction, doctrine and belief taken to its limit.",
+    addiction: "A motive rooted in dependency, shame and the pull of compulsion.",
+    romance: "A motive shaped by desire, intimacy and the risk of exposure.",
+    fear: "A motive driven by panic, self-preservation and the instinct to control the threat.",
+    ambition: "A motive powered by drive, rivalry and the cost of success."
   }
 };
 
@@ -1116,6 +1149,82 @@ const CARDS = {
   ]
 };
 
+const SEASON_CARDS = {
+  suspects: [
+    ["bianca_frost", "Bianca Frost", "assets/suspects/bianca_frost.JPG", ["female", "black", "dark hair", "long hair", "wavy hair", "no glasses", "athletic", "fashionable", "wealthy", "influencer", "extrovert"]],
+    ["cleo_saint", "Cleo Saint", "assets/suspects/cleo_saint.JPG", ["female", "medium skin", "dark hair", "wavy hair", "glasses", "earrings", "fashionable", "wealthy"]],
+    ["dorian_luxe", "Dorian Luxe", "assets/suspects/dorian_luxe.JPG", ["male", "black", "dark hair", "glasses", "beard", "fashionable", "wealthy"]],
+    ["gideon_pryce", "Gideon Pryce", "assets/suspects/gideon_pryce.JPG", ["male", "dark hair", "no glasses", "fashionable", "wealthy", "aggressive", "cold"]],
+    ["harvey_slate", "Harvey Slate", "assets/suspects/harvey_slate.JPG", ["male", "beard", "no glasses", "fashionable", "wealthy", "aggressive"]],
+    ["india_gold", "India Gold", "assets/suspects/India_gold.JPG", ["female", "dark hair", "long hair", "wavy hair", "no glasses", "earrings", "fashionable", "wealthy", "influencer", "extrovert"]],
+    ["jaxon_vale", "Jaxon Vale", "assets/suspects/jaxon_vale.JPG", ["male", "medium skin", "dark hair", "beard", "no glasses", "athletic", "fashionable", "wealthy", "tech"]],
+    ["milo_vex", "Milo Vex", "assets/suspects/milo-vale.JPG", ["male", "dark hair", "glasses", "tech", "introvert", "intelligent"]],
+    ["nova_wilde", "Nova Wilde", "assets/suspects/nova_wilde.JPG", ["female", "dark hair", "wavy hair", "glasses", "earrings", "creative", "introvert", "calm"]],
+    ["otis_blank", "Otis Blank", "assets/suspects/otis_blank.JPG", ["male", "glasses", "wealthy", "tech", "cold", "calm"]],
+    ["piper_bloom", "Piper Bloom", "assets/suspects/piper_bloom.JPG", ["female", "blonde hair", "wavy hair", "no glasses", "earrings", "fashionable", "calm", "wellness"]],
+    ["rex_branson", "Rex Branson", "assets/suspects/rex_branson.JPG", ["male", "dark hair", "beard", "no glasses", "athletic", "aggressive", "extrovert"]],
+    ["saffron_skye", "Saffron Skye", "assets/suspects/saffron_skye.JPG", ["female", "blonde hair", "long hair", "wavy hair", "glasses", "fashionable", "wealthy", "calm", "wellness"]],
+    ["sebastian_drift", "Sebastian Drift", "assets/suspects/sebastian_drift.JPG", ["male", "medium skin", "dark hair", "glasses", "athletic", "tech"]],
+    ["tilly_chrome", "Tilly Chrome", "assets/suspects/tilly_chrome.JPG", ["female", "dark hair", "fashionable", "creative", "extrovert"]],
+    ["velvet_kane", "Velvet Kane", "assets/suspects/velvet_kane.JPG", ["female", "dark hair", "glasses", "wealthy", "intelligent"]],
+  ],
+  rooms: [
+    ["art_vault", "Art Vault", "assets/rooms/art_vault.jpg", ["medium", "vault door", "artwork", "no windows", "stone", "cold lighting", "minimal", "security", "luxury finish", "secluded"]],
+    ["billiard_room", "Billiard Room", "assets/rooms/billiard_room.jpg", ["large", "carpet", "artwork", "seating", "no windows", "classic style", "low lighting", "entertainment", "luxury finish"]],
+    ["chefs_table", "Chef's Table", "assets/rooms/chefs_table.jpg", ["medium", "dining", "rug", "no windows", "low lighting", "modern", "luxury finish"]],
+    ["cinema_room", "Cinema Room", "assets/rooms/cinema.jpg", ["screen", "seating", "rug", "no windows", "low lighting", "strip lighting", "modern", "entertainment", "soundproofed"]],
+    ["dressing_room", "Dressing Room", "assets/rooms/dressing.jpg", ["medium", "mirrors", "seating", "rug", "no windows", "strip lighting", "low lighting", "luxury finish"]],
+    ["glass_lift", "Glass Lift", "assets/rooms/lift.jpg", ["small", "glass walls", "metal", "strip lighting", "all floors", "transparent", "modern", "elevated"]],
+    ["home_gym", "Home Gym", "assets/rooms/gym.jpg", ["medium", "mirrors", "screen", "fitness", "no windows", "strip lighting", "modern", "technology"]],
+    ["indoor_pool", "Indoor Pool", "assets/rooms/pool.jpg", ["large", "water", "mirrors", "plants", "windows", "strip lighting", "modern", "wellness", "luxury finish"]],
+    ["library", "Library", "assets/rooms/library.jpg", ["large", "classic style", "seating", "rug", "windows", "low lighting", "wood", "luxury finish"]],
+    ["meditation_suite", "Meditation Suite", "assets/rooms/med-suite.jpg", ["medium", "wood", "plants", "outdoor", "open plan", "wellness", "natural light", "calm"]],
+    ["observatory", "Observatory", "assets/rooms/observ.jpg", ["glass walls", "windows", "carpet", "seating", "modern", "elevated", "open plan"]],
+    ["panic_room", "Panic Room", "assets/rooms/panic.jpg", ["small", "vault door", "concrete", "screen", "no windows", "soundproofed", "strip lighting", "security", "secluded"]],
+    ["podcast_studio", "Podcast Studio", "assets/rooms/podstudio.jpg", ["small", "seating", "carpet", "screen", "soundproofed", "low lighting", "strip lighting", "technology", "entertainment"]],
+    ["rooftop_terrace", "Rooftop Terrace", "assets/rooms/fooftop.jpg", ["outdoor", "glass walls", "plants", "seating", "wood", "fire", "windows", "strip lighting", "elevated", "luxury finish"]],
+    ["smart_kitchen", "Smart Kitchen", "assets/rooms/kitchen.jpg", ["large", "open plan", "screen", "sink", "dining", "windows", "strip lighting", "modern", "technology", "luxury finish"]],
+    ["wine_cellar", "Wine Cellar", "assets/rooms/wine_cellar.jpg", ["stone", "underground", "vault door", "storage", "no windows", "security", "cold lighting", "secluded"]],
+  ],
+  weapons: [
+    ["champagne_saber", "Champagne Sabre", "assets/weapons/champagne_sabre.png", ["sharp", "silver", "black", "metal", "handheld", "medium", "luxury"]],
+    ["charging_cable", "Charging Cable", "assets/weapons/chargeing_cable.png", ["black", "silver", "flexible", "wired", "technology", "lightweight", "small"]],
+    ["chefs_knife", "Chef's Knife", "assets/weapons/chefs_knife.png", ["sharp", "silver", "black", "metal", "handheld", "kitchen", "medium"]],
+    ["crystal_award", "Crystal Award", "assets/weapons/crystal_award.png", ["glass", "reflective", "medium", "blunt", "luxury", "decorative"]],
+    ["drone", "Drone", "assets/weapons/drone.png", ["black", "silver", "powered", "battery", "technology", "small", "electronic", "lightweight"]],
+    ["gold_dumbbell", "Gold Dumbbell", "assets/weapons/gold_dumbbell.png", ["gold", "round", "blunt", "handheld", "metal", "fitness", "medium", "heavy"]],
+    ["key_card", "Keycard", "assets/weapons/keycard.png", ["black", "gold", "small", "sharp", "plastic", "security", "lightweight"]],
+    ["luxury_pen", "Luxury Pen", "assets/weapons/luxury_pen.png", ["black", "gold", "sharp", "small", "luxury", "handheld", "metal"]],
+    ["mangrenade_candle", "ManGrenade Candle", "assets/weapons/mangreneade_candle.png", ["black", "blunt", "small", "handheld", "luxury", "masculine"]],
+    ["marble_bust", "Marble Bust", "assets/weapons/marble_bust.png", ["large", "heavy", "blunt", "stone", "decorative", "classical"]],
+    ["ring_light_stand", "Ring Light Stand", "assets/weapons/ring_light_stand.png", ["metal", "powered", "wired", "blunt", "medium", "influencer", "technology"]],
+    ["smart_speaker", "Smart Speaker", "assets/weapons/smart_speaker.png", ["black", "powered", "wired", "blunt", "small", "technology", "electronic"]],
+    ["smartwatch_cable", "Smartwatch Cable", "assets/weapons/smart_watch_cable.png", ["white", "plastic", "flexible", "wired", "technology", "lightweight", "small"]],
+    ["sous_vide_weight", "Sous Vide Weight", "assets/weapons/sous_vide_weight.png", ["silver", "round", "handheld", "blunt", "kitchen", "metal", "heavy", "small"]],
+    ["stiletto_heel", "Stiletto Heel", "assets/weapons/stiletto.png", ["black", "fabric", "sharp", "medium", "fashion", "lightweight", "handheld"]],
+    ["vr_headset", "VR Headset", "assets/weapons/vr_headset.png", ["black", "powered", "wired", "blunt", "medium", "technology", "electronic", "wearable"]],
+    ["mci_original_artwork", "MCI Original Artwork", "assets/weapons/mci_original_artwork.PNG", ["heavy", "fragile", "luxury", "collectible", "decorative", "custom", "blunt", "fingerprintable"]],
+  ],
+  motives: [
+    ["blackmail", "BLACKMAIL", "assets/motives/blackmail.png", ["exposure", "secrecy", "reputation", "manipulation", "control", "influence", "money", "pressure"]],
+    ["revenge", "REVENGE", "assets/motives/revenge.png", ["betrayal", "humiliation", "resentment", "rivalry", "justice", "violence", "pressure", "fixation"]],
+    ["greed", "GREED", "assets/motives/greed.png", ["money", "luxury", "status", "power", "influence", "wealth", "possession", "acquisition"]],
+    ["jealousy", "JEALOUSY", "assets/motives/jealousy.png", ["rivalry", "attention", "betrayal", "desire", "humiliation", "status", "resentment", "insecurity"]],
+    ["cover_up", "COVER-UP", "assets/motives/cover_up.png", ["secrecy", "exposure", "pressure", "manipulation", "control", "reputation", "suppression", "concealment"]],
+    ["desperation", "DESPERATION", "assets/motives/desperation.png", ["survival", "pressure", "dependency", "shame", "secrecy", "money", "panic", "scarcity"]],
+    ["obsession", "OBSESSION", "assets/motives/obsession.png", ["dependency", "desire", "manipulation", "control", "attention", "isolation", "compulsion", "fixation"]],
+    ["corruption", "CORRUPTION", "assets/motives/corruption.png", ["power", "influence", "money", "control", "secrecy", "bribery", "manipulation", "coercion"]],
+    ["ego", "EGO", "assets/motives/ego.png", ["status", "attention", "reputation", "luxury", "humiliation", "power", "vanity", "pride"]],
+    ["inheritance", "INHERITANCE", "assets/motives/inheritance.png", ["family", "legacy", "money", "resentment", "betrayal", "status", "succession", "wealth"]],
+    ["silencing", "SILENCING", "assets/motives/silencing.png", ["secrecy", "exposure", "control", "influence", "violence", "manipulation", "suppression", "intimidation"]],
+    ["ideology", "IDEOLOGY", "assets/motives/ideology.png", ["justice", "rebellion", "technology", "resentment", "power", "influence", "extremism", "doctrine"]],
+    ["addiction", "ADDICTION", "assets/motives/addiction.png", ["dependency", "shame", "secrecy", "survival", "pressure", "compulsion", "risk", "escapism"]],
+    ["romance", "ROMANCE", "assets/motives/romance.png", ["desire", "betrayal", "attention", "dependency", "humiliation", "secrecy", "rivalry", "intimacy"]],
+    ["fear", "FEAR", "assets/motives/fear.png", ["exposure", "secrecy", "pressure", "survival", "control", "panic", "manipulation", "paranoia"]],
+    ["ambition", "AMBITION", "assets/motives/ambition.png", ["power", "status", "rivalry", "influence", "manipulation", "reputation", "success", "sacrifice"]],
+  ]
+};
+
 let CASES = [];
 let DATA_READY = false;
 let scrollMemory = {};
@@ -1123,14 +1232,105 @@ let pageScrollBeforeSelection = 0;
 let accusationPending = null;
 let lastLiveCard = {};
 
+// Detective rank ladder, per the Gameplay Logic Book. Sleuth Index is a rolling
+// average of the player's last 15 case scores (not cumulative), and accusations
+// available per case are tied to current rank, not to the individual case.
+const RANKS = [
+  { name: "Police Officer", min: 0, max: 49, accusations: 8 },
+  { name: "Detective", min: 50, max: 64, accusations: 7 },
+  { name: "Detective II", min: 65, max: 74, accusations: 7 },
+  { name: "Detective Sergeant", min: 75, max: 84, accusations: 6 },
+  { name: "Lieutenant", min: 85, max: 94, accusations: 6 },
+  { name: "Captain", min: 95, max: 104, accusations: 5 },
+  { name: "Deputy Chief", min: 105, max: 114, accusations: 5 },
+  { name: "Assistant Chief", min: 115, max: 124, accusations: 4 },
+  { name: "Chief of Detectives", min: 125, max: 134, accusations: 4 },
+  { name: "Police Commissioner", min: 135, max: Infinity, accusations: 4 }
+];
+
+const PROMOTION_COOLDOWN_DAYS = 15;
+const DEMOTION_COOLDOWN_DAYS = 10;
+const MAX_RECENT_SCORES = 15;
+const MAX_STREAK_BONUS = 10;
+
+const DIFFICULTY_MULTIPLIER = { Easy: 1.00, Medium: 1.10, Hard: 1.25, Expert: 1.50, Master: 2.00 };
+const BASE_SCORE_BY_ACCUSATIONS = [null, 100, 95, 90, 85, 80, 75, 70, 65];
+
+function accusationsForRank(rankName) {
+  return RANKS.find(r => r.name === rankName)?.accusations || 8;
+}
+
+function caseScore(difficulty, accusationsUsed, failed) {
+  if (failed) return 0;
+  const base = BASE_SCORE_BY_ACCUSATIONS[Math.min(accusationsUsed, 8)] ?? 65;
+  const multiplier = DIFFICULTY_MULTIPLIER[difficulty] ?? 1.0;
+  return Math.round(base * multiplier);
+}
+
+// One certificate image per rank. Detective and Detective II share an asset --
+// no dedicated art exists for Detective II, and they're adjacent tiers.
+const RANK_CERTIFICATE_IMAGES = {
+  "Police Officer": "assets/promotion/po.jpg",
+  "Detective": "assets/promotion/detective.jpg",
+  "Detective II": "assets/promotion/detective.jpg",
+  "Detective Sergeant": "assets/promotion/ds.jpg",
+  "Lieutenant": "assets/promotion/ltnt.jpg",
+  "Captain": "assets/promotion/captain.jpg",
+  "Deputy Chief": "assets/promotion/dep_chf.jpg",
+  "Assistant Chief": "assets/promotion/ast_chf.jpg",
+  "Chief of Detectives": "assets/promotion/chief_dik.jpg",
+  "Police Commissioner": "assets/promotion/commisioner.jpg"
+};
+
+// Streak milestones, matched to the reward art that actually exists in the repo.
+const STREAK_REWARD_DAYS = [10, 25, 75, 100, 125, 150, 175, 200, 240];
+
+function streakRewardImage(days) {
+  return `assets/rewards/${days}.PNG`;
+}
+
+// Awarded as a set the moment the prologue is completed -- the game's only
+// batch reward, marking "founding" detectives who played before Season One.
+const FOUNDING_REWARDS = [
+  "assets/rewards/mci_screener_reward.PNG",
+  "assets/rewards/mci_screener_reward_2.PNG",
+  "assets/rewards/mci_mangrenade_screener_reward.PNG",
+  "assets/rewards/mci_mangrenade_2_screener_reward.PNG",
+  "assets/rewards/mci_mangrenade_3_screener_reward.PNG",
+  "assets/rewards/mci_mangrenade_4_screener_reward.PNG",
+  "assets/rewards/mci_mangrenade_5_screener_reward.PNG"
+];
+
+function hasVaultItem(key) {
+  return player.vault.includes(key);
+}
+
+function unlockVaultItem(key) {
+  if (player.vault.includes(key)) return false;
+  player.vault.push(key);
+  localStorage.setItem("mci_vault", JSON.stringify(player.vault));
+  return true;
+}
+
 const player = {
   name: localStorage.getItem("mci_player_name") || "",
-  rank: localStorage.getItem("mci_rank") || "Detective",
+  rank: localStorage.getItem("mci_rank") || "Police Officer",
   streak: +(localStorage.getItem("mci_streak") || 0),
   solved: +(localStorage.getItem("mci_solved") || 0),
   sleuthIndex: +(localStorage.getItem("mci_sleuth_index") || 0),
+  recentScores: JSON.parse(localStorage.getItem("mci_recent_scores") || "[]"),
+  lastPromotionDate: localStorage.getItem("mci_last_promotion_date") || "",
+  lastDemotionDate: localStorage.getItem("mci_last_demotion_date") || "",
   lastSolvedDate: localStorage.getItem("mci_last_solved_date") || "",
-  haptics: localStorage.getItem("mci_haptics") !== "off"
+  haptics: localStorage.getItem("mci_haptics") !== "off",
+  // Placeholder until real subscription/payment integration lands. Grants catch-up on missed Season One days only —
+  // it never lifts the seasonMaxUnlockedIndex() ceiling, so it cannot get anyone ahead of the daily release.
+  isSubscriber: localStorage.getItem("mci_subscriber") === "yes",
+  vault: JSON.parse(localStorage.getItem("mci_vault") || "[]"),
+  // Device-local playtesting switch. Bypasses the date lock (see seasonUnlockedCount)
+  // for this browser only -- SEASON_START_DATE itself is never touched, so it's safe
+  // to leave this code shipped and simply keep the toggle off by default.
+  testMode: localStorage.getItem("mci_test_mode") === "on"
 };
 
 let state = {
@@ -1149,23 +1349,25 @@ let state = {
   lastScore: null,
   lastAccusation: null,
   loadingScore: null,
+  justPromoted: null,
   expandedInfo: {}
 };
 
+applyTestModeFromURL();
 loadCases();
 
 async function loadCases() {
   let loadedFrom = "embedded";
 
   try {
-    const res = await fetch("data/cases.json", { cache: "no-store" });
-    if (!res.ok) throw new Error(`data/cases.json missing: ${res.status}`);
+    const res = await fetch("cases.json", { cache: "no-store" });
+    if (!res.ok) throw new Error(`cases.json missing: ${res.status}`);
     const data = await res.json();
     const sourceCases = data.cases || data || [];
     CASES = normaliseCases(sourceCases);
-    loadedFrom = "data/cases.json";
+    loadedFrom = "cases.json";
   } catch (e) {
-    console.warn("MCI case JSON failed. Falling back to embedded 16-case prologue.", e);
+    console.warn("MCI case JSON (cases.json) failed to load. Falling back to embedded 16-case prologue.", e);
     CASES = normaliseCases(EMBEDDED_CASES);
   }
 
@@ -1178,7 +1380,7 @@ async function loadCases() {
   }
 
   DATA_READY = true;
-  state.caseIndex = Math.max(0, Math.min(Math.min(PROLOGUE_LENGTH, CASES.length) - 1, state.caseIndex));
+  state.caseIndex = Math.max(0, Math.min(CASES.length - 1, state.caseIndex));
   console.log("MCI CASE LOAD", {
     loadedFrom,
     caseCount: CASES.length,
@@ -1399,6 +1601,7 @@ function render() {
   if (state.screen === "home") home();
   if (state.screen === "how") howToPlay();
   if (state.screen === "settings") settings();
+  if (state.screen === "vault") vault();
   if (state.screen === "information") informationBase();
   if (state.screen === "audit") dataAudit();
   if (state.screen === "casefile") casefile();
@@ -1436,18 +1639,84 @@ function savePlayerName() {
 }
 
 function home() {
-  const c = currentCase();
-  const prologueComplete = hasCompletedPrologue();
+  if (hasCompletedPrologue()) {
+    seasonHome();
+    return;
+  }
 
-  app.innerHTML = `<section class="screen home-screen" ${bg(ASSETS.frontpage)}><div class="content"><div class="home-spacer"></div><h2>MURDER CASE INVESTIGATION</h2><div class="statgrid"><div class="stat"><div class="label">Detective Rank</div><div class="value">${escapeHTML(player.rank)}</div></div><div class="stat"><div class="label">Current Streak</div><div class="value">${player.streak}</div></div><div class="stat"><div class="label">Cases Solved</div><div class="value">${player.solved}</div></div><div class="stat"><div class="label">Sleuth Index</div><div class="value">${player.sleuthIndex}</div></div></div><div class="panel"><h2>TODAY'S CASE</h2><h3>${c.id} — ${escapeHTML(c.title)}</h3><p>Victim: ${escapeHTML(c.victim)}</p><p class="small">Prologue case ${state.caseIndex + 1} of ${Math.min(PROLOGUE_LENGTH, CASES.length)}</p>${prologueComplete ? "<p class='green'>Prologue complete. Season One is coming soon.</p>" : ""}</div><button class="primary" onclick="openCase()">OPEN CASE FILE</button><button class="secondary" onclick="go('information')">INFORMATION BASE</button><div class="button-row"><button class="secondary" onclick="go('how')">HOW TO PLAY</button><button class="secondary" onclick="go('settings')">SETTINGS</button></div></div></section>`;
+  const c = currentCase();
+
+  app.innerHTML = `<section class="screen home-screen" ${bg(ASSETS.frontpage)}><div class="content"><div class="home-spacer"></div><h2>MURDER CASE INVESTIGATION</h2><div class="statgrid"><div class="stat"><div class="label">Detective Rank</div><div class="value">${escapeHTML(player.rank)}</div></div><div class="stat"><div class="label">Current Streak</div><div class="value">${player.streak}</div></div><div class="stat"><div class="label">Cases Solved</div><div class="value">${player.solved}</div></div><div class="stat"><div class="label">Sleuth Index</div><div class="value">${player.sleuthIndex}</div></div></div><div class="panel"><h2>TODAY'S CASE</h2><h3>${c.id} — ${escapeHTML(c.title)}</h3><p>Victim: ${escapeHTML(c.victim)}</p><p class="small">Prologue case ${state.caseIndex + 1} of ${Math.min(PROLOGUE_LENGTH, CASES.length)}</p></div><button class="primary" onclick="openCase()">OPEN CASE FILE</button><button class="secondary" onclick="go('information')">INFORMATION BASE</button><button class="secondary" onclick="go('vault')">VAULT</button><div class="button-row"><button class="secondary" onclick="go('how')">HOW TO PLAY</button><button class="secondary" onclick="go('settings')">SETTINGS</button></div></div></section>`;
 
   console.log("MCI HOME", {
     caseIndex: state.caseIndex,
     caseId: c.id,
     totalCases: CASES.length,
     completedCases: state.completedCases,
-    prologueComplete
+    prologueComplete: false
   });
+}
+
+function seasonHome() {
+  const total = seasonCaseCount();
+  const unlocked = seasonUnlockedCount();
+
+  const statgrid = `<div class="statgrid"><div class="stat"><div class="label">Detective Rank</div><div class="value">${escapeHTML(player.rank)}</div></div><div class="stat"><div class="label">Current Streak</div><div class="value">${player.streak}</div></div><div class="stat"><div class="label">Cases Solved</div><div class="value">${player.solved}</div></div><div class="stat"><div class="label">Sleuth Index</div><div class="value">${player.sleuthIndex}</div></div></div>`;
+
+  if (!unlocked) {
+    const launchDate = new Date(SEASON_START_DATE).toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
+    app.innerHTML = `<section class="screen home-screen" ${bg(ASSETS.frontpage)}><div class="content"><div class="home-spacer"></div><h2>MURDER CASE INVESTIGATION</h2>${statgrid}<div class="panel prologue-banner"><h2>PROLOGUE COMPLETE</h2><p class="green">The next case file opens ${escapeHTML(launchDate)}. One new case unlocks every day — come back then.</p></div><button class="secondary" onclick="go('information')">INFORMATION BASE</button><button class="secondary" onclick="go('vault')">VAULT</button><div class="button-row"><button class="secondary" onclick="go('how')">HOW TO PLAY</button><button class="secondary" onclick="go('settings')">SETTINGS</button></div></div></section>`;
+    return;
+  }
+
+  const todayIdx = todaysSeasonIndex();
+  const todayCase = CASES[todayIdx];
+  const todaySolved = state.completedCases.includes(todayCase.id);
+  const dayNumber = todayIdx - PROLOGUE_LENGTH + 1;
+  const missed = missedSeasonIndexes();
+
+  if (player.testMode) {
+    const rows = [];
+    for (let i = PROLOGUE_LENGTH; i < CASES.length; i++) {
+      const solved = state.completedCases.includes(CASES[i].id);
+      rows.push(`<button class="secondary season-case-row" onclick="openSeasonCase(${i})">${solved ? "✓ " : ""}${CASES[i].id} — ${escapeHTML(CASES[i].title)}</button>`);
+    }
+    app.innerHTML = `<section class="screen home-screen" ${bg(ASSETS.frontpage)}><div class="content"><div class="home-spacer"></div><h2>MURDER CASE INVESTIGATION</h2>${statgrid}<div class="panel dark"><h2>TEST MODE</h2><p class="small">All ${total} Season One cases are browsable in order, ignoring the real launch date. Turn this off in Settings before sharing a link with anyone else.</p></div><div class="panel"><h3>All Cases</h3><div class="season-list">${rows.join("")}</div></div><button class="secondary" onclick="go('information')">INFORMATION BASE</button><button class="secondary" onclick="go('vault')">VAULT</button><div class="button-row"><button class="secondary" onclick="go('how')">HOW TO PLAY</button><button class="secondary" onclick="go('settings')">SETTINGS</button></div></div></section>`;
+    return;
+  }
+
+  const todayPanel = todaySolved
+    ? `<div class="panel"><h2>TODAY'S CASE</h2><h3>${todayCase.id} — ${escapeHTML(todayCase.title)}</h3><p class="green">Case closed. The next case unlocks tomorrow.</p></div>`
+    : `<div class="panel"><h2>TODAY'S CASE</h2><h3>${todayCase.id} — ${escapeHTML(todayCase.title)}</h3><p>Victim: ${escapeHTML(todayCase.victim)}</p><p class="small">Day ${dayNumber} of ${total}</p></div><button class="primary" onclick="openSeasonCase(${todayIdx})">OPEN CASE FILE</button>`;
+
+  let catchUpPanel = "";
+  if (missed.length && player.isSubscriber) {
+    const rows = missed.map(i => `<button class="secondary season-case-row" onclick="openSeasonCase(${i})">${CASES[i].id} — ${escapeHTML(CASES[i].title)}</button>`).join("");
+    catchUpPanel = `<div class="panel dark"><h2>CATCH UP</h2><p class="small">Missed cases stay open to subscribers. You can never get ahead of today's release, only catch up on the past.</p><div class="season-list">${rows}</div></div>`;
+  } else if (missed.length) {
+    catchUpPanel = `<div class="panel dark"><h2>CATCH UP</h2><p>You have ${missed.length} missed case${missed.length === 1 ? "" : "s"} waiting.</p><p class="small">Subscribers can catch up on missed days. Nobody can ever play ahead of today's release.</p><button class="ghost" onclick="go('settings')">SUBSCRIBER ACCESS</button></div>`;
+  }
+
+  app.innerHTML = `<section class="screen home-screen" ${bg(ASSETS.frontpage)}><div class="content"><div class="home-spacer"></div><h2>MURDER CASE INVESTIGATION</h2>${statgrid}${todayPanel}${catchUpPanel}<button class="secondary" onclick="go('information')">INFORMATION BASE</button><button class="secondary" onclick="go('vault')">VAULT</button><div class="button-row"><button class="secondary" onclick="go('how')">HOW TO PLAY</button><button class="secondary" onclick="go('settings')">SETTINGS</button></div></div></section>`;
+
+  console.log("MCI SEASON HOME", {
+    todayIdx,
+    todayCaseId: todayCase.id,
+    todaySolved,
+    missed,
+    isSubscriber: player.isSubscriber
+  });
+}
+
+function openSeasonCase(i) {
+  if (!canPlayCase(i)) {
+    haptic([20, 40, 20]);
+    alert("That case isn't available yet.");
+    return;
+  }
+
+  resetForCase(i);
+  go("casefile");
 }
 
 function howToPlay() {
@@ -1455,12 +1724,40 @@ function howToPlay() {
 }
 
 function settings() {
-  app.innerHTML = `<section class="screen" ${bg(ASSETS.casefile)}><div class="content tight"><div class="panel dark"><h2>SETTINGS</h2><div class="toggle-row"><div><h3>Haptic Feedback</h3><p class="small">Small vibration taps on supported phones.</p></div><button class="switch ${player.haptics ? "on" : ""}" aria-label="Toggle haptics" onclick="toggleHaptics()"></button></div><div class="panel"><h3>Detective Name</h3><p>${escapeHTML(player.name)}</p><button class="ghost" onclick="renamePlayer()">CHANGE NAME</button></div><button class="primary" onclick="go('home')">RETURN HOME</button></div></div></section>`;
+  app.innerHTML = `<section class="screen" ${bg(ASSETS.casefile)}><div class="content tight"><div class="panel dark"><h2>SETTINGS</h2><div class="toggle-row"><div><h3>Haptic Feedback</h3><p class="small">Small vibration taps on supported phones.</p></div><button class="switch ${player.haptics ? "on" : ""}" aria-label="Toggle haptics" onclick="toggleHaptics()"></button></div><div class="toggle-row"><div><h3>Season Catch-Up Access</h3><p class="small">Test toggle only — this stands in for real subscription checkout. It only unlocks missed past days, never today's ceiling.</p></div><button class="switch ${player.isSubscriber ? "on" : ""}" aria-label="Toggle subscriber access" onclick="toggleSubscriber()"></button></div><div class="panel"><h3>Detective Name</h3><p>${escapeHTML(player.name)}</p><button class="ghost" onclick="renamePlayer()">CHANGE NAME</button></div><div class="panel"><h3>Reset Progress</h3><p class="small">Wipes rank, streak, Sleuth Index and case history on this device. Use before launch to clear dry-run testing data.</p><button class="ghost" onclick="resetProgress()">RESET PROGRESS</button></div><button class="primary" onclick="go('home')">RETURN HOME</button></div></div></section>`;
+}
+
+function resetProgress() {
+  if (!confirm("Reset all progress on this device? This cannot be undone.")) return;
+
+  Object.keys(localStorage)
+    .filter(k => k.startsWith("mci_"))
+    .forEach(k => localStorage.removeItem(k));
+
+  location.reload();
 }
 
 function toggleHaptics() {
   player.haptics = !player.haptics;
   localStorage.setItem("mci_haptics", player.haptics ? "on" : "off");
+  haptic(20);
+  render();
+}
+
+// Test Mode has no visible toggle -- flip it with ?testmode=on or ?testmode=off
+// in the URL once, and it persists on that device from then on. Anyone just
+// browsing Settings normally will never see it exists.
+function applyTestModeFromURL() {
+  const params = new URLSearchParams(location.search);
+  if (!params.has("testmode")) return;
+
+  player.testMode = params.get("testmode") === "on";
+  localStorage.setItem("mci_test_mode", player.testMode ? "on" : "off");
+}
+
+function toggleSubscriber() {
+  player.isSubscriber = !player.isSubscriber;
+  localStorage.setItem("mci_subscriber", player.isSubscriber ? "yes" : "no");
   haptic(20);
   render();
 }
@@ -1471,6 +1768,46 @@ function renamePlayer() {
   player.name = name.trim().slice(0, 22) || player.name;
   localStorage.setItem("mci_player_name", player.name);
   render();
+}
+
+function vault() {
+  const certRow = RANKS.map(r => {
+    const unlocked = hasVaultItem(`cert:${r.name}`);
+    const img = RANK_CERTIFICATE_IMAGES[r.name] || "assets/promotion/promotion.jpg";
+    return `<div class="vault-item ${unlocked ? "" : "locked"}">
+      <img src="${unlocked ? img : ASSETS.casefile}" alt="${escapeHTML(r.name)}" onerror="imageFallback(this)">
+      <p>${escapeHTML(r.name)}</p>
+      ${unlocked ? "" : "<span class='vault-lock'>LOCKED</span>"}
+    </div>`;
+  }).join("");
+
+  const streakRow = STREAK_REWARD_DAYS.map(days => {
+    const unlocked = hasVaultItem(`streak:${days}`);
+    return `<div class="vault-item ${unlocked ? "" : "locked"}">
+      <img src="${unlocked ? streakRewardImage(days) : ASSETS.casefile}" alt="${days}-day streak" onerror="imageFallback(this)">
+      <p>${days}-Day Streak</p>
+      ${unlocked ? "" : "<span class='vault-lock'>LOCKED</span>"}
+    </div>`;
+  }).join("");
+
+  const foundingUnlocked = hasVaultItem("founding:0");
+  const foundingRow = FOUNDING_REWARDS.map((img, i) => `<div class="vault-item ${foundingUnlocked ? "" : "locked"}">
+    <img src="${foundingUnlocked ? img : ASSETS.casefile}" alt="Founding Detective reward ${i + 1}" onerror="imageFallback(this)">
+    ${foundingUnlocked ? "" : "<span class='vault-lock'>LOCKED</span>"}
+  </div>`).join("");
+
+  app.innerHTML = `<section class="screen information-screen" ${bg(ASSETS.casefile)}>
+    <div class="sticky-return"><button class="secondary" onclick="go('home')">RETURN HOME</button></div>
+    <div class="content info-content">
+      <div class="panel dark">
+        <h2>REWARD VAULT</h2>
+        <p>Rewards are earned, never purchased. Everything here stays unlocked permanently once you've earned it.</p>
+      </div>
+      <div class="panel"><h3>Promotion Certificates</h3><div class="vault-grid">${certRow}</div></div>
+      <div class="panel"><h3>Streak Rewards</h3><div class="vault-grid">${streakRow}</div></div>
+      <div class="panel"><h3>Founding Detective Collection</h3><p class="small">Awarded for completing the prologue.</p><div class="vault-grid">${foundingRow}</div></div>
+    </div>
+  </section>`;
 }
 
 function informationBase() {
@@ -1502,10 +1839,11 @@ function setInfoTab(tab) {
 }
 
 function infoItemsForTab(tab) {
-  if (tab === "residents") return CARDS.suspects.map(x => ({ type: "suspect", data: x }));
-  if (tab === "rooms") return CARDS.rooms.map(x => ({ type: "room", data: x }));
-  if (tab === "weapons") return CARDS.weapons.map(x => ({ type: "weapon", data: x }));
-  return CARDS.motives.map(x => ({ type: "motive", data: x }));
+  const cards = hasCompletedPrologue() ? SEASON_CARDS : CARDS;
+  if (tab === "residents") return cards.suspects.map(x => ({ type: "suspect", data: x }));
+  if (tab === "rooms") return cards.rooms.map(x => ({ type: "room", data: x }));
+  if (tab === "weapons") return cards.weapons.map(x => ({ type: "weapon", data: x }));
+  return cards.motives.map(x => ({ type: "motive", data: x }));
 }
 
 function renderInfoEntry(entry) {
@@ -1571,12 +1909,13 @@ function openCase() {
 
 function resetForCase(i, keepScreen = false) {
   const nextScreen = keepScreen ? state.screen : state.screen;
-  const lastIndex = Math.min(PROLOGUE_LENGTH, CASES.length) - 1;
+  const lastIndex = CASES.length - 1;
   state = {
     ...state,
     screen: nextScreen,
     caseIndex: Math.max(0, Math.min(lastIndex, i)),
-    guessesLeft: CASES[i]?.turns || 6,
+    guessesLeft: accusationsForRank(player.rank),
+    initialGuesses: accusationsForRank(player.rank),
     selected: {},
     locked: {},
     wrong: {},
@@ -1587,6 +1926,7 @@ function resetForCase(i, keepScreen = false) {
     lastScore: null,
     lastAccusation: null,
     loadingScore: null,
+    justPromoted: null,
     expandedInfo: state.expandedInfo || {}
   };
 
@@ -1597,7 +1937,7 @@ function resetForCase(i, keepScreen = false) {
 function casefile() {
   const c = currentCase();
 
-  app.innerHTML = `<section class="screen" ${bg(ASSETS.casefile)}><div class="content"><div class="panel dark"><h2>CASE FILE OPENED</h2><h2>${escapeHTML(c.victim)}</h2><h3>${c.id} — ${escapeHTML(c.title)}</h3>${para(c.narrative.opening)}<h2>${c.turns} accusations authorised</h2></div><button class="primary" onclick="go('investigation')">BEGIN INVESTIGATION</button><button class="secondary" onclick="go('home')">RETURN HOME</button></div></section>`;
+  app.innerHTML = `<section class="screen" ${bg(ASSETS.casefile)}><div class="content"><div class="panel dark"><h2>CASE FILE OPENED</h2><h2>${escapeHTML(c.victim)}</h2><h3>${c.id} — ${escapeHTML(c.title)}</h3>${para(c.narrative.opening)}<h2>${accusationsForRank(player.rank)} accusations authorised</h2></div><button class="primary" onclick="go('investigation')">BEGIN INVESTIGATION</button><button class="secondary" onclick="go('home')">RETURN HOME</button></div></section>`;
 }
 
 function investigation() {
@@ -1644,7 +1984,7 @@ function accusationGrid() {
 
 function visibleCards(type) {
   const map = { suspect: "suspects", weapon: "weapons", room: "rooms", motive: "motives" };
-  const all = CARDS[map[type]];
+  const all = activeCards()[map[type]];
   const sol = currentCase().solution[type];
   const chosen = new Set([sol]);
   const seed = currentCase().id + type;
@@ -1759,13 +2099,14 @@ function accuse() {
     accusationPending = null;
 
     if (result.correct === 4) {
-      markSolved();
+      markSolved(false);
       haptic([60, 90, 60]);
       go("solved");
       return;
     }
 
     if (state.guessesLeft <= 0) {
+      markSolved(true);
       haptic([100, 100, 100]);
       go("failed");
       return;
@@ -1895,40 +2236,92 @@ function labelFor(type) {
   return ({ suspect: "SUSPECT", weapon: "WEAPON", room: "ROOM", motive: "MOTIVE" })[type];
 }
 
-function markSolved() {
-  const id = currentCase().id;
+// Called once per case resolution -- on a 4/4 solve (failed=false) or once
+// accusations run out (failed=true). Failed cases still feed the rolling
+// Sleuth Index (Case Failed = 0) but are never added to completedCases, so
+// they remain available to retry/catch-up later rather than being locked out.
+function markSolved(failed) {
+  const c = currentCase();
+  const id = c.id;
 
-  if (!state.completedCases.includes(id)) {
+  if (!failed) {
+    if (state.completedCases.includes(id)) return;
     state.completedCases.push(id);
     saveCompletedCases();
-
     player.solved++;
-    player.sleuthIndex += 10 + Math.max(0, state.guessesLeft) * 2;
-    player.rank = rankFromIndex(player.sleuthIndex);
+  }
 
-    const today = todayKey();
+  const initialGuesses = state.initialGuesses || accusationsForRank(player.rank);
+  const accusationsUsed = initialGuesses - state.guessesLeft;
+  const score = caseScore(c.difficulty, accusationsUsed, failed);
+
+  player.recentScores.push(score);
+  if (player.recentScores.length > MAX_RECENT_SCORES) player.recentScores.shift();
+
+  const avg = player.recentScores.reduce((a, b) => a + b, 0) / player.recentScores.length;
+  const streakBonus = Math.min(MAX_STREAK_BONUS, Math.floor(player.streak / 5));
+  player.sleuthIndex = Math.round(avg + streakBonus);
+
+  const today = todayKey();
+
+  if (!failed) {
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     const yKey = yesterday.toISOString().slice(0, 10);
-
     player.streak = player.lastSolvedDate === yKey ? player.streak + 1 : Math.max(player.streak, 1);
     player.lastSolvedDate = today;
-
-    localStorage.setItem("mci_streak", player.streak);
-    localStorage.setItem("mci_solved", player.solved);
-    localStorage.setItem("mci_sleuth_index", player.sleuthIndex);
-    localStorage.setItem("mci_rank", player.rank);
-    localStorage.setItem("mci_last_solved_date", player.lastSolvedDate);
+  } else {
+    player.streak = 0;
   }
+
+  const rankBefore = player.rank;
+  evaluateRankChange();
+  state.justPromoted = player.rank !== rankBefore ? player.rank : null;
+  if (state.justPromoted) unlockVaultItem(`cert:${state.justPromoted}`);
+
+  if (!failed && STREAK_REWARD_DAYS.includes(player.streak)) {
+    unlockVaultItem(`streak:${player.streak}`);
+  }
+
+  if (!failed && id === CASES[Math.min(PROLOGUE_LENGTH, CASES.length) - 1]?.id) {
+    FOUNDING_REWARDS.forEach((_, i) => unlockVaultItem(`founding:${i}`));
+  }
+
+  localStorage.setItem("mci_streak", player.streak);
+  localStorage.setItem("mci_solved", player.solved);
+  localStorage.setItem("mci_sleuth_index", player.sleuthIndex);
+  localStorage.setItem("mci_rank", player.rank);
+  localStorage.setItem("mci_last_solved_date", player.lastSolvedDate);
+  localStorage.setItem("mci_recent_scores", JSON.stringify(player.recentScores));
+  localStorage.setItem("mci_last_promotion_date", player.lastPromotionDate);
+  localStorage.setItem("mci_last_demotion_date", player.lastDemotionDate);
 }
 
-function rankFromIndex(index) {
-  if (index >= 220) return "Superintendent";
-  if (index >= 160) return "Chief Inspector";
-  if (index >= 100) return "Inspector";
-  if (index >= 50) return "Senior Detective";
-  if (index >= 15) return "Detective";
-  return "Trainee Detective";
+// Promotion needs Sleuth Index past the next rank's threshold AND a 15-day
+// cooldown since the last promotion. Demotion needs the index below the
+// current rank's floor AND a 10-day cooldown since the last demotion.
+// Evaluated after every case, per the Gameplay Logic Book -- neither happens
+// automatically just because a threshold is crossed mid-cooldown.
+function evaluateRankChange() {
+  const today = todayKey();
+  const daysSince = dateStr => dateStr ? Math.floor((Date.now() - new Date(dateStr).getTime()) / 86400000) : Infinity;
+  const idx = RANKS.findIndex(r => r.name === player.rank);
+  if (idx === -1) return;
+
+  const current = RANKS[idx];
+  const next = RANKS[idx + 1];
+
+  if (next && player.sleuthIndex >= next.min && daysSince(player.lastPromotionDate) >= PROMOTION_COOLDOWN_DAYS) {
+    player.rank = next.name;
+    player.lastPromotionDate = today;
+    return;
+  }
+
+  const prev = RANKS[idx - 1];
+  if (prev && player.sleuthIndex < current.min && daysSince(player.lastDemotionDate) >= DEMOTION_COOLDOWN_DAYS) {
+    player.rank = prev.name;
+    player.lastDemotionDate = today;
+  }
 }
 
 function todayKey() {
@@ -1936,26 +2329,121 @@ function todayKey() {
 }
 
 function hasCompletedPrologue() {
-  const lastIndex = Math.min(PROLOGUE_LENGTH, CASES.length) - 1;
-  const c = currentCase();
-  return state.caseIndex === lastIndex && !!c && state.completedCases.includes(c.id);
+  const prologueLast = CASES[Math.min(PROLOGUE_LENGTH, CASES.length) - 1];
+  return !!prologueLast && state.completedCases.includes(prologueLast.id);
+}
+
+// Season One cases (index >= PROLOGUE_LENGTH) unlock one per day from SEASON_START_DATE.
+// This ceiling is absolute: nobody, subscriber or not, can ever play past it.
+function seasonCaseCount() {
+  return Math.max(0, CASES.length - PROLOGUE_LENGTH);
+}
+
+function seasonDaysElapsed() {
+  const start = new Date(SEASON_START_DATE).getTime();
+  return Math.floor((Date.now() - start) / 86400000);
+}
+
+// Number of season cases unlocked so far (0 = season hasn't started yet).
+// Test Mode bypasses the date math entirely for this device only -- it never
+// touches SEASON_START_DATE, so the real launch-day lock is untouched for
+// everyone else regardless of whether a tester has this switched on.
+function seasonUnlockedCount() {
+  const total = seasonCaseCount();
+  if (!total) return 0;
+  if (player.testMode) return total;
+  return Math.max(0, Math.min(total, seasonDaysElapsed() + 1));
+}
+
+// Highest CASES index anyone is currently allowed to play, or -1 if season hasn't started.
+function seasonMaxUnlockedIndex() {
+  const unlocked = seasonUnlockedCount();
+  return unlocked ? PROLOGUE_LENGTH + unlocked - 1 : -1;
+}
+
+// Today's case is always the most recently unlocked one.
+function todaysSeasonIndex() {
+  return seasonMaxUnlockedIndex();
+}
+
+// Season indices between PROLOGUE_LENGTH and today's that the player hasn't solved yet.
+function missedSeasonIndexes() {
+  const todayIdx = todaysSeasonIndex();
+  if (todayIdx < 0) return [];
+
+  const missed = [];
+  for (let i = PROLOGUE_LENGTH; i < todayIdx; i++) {
+    if (!state.completedCases.includes(CASES[i]?.id)) missed.push(i);
+  }
+  return missed;
+}
+
+// Single gate every season case-open goes through: today's case is open to everyone,
+// earlier missed cases are catch-up only for subscribers, nothing beyond today's is ever playable.
+function canPlayCase(i) {
+  if (i < PROLOGUE_LENGTH) return true;
+
+  const maxUnlocked = seasonMaxUnlockedIndex();
+  if (maxUnlocked < 0 || i > maxUnlocked) return false;
+  if (i === maxUnlocked) return true;
+
+  return !!player.isSubscriber || !!player.testMode;
 }
 
 function end(failed) {
   const c = currentCase();
   const s = c.solution;
   const lastIndex = Math.min(PROLOGUE_LENGTH, CASES.length) - 1;
+  const isPrologueCase = state.caseIndex < PROLOGUE_LENGTH;
   const isLastPrologueCase = state.caseIndex === lastIndex;
   const finalPrologue = !failed && isLastPrologueCase && state.completedCases.includes(c.id);
-  const nextButton = !isLastPrologueCase
+  const nextButton = isPrologueCase && !isLastPrologueCase
     ? `<button class="secondary" onclick="nextCase()">NEXT DAY</button>`
     : "";
 
-  app.innerHTML = `<section class="screen result-screen" ${bg(ASSETS.caseclosed)}><div class="content"><div class="end-title">${failed ? "THEY GOT AWAY WITH IT" : "CASE SOLVED"}</div><div class="subtitle">${failed ? "The suspect walks free." : "Great work, Detective."}</div><div class="panel dark"><h2>VICTIM: ${escapeHTML(c.victim)}</h2><div class="result-grid">${res("SUSPECT", "suspect", s.suspect)}${res("WEAPON", "weapon", s.weapon)}${res("ROOM", "room", s.room)}${res("MOTIVE", "motive", s.motive)}</div>${narrativeOutcomeHTML(c, failed)}${finalPrologue ? prologueEndHTML() : teaserHTML(c)}<div class="end-buttons"><button class="primary" onclick="share(${failed})">SHARE RESULT</button><button class="secondary" onclick="feedbackEmail()">EMAIL FEEDBACK</button><p class="email-note">Help Blackwood Tower grow. Share your result with 10 friends.</p>${nextButton}<button class="ghost" onclick="go('home')">RETURN HOME</button></div></div></div></section>`;
+  app.innerHTML = `<section class="screen result-screen" ${bg(ASSETS.caseclosed)}><div class="content"><div class="end-title">${failed ? "THEY GOT AWAY WITH IT" : "CASE SOLVED"}</div><div class="subtitle">${failed ? "The suspect walks free." : "Great work, Detective."}</div><div class="panel dark"><h2>VICTIM: ${escapeHTML(c.victim)}</h2><div class="result-grid">${res("SUSPECT", "suspect", s.suspect)}${res("WEAPON", "weapon", s.weapon)}${res("ROOM", "room", s.room)}${res("MOTIVE", "motive", s.motive)}</div>${promotionHTML()}${streakRewardHTML()}${foundingRewardHTML(finalPrologue)}${narrativeOutcomeHTML(c, failed)}${finalPrologue ? prologueEndHTML() : teaserHTML(c)}<div class="end-buttons"><button class="primary" onclick="share(${failed})">SHARE RESULT</button><button class="secondary" onclick="feedbackEmail()">EMAIL FEEDBACK</button><p class="email-note">Help Blackwood Tower grow. Share your result with 10 friends.</p>${nextButton}<button class="ghost" onclick="go('home')">RETURN HOME</button></div></div></div></section>`;
 
   requestAnimationFrame(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
   });
+}
+
+function promotionHTML() {
+  if (!state.justPromoted) return "";
+
+  const certImg = RANK_CERTIFICATE_IMAGES[state.justPromoted] || "assets/promotion/promotion.jpg";
+  const issueDate = new Date().toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" });
+
+  return `<div class="panel prologue-banner promotion-panel">
+    <h2>PROMOTED</h2>
+    <img class="certificate-img" src="${certImg}" alt="${escapeHTML(state.justPromoted)} certificate" onerror="imageFallback(this)">
+    <h3>${escapeHTML(state.justPromoted)}</h3>
+    <p>This certifies that</p>
+    <p class="certificate-name">${escapeHTML(player.name || "Detective")}</p>
+    <p>has been promoted to the rank of ${escapeHTML(state.justPromoted)}, Blackwood Tower Division.</p>
+    <p class="small">Issued ${issueDate} — Mark Middleton, Mayor</p>
+  </div>`;
+}
+
+function streakRewardHTML() {
+  if (!STREAK_REWARD_DAYS.includes(player.streak)) return "";
+
+  return `<div class="panel prologue-banner">
+    <h2>STREAK REWARD UNLOCKED</h2>
+    <img class="certificate-img" src="${streakRewardImage(player.streak)}" alt="${player.streak}-day streak reward" onerror="imageFallback(this)">
+    <p>${player.streak}-day streak. Added to your Vault.</p>
+    <button class="ghost" onclick="go('vault')">VIEW VAULT</button>
+  </div>`;
+}
+
+function foundingRewardHTML(finalPrologue) {
+  if (!finalPrologue) return "";
+
+  return `<div class="panel prologue-banner">
+    <h2>FOUNDING DETECTIVE COLLECTION UNLOCKED</h2>
+    <p>You played before the season began. ${FOUNDING_REWARDS.length} collectibles have been added to your Vault.</p>
+    <button class="ghost" onclick="go('vault')">VIEW VAULT</button>
+  </div>`;
 }
 
 function narrativeOutcomeHTML(c, failed) {
@@ -1994,7 +2482,7 @@ function teaserHTML(c) {
 }
 
 function prologueEndHTML() {
-  return `<div class="panel prologue-banner"><h2>PROLOGUE COMPLETE</h2><p>Blackwood Tower has not given up its secrets. It has only shown you where the bodies are buried.</p><p>The full season of MCI is coming soon.</p><p>Season One will open the wider case file.</p></div>`;
+  return `<div class="panel prologue-banner"><h2>PROLOGUE COMPLETE</h2><p>Blackwood Tower has not given up its secrets. It has only shown you where the bodies are buried.</p><p>The full case archive is coming soon.</p><p>It will open onto the wider investigation.</p></div>`;
 }
 
 function res(label, type, id) {
@@ -2019,9 +2507,9 @@ function highlight(text) {
 
 function share(failed) {
   const c = currentCase();
-  const used = c.turns - state.guessesLeft;
+  const used = (state.initialGuesses || accusationsForRank(player.rank)) - state.guessesLeft;
   const grid = state.history.map(r => r.map(x => x ? "🟩" : "⬛").join("")).join("\n") || "⬛⬛⬛⬛";
-  const text = `MCI Prologue ${c.id}\n${c.title}\n\n${grid}\n\n${failed ? "The suspect walked free." : `Solved in ${used} accusation${used === 1 ? "" : "s"}.`}\nDetective: ${player.name || player.rank}\nRank: ${player.rank}\nDaily streak: ${player.streak}\nCases solved: ${player.solved}\nSleuth Index: ${player.sleuthIndex}\n\nHelp Blackwood Tower grow. Share your result with 10 friends.\n${GAME_URL}`;
+  const text = `MCI ${c.id}\n${c.title}\n\n${grid}\n\n${failed ? "The suspect walked free." : `Solved in ${used} accusation${used === 1 ? "" : "s"}.`}\nDetective: ${player.name || player.rank}\nRank: ${player.rank}\nDaily streak: ${player.streak}\nCases solved: ${player.solved}\nSleuth Index: ${player.sleuthIndex}\n\nHelp Blackwood Tower grow. Share your result with 10 friends.\n${GAME_URL}`;
 
   if (navigator.share) navigator.share({ text });
   else {
@@ -2067,23 +2555,32 @@ function go(screen) {
   });
 }
 
+// Prologue cases (index < PROLOGUE_LENGTH) use the original CARDS pool.
+// Season One cases use the canon SEASON_CARDS pool -- the two are deliberately
+// separate card databases, matching the prologue's "non-canon" status.
+function activeCards() {
+  return state.caseIndex >= PROLOGUE_LENGTH ? SEASON_CARDS : CARDS;
+}
+
 function item(type, id) {
+  const cards = activeCards();
   return ({
-    suspect: CARDS.suspects,
-    weapon: CARDS.weapons,
-    room: CARDS.rooms,
-    motive: CARDS.motives
+    suspect: cards.suspects,
+    weapon: cards.weapons,
+    room: cards.rooms,
+    motive: cards.motives
   }[type] || []).find(x => x[0] === id);
 }
 
 function name(group, id) {
   if (!id) return "Not selected";
 
+  const cards = activeCards();
   return ({
-    suspects: CARDS.suspects,
-    weapons: CARDS.weapons,
-    rooms: CARDS.rooms,
-    motives: CARDS.motives
+    suspects: cards.suspects,
+    weapons: cards.weapons,
+    rooms: cards.rooms,
+    motives: cards.motives
   }[group] || []).find(x => x[0] === id)?.[1] || "Not selected";
 }
 
