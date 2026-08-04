@@ -988,7 +988,8 @@ const INFO_DESCRIPTIONS = {
     saffron_skye: "A lawyer and investigator focused on accountability. Saffron brings legal pressure into places that prefer secrecy.",
     sebastian_drift: "An archivist and historian who understands the power of records. Sebastian knows that memory can become evidence.",
     tilly_chrome: "A chef, entrepreneur and performer under constant pressure to succeed. Tilly’s ambition makes her visible and vulnerable.",
-    cleo_saint: "An heir and social strategist shaped by legacy, inheritance and power. Cleo understands the value of reputation."
+    cleo_saint: "An heir and social strategist shaped by legacy, inheritance and power. Cleo understands the value of reputation.",
+    milo_vex: "A technologist fascinated by systems, data and hidden patterns. Milo trusts logic more than people, and rarely lets a puzzle go unsolved."
   },
   rooms: {
     art_vault: "A secure gallery space where value, status and authenticity intersect.",
@@ -1006,7 +1007,18 @@ const INFO_DESCRIPTIONS = {
     panic: "A secure hidden space designed for protection, confinement and secrecy.",
     podstudio: "A recording space where voice, exposure and evidence can become dangerous.",
     pool: "A luxury wellness space where calm surfaces can hide risk.",
-    wine_cellar: "A restricted private space suited to confession, leverage and trust."
+    wine_cellar: "A restricted private space suited to confession, leverage and trust.",
+    cinema_room: "A dark, soundproofed screening room built for privacy, projection and observation.",
+    dressing_room: "A mirrored preparation space tied to image, performance and vulnerability.",
+    glass_lift: "A transparent transit space where access, timing and observation become crucial.",
+    home_gym: "A private training room where routine, movement and opportunity intersect.",
+    indoor_pool: "A luxury wellness space where calm surfaces can hide risk.",
+    meditation_suite: "A calm, open-plan retreat associated with reflection, vulnerability and emotional pressure.",
+    observatory: "An elevated, glass-walled room built for distance, perspective and discovery.",
+    panic_room: "A secure, soundproofed space designed for protection, confinement and secrecy.",
+    podcast_studio: "A soundproofed recording space where voice, exposure and evidence can become dangerous.",
+    rooftop_terrace: "An exposed open-air space where privacy, danger and spectacle can collide.",
+    smart_kitchen: "A high-spec, technology-driven kitchen where preparation, access and control matter."
   },
   weapons: {
     champagne_sabre: "A ceremonial luxury object where status and violence sit uncomfortably close.",
@@ -1025,7 +1037,11 @@ const INFO_DESCRIPTIONS = {
     smart_watch_cable: "A small everyday technology item associated with opportunity and improvisation.",
     sous_vide_weight: "A kitchen object built for control, weight and preparation.",
     stiletto: "A fashion object associated with status, concealment and improvisation.",
-    vr_headset: "A technology object connected to distraction, isolation and altered perception."
+    vr_headset: "A technology object connected to distraction, isolation and altered perception.",
+    champagne_saber: "A ceremonial luxury blade where status and violence sit uncomfortably close.",
+    key_card: "A small access object representing privilege, movement and control.",
+    smartwatch_cable: "A slim, everyday technology item whose usefulness makes it easy to overlook.",
+    stiletto_heel: "A fashion object associated with status, concealment and improvisation."
   },
   motives: {
     affair: "A motive driven by exposure risk, secrecy and emotional consequence.",
@@ -1043,7 +1059,17 @@ const INFO_DESCRIPTIONS = {
     rejection: "A motive driven by humiliation, emotion and personal resentment.",
     reputation_protection: "A motive centred on preserving image, credibility and public standing.",
     revenge: "A motive driven by remembered harm, anger and the desire for retribution.",
-    whistleblower_silence: "A motive focused on stopping exposure before truth becomes public."
+    whistleblower_silence: "A motive focused on stopping exposure before truth becomes public.",
+    greed: "A motive driven by accumulation, status and the desire for more than enough.",
+    desperation: "A motive rooted in survival, scarcity and a shrinking sense of options.",
+    corruption: "A motive built on power, secrecy and the quiet erosion of principle.",
+    ego: "A motive centred on pride, status and the refusal to be diminished.",
+    silencing: "A motive focused on stopping exposure by any means necessary.",
+    ideology: "A motive driven by conviction, doctrine and belief taken to its limit.",
+    addiction: "A motive rooted in dependency, shame and the pull of compulsion.",
+    romance: "A motive shaped by desire, intimacy and the risk of exposure.",
+    fear: "A motive driven by panic, self-preservation and the instinct to control the threat.",
+    ambition: "A motive powered by drive, rivalry and the cost of success."
   }
 };
 
