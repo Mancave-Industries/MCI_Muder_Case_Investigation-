@@ -1561,6 +1561,18 @@ function preservePageScroll(callback) {
   requestAnimationFrame(() => window.scrollTo({ top: y, left: 0, behavior: "auto" }));
 }
 
+// Native "scroll" fires many times per second during a touch swipe; calling
+// updateLiveCards() (which forces a layout read per card) on every single
+// event causes visible jank on real devices. Batch it to once per frame.
+let liveCardsRAF = null;
+function requestLiveCardsUpdate() {
+  if (liveCardsRAF) return;
+  liveCardsRAF = requestAnimationFrame(() => {
+    liveCardsRAF = null;
+    updateLiveCards();
+  });
+}
+
 // Drives the reel effect: every card gets a continuous --dist custom property
 // (in card-widths from the carousel's centre, signed by direction) so the CSS
 // transform can rotate/recede cards smoothly as the reel spins, not just snap
@@ -2056,7 +2068,7 @@ function progressHTML() {
 function carousel(type, title, items) {
   const loop = [...items, ...items, ...items];
 
-  return `<div class="carousel-block"><div class="carousel-title">${title}</div><div class="carousel" data-type="${type}" onscroll="loopCarousel(this);updateLiveCards()">${loop.map(itemData => card(type, itemData)).join("")}</div></div>`;
+  return `<div class="carousel-block"><div class="carousel-title">${title}</div><div class="carousel" data-type="${type}" onscroll="loopCarousel(this);requestLiveCardsUpdate()">${loop.map(itemData => card(type, itemData)).join("")}</div></div>`;
 }
 
 function card(type, itemData) {
