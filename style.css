@@ -360,28 +360,60 @@ label {
 }
 
 .carousel {
-  display: flex;
   overflow-x: auto;
-  gap: 10px;
   scroll-snap-type: x mandatory;
   scroll-behavior: auto;
-  padding: 12px 24px 20px;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-x: contain;
-  perspective: 800px;
 }
 
 .carousel::-webkit-scrollbar {
   display: none;
 }
 
-/* .card is the 3D "reel" element -- its rotation/depth are driven by --dist
-   and --dist-abs (set continuously from JS as the carousel scrolls, see
-   updateLiveCards()), not just a binary live/not-live state. The visible
-   surface (border, background, padding) lives on the .card-face children so
-   the front and back can each be independently shown as the card rotates
-   past its edge-on point. */
-/* opacity/filter must NOT live on .card itself: per spec, either one forces
+/* The ring's shared 3D context. Deliberately NOT on .carousel itself: an
+   element with overflow other than visible has its transform-style forced
+   to flat regardless of what's declared, which would silently break
+   Z-depth sorting between sibling cards (paint order would fall back to
+   DOM order, so a card that's actually far behind the live one could
+   still paint on top of it). This inner element scrolls only because its
+   scrolling ancestor does; it has no overflow of its own to trigger that
+   flattening rule.
+   All the padding that used to live on .carousel lives here instead, so
+   that JS's offsetLeft-based --dist math (which treats this element as
+   the coordinate origin) stays in the same coordinate space as
+   .carousel's own scrollLeft -- padding on the *scrolling* ancestor would
+   introduce a constant offset between the two. */
+.carousel-track {
+  position: relative;
+  display: inline-flex;
+  gap: 10px;
+  padding: 12px 24px 20px;
+  perspective: 800px;
+  transform-style: preserve-3d;
+  /* Under perspective+preserve-3d, children are visually relocated by their
+     3D transform but the track's own flat, untransformed box still covers
+     the same area -- and still wins hit-testing there ahead of the
+     children painted on top of it, so taps land on the track and never
+     reach a card. Making the track (and .card, which has no visible
+     surface of its own -- see .card-face) transparent to pointer events,
+     then re-enabling them only on .card-face, forces hit-testing past the
+     flat layers and onto the actually-painted, 3D-projected card face. */
+  pointer-events: none;
+}
+
+/* .card is a true rotating ring, not a coverflow. Cards are still real flex
+   children of the scrollable .carousel (so native touch/momentum/snap/tap
+   all keep working for free) but flex only gives them a *straight-line* X
+   position. --dist / --dist-abs / --slot (continuous, set every scroll tick
+   by updateLiveCards()) let the transform below cancel that straight-line
+   position out (translateX(-dist*slot)) and replace it with a point on a
+   circle instead (rotateY + translateZ composing into radius*sin/cos). That
+   composition is why a card two slots out doesn't just sit further along
+   the same line the near card is on -- past the quarter-turn it's on the
+   *opposite* arc of the ring and visibly swings back the other way, exactly
+   like the far side of a real rolodex.
+   opacity/filter must NOT live on .card itself: per spec, either one forces
    a preserve-3d element's children to flatten, which silently breaks the
    front/back flip (the front stays visible, mirrored, past 90deg) no matter
    what backface-visibility says. They live on .card-face instead. */
@@ -392,14 +424,30 @@ label {
   scroll-snap-align: center;
   transform-style: preserve-3d;
   touch-action: pan-x;
+  pointer-events: none;
   --card-scale: 0.9;
-  --card-opacity: 0.72;
-  --card-brightness: 0.85;
+  --card-opacity: 1;
+  --card-brightness: 0.8;
+  --ring-radius: 175px;
   transform:
-    rotateY(clamp(-150deg, calc(var(--dist, 0) * 78deg), 150deg))
-    translateZ(calc(-1 * min(var(--dist-abs, 0), 2.4) * 95px))
+    translateX(calc(-1 * var(--dist, 0) * var(--slot, 200px)))
+    translateZ(calc(-1 * var(--ring-radius)))
+    rotateY(calc(var(--dist, 0) * var(--angle-step, 45deg)))
+    translateZ(var(--ring-radius))
     scale(var(--card-scale));
   transition: transform 0.18s ease-out;
+}
+
+/* Outer two of the 3 tripled copies exist only to give native scroll a
+   buffer to scroll into before loopCarousel() jumps it back by exactly one
+   lap -- see the comment in carousel() in script.js. They always sit at
+   the exact same ring angle as the middle (real) copy, so leaving all 3
+   visible causes 3 perfectly-coincident cards to fight over the same
+   pixels. visibility (not display/opacity) hides them from paint and
+   pointer events while keeping their layout footprint, i.e. the actual
+   scroll buffer, intact. */
+.card[data-ring-copy="edge"] {
+  visibility: hidden;
 }
 
 .card.live {
@@ -466,7 +514,16 @@ label {
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   overflow: hidden;
-  opacity: var(--card-opacity);
+  /* Re-enable pointer events here specifically: the click still bubbles up
+     to .card's onclick from whichever face the tap actually landed on. */
+  pointer-events: auto;
+  /* Cards within about a slot of centre stay fully opaque -- opacity below
+     1 lets whatever ring position is directly behind (Z-occluded but at
+     the same on-screen X, e.g. the exact-opposite point of the ring) bleed
+     through as a ghosting artifact instead of being cleanly hidden. Only
+     cards that have already swung out past that (already edge-on or
+     further) fade, which reads as depth rather than transparency. */
+  opacity: calc(var(--card-opacity) * clamp(0, 1 - max(0, var(--dist-abs, 0) - 1.3) * 0.6, 1));
   filter: brightness(var(--card-brightness)) saturate(0.92);
   transition: opacity 0.12s, filter 0.12s;
 }

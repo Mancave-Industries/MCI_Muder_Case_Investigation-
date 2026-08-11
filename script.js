@@ -1549,6 +1549,12 @@ function restoreScrolls() {
     document.querySelectorAll(".carousel").forEach(e => {
       if (scrollMemory[e.dataset.type] != null) {
         e.scrollLeft = scrollMemory[e.dataset.type];
+      } else {
+        // Fresh carousel, nothing saved yet: native default scrollLeft is 0,
+        // which lands on the first (hidden) edge copy -- only the middle
+        // copy is ever visible/interactive (see carousel()/loopCarousel()),
+        // so start centred on it or the ring would render empty.
+        e.scrollLeft = e.scrollWidth / 3;
       }
     });
     updateLiveCards();
@@ -1578,21 +1584,38 @@ function requestLiveCardsUpdate() {
 // transform can rotate/recede cards smoothly as the reel spins, not just snap
 // a binary "live" state. The nearest card to centre is still tracked as
 // "live" for selection/haptic purposes exactly as before.
+//
+// Distance MUST be measured from layout position (offsetLeft/offsetWidth),
+// not getBoundingClientRect(). The ring transform below moves a card's
+// *rendered* position far from its flex-laid-out position on purpose -- if
+// this read the rendered box instead, each frame would compute --dist from
+// the already-ring-warped position and feed it back into the same formula,
+// a runaway loop that blows --dist up to nonsense within a few frames.
+// offsetLeft/offsetWidth are pure layout geometry and are never affected by
+// the transform, so they stay a stable, transform-independent input.
 function updateLiveCards() {
   document.querySelectorAll(".carousel").forEach(car => {
     const type = car.dataset.type;
-    const mid = car.getBoundingClientRect().left + car.clientWidth / 2;
+    const mid = car.scrollLeft + car.clientWidth / 2;
     const cards = car.querySelectorAll(".card");
     if (!cards.length) return;
 
-    const slot = cards[0].getBoundingClientRect().width + 14; // card width + carousel gap
+    const slot = cards[0].offsetWidth + 10; // card width + carousel gap
+    car.style.setProperty("--slot", slot.toFixed(2) + "px");
+
+    // The DOM holds 3 copies of the visible set (for the infinite-loop
+    // illusion), so a full ring lap must span exactly one copy's worth of
+    // cards -- otherwise consecutive copies land at different ring angles
+    // and pile up as overlapping ghost cards instead of lining up.
+    const cardsPerLap = cards.length / 3;
+    car.style.setProperty("--angle-step", (360 / cardsPerLap).toFixed(2) + "deg");
     let best = null;
     let bestDist = Infinity;
 
     cards.forEach(card => {
       card.classList.remove("live");
-      const r = card.getBoundingClientRect();
-      const offset = (r.left + r.width / 2) - mid;
+      const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+      const offset = cardCenter - mid;
       const distVal = offset / slot;
       card.style.setProperty("--dist", distVal.toFixed(3));
       card.style.setProperty("--dist-abs", Math.min(Math.abs(distVal), 3).toFixed(3));
@@ -2068,10 +2091,27 @@ function progressHTML() {
 function carousel(type, title, items) {
   const loop = [...items, ...items, ...items];
 
-  return `<div class="carousel-block"><div class="carousel-title">${title}</div><div class="carousel" data-type="${type}" onscroll="loopCarousel(this);requestLiveCardsUpdate()">${loop.map(itemData => card(type, itemData)).join("")}</div></div>`;
+  // The ring's angle-per-slot is set (in updateLiveCards) so a full lap
+  // exactly spans one copy's worth of cards -- so all 3 tripled copies of
+  // a given card always sit at the *same* ring angle, at the same time,
+  // not just momentarily during the loop-jump. Rendering all 3 identical,
+  // perfectly-coincident cards causes Z-fighting (which one's front/back
+  // wins the hit-test flickers unpredictably). Only the middle copy is
+  // ever the "real" one on screen; the outer two exist purely to give the
+  // native scroll native buffer to scroll into before loopCarousel() jumps
+  // it back, so they're marked and hidden (visibility, not display, so
+  // their layout footprint -- the actual scroll buffer -- is untouched).
+  // .carousel (overflow-x:auto, native scroll/snap physics) can't also be
+  // the ring's shared 3D context: per spec, overflow other than visible
+  // forces transform-style to compute as flat on that same element, which
+  // would silently break Z-depth sorting between sibling cards (without a
+  // shared preserve-3d ancestor, siblings paint in DOM order regardless of
+  // which one is actually closer to the viewer). So perspective and
+  // preserve-3d live on an inner, non-scrolling .carousel-track instead.
+  return `<div class="carousel-block"><div class="carousel-title">${title}</div><div class="carousel" data-type="${type}" onscroll="loopCarousel(this);requestLiveCardsUpdate()"><div class="carousel-track">${loop.map((itemData, i) => card(type, itemData, Math.floor(i / items.length) === 1)).join("")}</div></div></div>`;
 }
 
-function card(type, itemData) {
+function card(type, itemData, isRingCopy) {
   const [id, displayName, img, playableAttributes] = itemData;
   const cls = [
     state.selected[type] === id ? "selected" : "",
@@ -2085,7 +2125,7 @@ function card(type, itemData) {
     .map(attribute => `<span class="playable-attribute ${isRev(type, id, attribute) ? "revealed" : ""}">${escapeHTML(attribute)}</span>`)
     .join("");
 
-  return `<div class="card ${cls}" data-card-id="${id}" onclick="selectCard('${type}','${id}')" style="--dist:0">
+  return `<div class="card ${cls}" data-card-id="${id}" data-ring-copy="${isRingCopy ? "mid" : "edge"}" onclick="selectCard('${type}','${id}')" style="--dist:0">
     <div class="card-face card-front">
       <img src="${img}" alt="${escapeHTML(displayName)}" onerror="imageFallback(this)">
       <div class="attribute-heading">${PLAYABLE_ATTRIBUTE_HEADINGS[type]}</div>
