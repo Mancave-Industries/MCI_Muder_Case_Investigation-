@@ -381,6 +381,10 @@ label {
    surface (border, background, padding) lives on the .card-face children so
    the front and back can each be independently shown as the card rotates
    past its edge-on point. */
+/* opacity/filter must NOT live on .card itself: per spec, either one forces
+   a preserve-3d element's children to flatten, which silently breaks the
+   front/back flip (the front stays visible, mirrored, past 90deg) no matter
+   what backface-visibility says. They live on .card-face instead. */
 .card {
   flex: 0 0 228px;
   min-height: 404px;
@@ -395,9 +399,7 @@ label {
     rotateY(clamp(-165deg, calc(var(--dist, 0) * 105deg), 165deg))
     translateZ(calc(-1 * var(--dist-abs, 0) * 70px))
     scale(var(--card-scale));
-  opacity: var(--card-opacity);
-  filter: brightness(var(--card-brightness)) saturate(0.92);
-  transition: transform 0.12s, opacity 0.12s, filter 0.12s;
+  transition: transform 0.12s;
 }
 
 .card.live {
@@ -437,6 +439,23 @@ label {
   border-color: var(--red);
 }
 
+.card.incorrect .card-back {
+  filter: brightness(var(--card-brightness)) saturate(0.92) grayscale(1);
+}
+
+.card.incorrect .card-back-emblem {
+  border-color: var(--muted);
+  color: var(--muted);
+}
+
+.card.incorrect .card-back-rule {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.card.incorrect .card-back-label {
+  color: rgba(255, 255, 255, 0.3);
+}
+
 .card-face {
   position: absolute;
   inset: 0;
@@ -447,6 +466,9 @@ label {
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   overflow: hidden;
+  opacity: var(--card-opacity);
+  filter: brightness(var(--card-brightness)) saturate(0.92);
+  transition: opacity 0.12s, filter 0.12s;
 }
 
 .card-back {
@@ -475,6 +497,15 @@ label {
   color: var(--gold);
 }
 
+.card-back-wordmark {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  color: var(--gold);
+  text-align: center;
+  padding: 0 12px;
+}
+
 .card-back-rule {
   width: 56%;
   height: 1px;
@@ -485,6 +516,10 @@ label {
   font-size: 12px;
   letter-spacing: 3px;
   color: var(--muted);
+}
+
+.card.incorrect .card-back-wordmark {
+  color: rgba(255, 255, 255, 0.3);
 }
 
 .card img {

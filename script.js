@@ -2081,6 +2081,7 @@ function card(type, itemData) {
     </div>
     <div class="card-face card-back">
       <div class="card-back-emblem">MCI</div>
+      <div class="card-back-wordmark">MURDER CASE INVESTIGATION</div>
       <div class="card-back-rule"></div>
       <div class="card-back-label">BLACKWOOD TOWER</div>
     </div>
