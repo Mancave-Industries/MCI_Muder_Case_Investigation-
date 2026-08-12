@@ -2141,7 +2141,7 @@ function carousel(type, title, items) {
   // being considered" cue no matter how fast the cards scroll past it.
   // Whichever card is scrolled to centre (scroll-snap-align:center keeps
   // it there) sits inside it.
-  return `<div class="carousel-block"><div class="carousel-title">${title}</div><div class="carousel-wrap"><div class="carousel-frame"></div><div class="carousel" data-type="${type}" onscroll="loopCarousel(this);requestLiveCardsUpdate();scheduleSnapSettle(this)">${loop.map(itemData => card(type, itemData)).join("")}</div></div></div>`;
+  return `<div class="carousel-block"><div class="carousel-title">${title}</div><div class="carousel-wrap"><div class="carousel-frame"><span class="frame-corner-tr"></span><span class="frame-corner-br"></span></div><div class="carousel" data-type="${type}" onscroll="loopCarousel(this);requestLiveCardsUpdate();scheduleSnapSettle(this)">${loop.map(itemData => card(type, itemData)).join("")}</div></div></div>`;
 }
 
 function card(type, itemData) {

@@ -366,27 +366,66 @@ label {
 /* A fixed marker at dead centre of the carousel viewport -- unlike the
    cards, it never scrolls, so it's always obvious which slot is "in
    focus" even mid-fast-scroll, before any card has settled there. Sits
-   ABOVE the cards (z-index higher than .carousel) so it reads as a frame
-   the live card sits inside, not just another border competing with the
-   card's own -- the layered box-shadow (light bevel, then a dark ring,
-   then a soft outer glow) gives it an embossed, cut-into-the-panel look
-   rather than a flat outline. */
+   ABOVE the cards (z-index higher than .carousel).
+   Deliberately NOT a rounded-rectangle outline: every card already has
+   one of those (its own border), so a second one just reads as visual
+   noise/another card edge, not a distinct "frame" indicator. Four
+   L-shaped corner brackets -- a camera-viewfinder/focus-target look --
+   are unambiguously a different kind of mark than a card's own border,
+   at any rotation the card's rounded corners might be at. */
 .carousel-frame {
   position: absolute;
-  top: 8px;
-  bottom: 12px;
+  top: 2px;
+  bottom: 10px;
   left: 50%;
-  width: 232px;
+  width: 240px;
   transform: translateX(-50%);
-  border: 3px solid var(--gold);
-  border-radius: 28px;
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.35),
-    inset 0 2px 10px rgba(0, 0, 0, 0.5),
-    0 0 0 3px rgba(0, 0, 0, 0.55),
-    0 0 26px rgba(234, 212, 125, 0.32);
   pointer-events: none;
   z-index: 2;
+}
+
+.carousel-frame::before,
+.carousel-frame::after,
+.frame-corner-tr,
+.frame-corner-br {
+  content: "";
+  position: absolute;
+  width: 34px;
+  height: 34px;
+  border: 4px solid var(--ink);
+  filter: drop-shadow(0 0 8px rgba(255, 244, 207, 0.55));
+}
+
+.carousel-frame::before {
+  top: -3px;
+  left: -3px;
+  border-right: 0;
+  border-bottom: 0;
+  border-top-left-radius: 14px;
+}
+
+.carousel-frame::after {
+  bottom: -3px;
+  left: -3px;
+  border-right: 0;
+  border-top: 0;
+  border-bottom-left-radius: 14px;
+}
+
+.frame-corner-tr {
+  top: -3px;
+  right: -3px;
+  border-left: 0;
+  border-bottom: 0;
+  border-top-right-radius: 14px;
+}
+
+.frame-corner-br {
+  bottom: -3px;
+  right: -3px;
+  border-left: 0;
+  border-top: 0;
+  border-bottom-right-radius: 14px;
 }
 
 .carousel {
@@ -443,7 +482,7 @@ label {
   opacity: var(--card-opacity);
   filter: brightness(var(--card-brightness)) saturate(0.92);
   transition:
-    transform 0.15s ease-out,
+    transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
     opacity 0.12s,
     filter 0.12s,
     border-color 0.12s,
@@ -477,8 +516,13 @@ label {
   }
 }
 
+/* 1.05 is deliberate, not just "a bit bigger than live's 1.02": at the
+   card's 228px base width and the frame's 240px width, this is what
+   actually brings the card out to meet the frame's edges -- picking a
+   card should visibly fill the frame, not just look slightly larger than
+   its neighbours. */
 .card.selected {
-  --card-scale: 1.04;
+  --card-scale: 1.05;
   --card-opacity: 1;
   --card-brightness: 1.08;
   border-color: var(--orange);
@@ -486,7 +530,7 @@ label {
 }
 
 .card.correct {
-  --card-scale: 1.04;
+  --card-scale: 1.05;
   --card-opacity: 1;
   --card-brightness: 1.16;
   border-color: var(--green);
