@@ -1573,33 +1573,19 @@ function requestLiveCardsUpdate() {
   });
 }
 
-// Drives the reel effect: every card gets a continuous --dist custom property
-// (in card-widths from the carousel's centre, signed by direction) so the CSS
-// transform can rotate/recede cards smoothly as the reel spins, not just snap
-// a binary "live" state. The nearest card to centre is still tracked as
-// "live" for selection/haptic purposes exactly as before.
 function updateLiveCards() {
   document.querySelectorAll(".carousel").forEach(car => {
     const type = car.dataset.type;
     const mid = car.getBoundingClientRect().left + car.clientWidth / 2;
-    const cards = car.querySelectorAll(".card");
-    if (!cards.length) return;
-
-    const slot = cards[0].getBoundingClientRect().width + 14; // card width + carousel gap
     let best = null;
-    let bestDist = Infinity;
+    let dist = Infinity;
 
-    cards.forEach(card => {
+    car.querySelectorAll(".card").forEach(card => {
       card.classList.remove("live");
       const r = card.getBoundingClientRect();
-      const offset = (r.left + r.width / 2) - mid;
-      const distVal = offset / slot;
-      card.style.setProperty("--dist", distVal.toFixed(3));
-      card.style.setProperty("--dist-abs", Math.min(Math.abs(distVal), 3).toFixed(3));
-
-      const d = Math.abs(offset);
-      if (d < bestDist) {
-        bestDist = d;
+      const d = Math.abs((r.left + r.width / 2) - mid);
+      if (d < dist) {
+        dist = d;
         best = card;
       }
     });
@@ -2085,18 +2071,10 @@ function card(type, itemData) {
     .map(attribute => `<span class="playable-attribute ${isRev(type, id, attribute) ? "revealed" : ""}">${escapeHTML(attribute)}</span>`)
     .join("");
 
-  return `<div class="card ${cls}" data-card-id="${id}" onclick="selectCard('${type}','${id}')" style="--dist:0">
-    <div class="card-face card-front">
-      <img src="${img}" alt="${escapeHTML(displayName)}" onerror="imageFallback(this)">
-      <div class="attribute-heading">${PLAYABLE_ATTRIBUTE_HEADINGS[type]}</div>
-      <div class="playable-attributes">${attributeHTML}</div>
-    </div>
-    <div class="card-face card-back">
-      <div class="card-back-emblem">MCI</div>
-      <div class="card-back-wordmark">MURDER CASE INVESTIGATION</div>
-      <div class="card-back-rule"></div>
-      <div class="card-back-label">BLACKWOOD TOWER</div>
-    </div>
+  return `<div class="card ${cls}" data-card-id="${id}" onclick="selectCard('${type}','${id}')">
+    <img src="${img}" alt="${escapeHTML(displayName)}" onerror="imageFallback(this)">
+    <div class="attribute-heading">${PLAYABLE_ATTRIBUTE_HEADINGS[type]}</div>
+    <div class="playable-attributes">${attributeHTML}</div>
   </div>`;
 }
 
