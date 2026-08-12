@@ -363,23 +363,30 @@ label {
   display: flex;
   overflow-x: auto;
   gap: 14px;
-  scroll-snap-type: x proximity;
+  scroll-snap-type: x mandatory;
   scroll-behavior: auto;
   padding: 12px 34px 20px;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-x: contain;
+  perspective: 900px;
 }
 
 .carousel::-webkit-scrollbar {
   display: none;
 }
 
-/* Deliberately flat -- no rotation/perspective. A 3D "reel" version of this
-   card was tried and reverted: it broke card rendering entirely on Safari
-   (untestable in this environment, since only Chromium is available here),
-   and even where it did render, the tilt read as messy rather than
-   polished. Scale/opacity/brightness on the centred card is a much safer,
-   universally-supported way to give it presence. */
+/* Cards tilt/recede on a curve as they move from centre (--dist, set
+   continuously by updateLiveCards()) -- a fan/reel look, not a flat strip.
+   Deliberately simpler than the true rotating-ring version that was tried
+   and reverted (it broke rendering entirely on Safari, which is untestable
+   in this environment -- only Chromium is available here): a single
+   element, no card-back/flip, no split scroll+3D containers, no
+   pointer-events surgery. rotateY is capped well short of 90deg so a card
+   never goes edge-on/reveals a "back" that doesn't exist, and
+   transform-style stays at its flat default since there's no child that
+   needs its own 3D position -- opacity/filter/border-color can all live
+   directly on .card because of that (only a *preserve-3d* element's
+   descendants are at risk of the opacity/filter-forces-flat rule). */
 .card {
   flex: 0 0 228px;
   min-height: 404px;
@@ -388,44 +395,50 @@ label {
   border-radius: 22px;
   padding: 10px;
   scroll-snap-align: center;
+  touch-action: pan-x;
+  --card-scale: 0.92;
+  --card-opacity: 0.78;
+  --card-brightness: 0.9;
+  transform:
+    rotateY(clamp(-55deg, calc(var(--dist, 0) * 24deg), 55deg))
+    translateZ(calc(-1 * min(var(--dist-abs, 0), 2.2) * 40px))
+    scale(var(--card-scale));
+  opacity: var(--card-opacity);
+  filter: brightness(var(--card-brightness)) saturate(0.92);
   transition:
-    transform 0.12s,
+    transform 0.15s ease-out,
     opacity 0.12s,
     filter 0.12s,
     border-color 0.12s,
     box-shadow 0.12s;
-  transform: scale(0.92);
-  opacity: 0.78;
-  filter: brightness(0.9) saturate(0.92);
-  touch-action: pan-x;
 }
 
 .card.live {
-  transform: scale(0.99);
-  opacity: 0.94;
-  filter: brightness(1);
+  --card-scale: 0.99;
+  --card-opacity: 0.94;
+  --card-brightness: 1;
 }
 
 .card.selected {
-  transform: scale(1.04);
-  opacity: 1;
-  filter: brightness(1.08);
+  --card-scale: 1.04;
+  --card-opacity: 1;
+  --card-brightness: 1.08;
   border-color: var(--orange);
   box-shadow: 0 0 24px rgba(255, 159, 28, 0.3);
 }
 
 .card.correct {
-  transform: scale(1.04);
-  opacity: 1;
-  filter: brightness(1.16);
+  --card-scale: 1.04;
+  --card-opacity: 1;
+  --card-brightness: 1.16;
   border-color: var(--green);
   box-shadow: 0 0 24px rgba(57, 199, 109, 0.34);
 }
 
 .card.incorrect {
   border-color: var(--red);
-  opacity: 0.48;
-  filter: brightness(0.66);
+  --card-opacity: 0.48;
+  --card-brightness: 0.66;
 }
 
 .card img {

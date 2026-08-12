@@ -1573,17 +1573,30 @@ function requestLiveCardsUpdate() {
   });
 }
 
+// Drives the tilt/reel look: every card gets a continuous --dist custom
+// property (in card-widths from the carousel's centre, signed by
+// direction) so the CSS transform can rotate/recede cards smoothly as the
+// user scrolls, not just snap a binary "live" state.
 function updateLiveCards() {
   document.querySelectorAll(".carousel").forEach(car => {
     const type = car.dataset.type;
     const mid = car.getBoundingClientRect().left + car.clientWidth / 2;
+    const cards = car.querySelectorAll(".card");
+    if (!cards.length) return;
+
+    const slot = cards[0].getBoundingClientRect().width + 14; // card width + carousel gap
     let best = null;
     let dist = Infinity;
 
-    car.querySelectorAll(".card").forEach(card => {
+    cards.forEach(card => {
       card.classList.remove("live");
       const r = card.getBoundingClientRect();
-      const d = Math.abs((r.left + r.width / 2) - mid);
+      const offset = (r.left + r.width / 2) - mid;
+      const distVal = offset / slot;
+      card.style.setProperty("--dist", distVal.toFixed(3));
+      card.style.setProperty("--dist-abs", Math.min(Math.abs(distVal), 3).toFixed(3));
+
+      const d = Math.abs(offset);
       if (d < dist) {
         dist = d;
         best = card;
@@ -2071,7 +2084,7 @@ function card(type, itemData) {
     .map(attribute => `<span class="playable-attribute ${isRev(type, id, attribute) ? "revealed" : ""}">${escapeHTML(attribute)}</span>`)
     .join("");
 
-  return `<div class="card ${cls}" data-card-id="${id}" onclick="selectCard('${type}','${id}')">
+  return `<div class="card ${cls}" data-card-id="${id}" onclick="selectCard('${type}','${id}')" style="--dist:0">
     <img src="${img}" alt="${escapeHTML(displayName)}" onerror="imageFallback(this)">
     <div class="attribute-heading">${PLAYABLE_ATTRIBUTE_HEADINGS[type]}</div>
     <div class="playable-attributes">${attributeHTML}</div>
