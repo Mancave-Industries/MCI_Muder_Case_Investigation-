@@ -359,7 +359,30 @@ label {
   margin: 0 16px 8px;
 }
 
+.carousel-wrap {
+  position: relative;
+}
+
+/* A fixed marker at dead centre of the carousel viewport -- unlike the
+   cards, it never scrolls, so it's always obvious which slot is "in
+   focus" even mid-fast-scroll, before any card has settled there. */
+.carousel-frame {
+  position: absolute;
+  top: 8px;
+  bottom: 12px;
+  left: 50%;
+  width: 236px;
+  transform: translateX(-50%);
+  border: 2px solid rgba(234, 212, 125, 0.55);
+  border-radius: 28px;
+  box-shadow: 0 0 22px rgba(234, 212, 125, 0.18), inset 0 0 22px rgba(234, 212, 125, 0.06);
+  pointer-events: none;
+  z-index: 0;
+}
+
 .carousel {
+  position: relative;
+  z-index: 1;
   display: flex;
   overflow-x: auto;
   gap: 14px;

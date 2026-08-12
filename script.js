@@ -1549,6 +1549,13 @@ function restoreScrolls() {
     document.querySelectorAll(".carousel").forEach(e => {
       if (scrollMemory[e.dataset.type] != null) {
         e.scrollLeft = scrollMemory[e.dataset.type];
+      } else {
+        // Fresh carousel: native default scrollLeft is 0 (the very start
+        // of the tripled array), which doesn't land any card at visual
+        // centre -- nothing has snapped it there yet, since snapping only
+        // happens after a scroll gesture. Start centred on the middle copy
+        // instead, so the first card is already framed correctly on load.
+        e.scrollLeft = e.scrollWidth / 3;
       }
     });
     updateLiveCards();
@@ -1573,10 +1580,19 @@ function requestLiveCardsUpdate() {
   });
 }
 
-// Drives the tilt/reel look: every card gets a continuous --dist custom
-// property (in card-widths from the carousel's centre, signed by
-// direction) so the CSS transform can rotate/recede cards smoothly as the
-// user scrolls, not just snap a binary "live" state.
+// Drives the tilt/reel look: every card gets a --dist custom property (in
+// whole card-slots from the carousel's centre, signed by direction) so the
+// CSS transform can rotate/recede cards as the user scrolls, not just snap
+// a binary "live" state.
+//
+// --dist is rounded to the nearest whole slot, not left continuous. With a
+// continuous value, fast scrolling calls this many times a scroll-frame
+// apart with a large jump each time -- the CSS transition keeps re-aiming
+// at a new target before it ever gets there, which reads as the tilt
+// "fighting" the scroll speed. Rounding means a card's target angle is
+// just "which slot is it in" (0, 1, 2 away from centre...), a handful of
+// fixed states regardless of how fast the scroll moves, so the transition
+// always has a stable target to actually reach.
 function updateLiveCards() {
   document.querySelectorAll(".carousel").forEach(car => {
     const type = car.dataset.type;
@@ -1592,9 +1608,9 @@ function updateLiveCards() {
       card.classList.remove("live");
       const r = card.getBoundingClientRect();
       const offset = (r.left + r.width / 2) - mid;
-      const distVal = offset / slot;
-      card.style.setProperty("--dist", distVal.toFixed(3));
-      card.style.setProperty("--dist-abs", Math.min(Math.abs(distVal), 3).toFixed(3));
+      const distVal = Math.round(offset / slot);
+      card.style.setProperty("--dist", distVal);
+      card.style.setProperty("--dist-abs", Math.min(Math.abs(distVal), 3));
 
       const d = Math.abs(offset);
       if (d < dist) {
@@ -2067,7 +2083,12 @@ function progressHTML() {
 function carousel(type, title, items) {
   const loop = [...items, ...items, ...items];
 
-  return `<div class="carousel-block"><div class="carousel-title">${title}</div><div class="carousel" data-type="${type}" onscroll="loopCarousel(this);requestLiveCardsUpdate()">${loop.map(itemData => card(type, itemData)).join("")}</div></div>`;
+  // .carousel-frame is a fixed marker at the centre of the carousel -- it
+  // never moves, so there's always an unambiguous "this slot is what's
+  // being considered" cue no matter how fast the cards scroll past it.
+  // Whichever card is scrolled to centre (scroll-snap-align:center keeps
+  // it there) sits inside it.
+  return `<div class="carousel-block"><div class="carousel-title">${title}</div><div class="carousel-wrap"><div class="carousel-frame"></div><div class="carousel" data-type="${type}" onscroll="loopCarousel(this);requestLiveCardsUpdate()">${loop.map(itemData => card(type, itemData)).join("")}</div></div></div>`;
 }
 
 function card(type, itemData) {
