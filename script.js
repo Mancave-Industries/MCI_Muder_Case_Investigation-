@@ -1653,7 +1653,16 @@ function updateLiveCards() {
     const cards = car.querySelectorAll(".card");
     if (!cards.length) return;
 
-    const slot = cards[0].getBoundingClientRect().width + 14; // card width + carousel gap
+    // offsetWidth (layout size), not getBoundingClientRect().width (the
+    // rendered, transform-scaled size) -- cards[0] could currently be
+    // scaled up (live/selected) or down (a receded neighbour), and using
+    // its rendered width skewed the slot-pitch estimate, throwing off
+    // every other card's rounded --dist and occasionally landing one on
+    // the wrong tilt angle. The gap is read from the actual CSS instead
+    // of a hardcoded number for the same reason: a hardcoded value here
+    // silently goes stale the next time the gap is tuned in CSS.
+    const gapPx = parseFloat(getComputedStyle(car).columnGap) || 0;
+    const slot = cards[0].offsetWidth + gapPx;
     let best = null;
     let dist = Infinity;
 
@@ -2174,7 +2183,48 @@ function selectCard(type, id) {
   preservePageScroll(() => {
     state.selected[type] = id;
     render();
+    centerAndPopCard(type, id);
   });
+}
+
+// Tapping a card selects it wherever it currently sits -- even a tilted
+// neighbour that isn't the centred/live one. Without this, selecting one
+// just enlarged it in place, off to the side, instead of bringing it into
+// the frame the way settling from a scroll does; the two felt like
+// different, disconnected mechanisms for the same idea ("this card is
+// what's in focus").
+function centerAndPopCard(type, id) {
+  const car = document.querySelector(`.carousel[data-type="${type}"]`);
+  if (!car) return;
+  const candidates = [...car.querySelectorAll(`.card[data-card-id="${id}"]`)];
+  if (!candidates.length) return;
+
+  const carRect = car.getBoundingClientRect();
+  const carMid = carRect.left + carRect.width / 2;
+
+  // The tripled array has 3 copies of this id; pick whichever is closest
+  // to centre already so selecting doesn't jump across the whole strip.
+  let target = candidates[0];
+  let bestDist = Infinity;
+  candidates.forEach(c => {
+    const r = c.getBoundingClientRect();
+    const d = Math.abs((r.left + r.width / 2) - carMid);
+    if (d < bestDist) {
+      bestDist = d;
+      target = c;
+    }
+  });
+
+  const targetRect = target.getBoundingClientRect();
+  const drift = (targetRect.left + targetRect.width / 2) - carMid;
+  if (Math.abs(drift) > 1) {
+    car.scrollLeft += drift;
+    updateLiveCards();
+  }
+
+  target.classList.remove("popping");
+  void target.offsetWidth; // restart the animation even if already "popping"
+  target.classList.add("popping");
 }
 
 function accuse() {

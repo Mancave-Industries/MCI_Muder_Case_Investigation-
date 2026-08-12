@@ -475,14 +475,21 @@ label {
   --card-scale: 0.92;
   --card-opacity: 0.78;
   --card-brightness: 0.9;
-  transform:
-    rotateY(clamp(-55deg, calc(var(--dist, 0) * 24deg), 55deg))
-    translateZ(calc(-1 * min(var(--dist-abs, 0), 2.2) * 40px))
-    scale(var(--card-scale));
+  --card-rotate: rotateY(clamp(-55deg, calc(var(--dist, 0) * 24deg), 55deg));
+  --card-depth: translateZ(calc(-1 * min(var(--dist-abs, 0), 2.2) * 40px));
+  transform: var(--card-rotate) var(--card-depth) scale(var(--card-scale));
   opacity: var(--card-opacity);
   filter: brightness(var(--card-brightness)) saturate(0.92);
+  /* ease-out, no overshoot: this is the transition for every continuous,
+     scroll-driven --dist change (a handful of times a second while
+     scrolling). A bouncy easing here was overshooting on *every* one of
+     those, not just the deliberate lock/select moment, which is what read
+     as jittering / odd-looking angles while actively scrolling. The
+     deliberate bounce lives only in .card.popping's animation below,
+     which is scoped to the two discrete moments that should feel like a
+     decisive pop: settling into the frame, and being tapped to select. */
   transition:
-    transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
+    transform 0.15s ease-out,
     opacity 0.12s,
     filter 0.12s,
     border-color 0.12s,
@@ -496,21 +503,33 @@ label {
   border-color: var(--gold);
 }
 
-/* Fired by settleCarousel() in script.js the moment a card is confirmed
-   centred in .carousel-frame (JS re-centres it there explicitly rather
-   than trusting scroll-snap alone to land it precisely) -- a brightness
-   flash plus a glow ring makes that "it just locked in" moment obvious,
-   on top of the haptic pulse fired at the same time. */
-.card.locked {
-  animation: cardLockFlash 0.34s ease-out;
+/* Fired by settleCarousel() the moment a card is confirmed centred in
+   .carousel-frame, and by selectCard() the moment a tap selects a card --
+   the two moments that should feel like a deliberate "it just locked in",
+   not a passive drift. A CSS *animation* (not the .card transition above)
+   so its bounce is scoped to just these moments: an animation on the same
+   property as an active transition wins for as long as it's running, so
+   this doesn't fight the calm transition used while actively scrolling.
+   The keyframes re-state rotate/depth from the same --card-rotate/
+   --card-depth custom properties .card itself uses, so the card's current
+   tilt carries through the bounce instead of snapping flat for its
+   duration. */
+.card.locked,
+.card.popping {
+  animation: cardPop 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-@keyframes cardLockFlash {
+@keyframes cardPop {
   0% {
+    transform: var(--card-rotate) var(--card-depth) scale(calc(var(--card-scale) * 0.94));
     filter: brightness(calc(var(--card-brightness) * 1.35)) saturate(0.92);
     box-shadow: 0 0 0 3px rgba(234, 212, 125, 0.85), 0 0 34px rgba(234, 212, 125, 0.55);
   }
+  60% {
+    transform: var(--card-rotate) var(--card-depth) scale(calc(var(--card-scale) * 1.05));
+  }
   100% {
+    transform: var(--card-rotate) var(--card-depth) scale(var(--card-scale));
     filter: brightness(var(--card-brightness)) saturate(0.92);
     box-shadow: none;
   }
