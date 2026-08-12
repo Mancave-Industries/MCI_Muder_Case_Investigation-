@@ -390,12 +390,18 @@ label {
 }
 
 .carousel {
+  /* No scroll-snap-type here on purpose: JS (settleCarousel(), fired once
+     scrolling stops -- see script.js) is now the sole thing responsible
+     for precisely centring a card, firing the lock + haptic once it has.
+     CSS scroll-snap running at the same time fights it -- it can silently
+     re-adjust a JS-assigned scrollLeft towards its own idea of the
+     nearest snap point, so a corrective assignment only partially lands
+     and the two systems fight to a stalemate instead of converging. */
   position: relative;
   z-index: 1;
   display: flex;
   overflow-x: auto;
   gap: 46px;
-  scroll-snap-type: x mandatory;
   scroll-behavior: auto;
   padding: 12px 34px 20px;
   -webkit-overflow-scrolling: touch;
@@ -426,7 +432,6 @@ label {
   border: 3px solid rgba(234, 212, 125, 0.38);
   border-radius: 22px;
   padding: 10px;
-  scroll-snap-align: center;
   touch-action: pan-x;
   --card-scale: 0.92;
   --card-opacity: 0.78;
@@ -446,9 +451,30 @@ label {
 }
 
 .card.live {
-  --card-scale: 0.99;
-  --card-opacity: 0.94;
-  --card-brightness: 1;
+  --card-scale: 1.02;
+  --card-opacity: 1;
+  --card-brightness: 1.05;
+  border-color: var(--gold);
+}
+
+/* Fired by settleCarousel() in script.js the moment a card is confirmed
+   centred in .carousel-frame (JS re-centres it there explicitly rather
+   than trusting scroll-snap alone to land it precisely) -- a brightness
+   flash plus a glow ring makes that "it just locked in" moment obvious,
+   on top of the haptic pulse fired at the same time. */
+.card.locked {
+  animation: cardLockFlash 0.34s ease-out;
+}
+
+@keyframes cardLockFlash {
+  0% {
+    filter: brightness(calc(var(--card-brightness) * 1.35)) saturate(0.92);
+    box-shadow: 0 0 0 3px rgba(234, 212, 125, 0.85), 0 0 34px rgba(234, 212, 125, 0.55);
+  }
+  100% {
+    filter: brightness(var(--card-brightness)) saturate(0.92);
+    box-shadow: none;
+  }
 }
 
 .card.selected {

@@ -1559,6 +1559,7 @@ function restoreScrolls() {
       }
     });
     updateLiveCards();
+    document.querySelectorAll(".carousel").forEach(e => scheduleSnapSettle(e));
   });
 }
 
@@ -1578,6 +1579,58 @@ function requestLiveCardsUpdate() {
     liveCardsRAF = null;
     updateLiveCards();
   });
+}
+
+// CSS scroll-snap alone isn't reliable enough on every device to guarantee
+// a card actually lands dead-centre in .carousel-frame -- so once the user
+// stops scrolling, snap it there explicitly instead of hoping the browser
+// did. This is also the one moment that gets a firm, distinct haptic
+// (separate from the light tick each time the live card changes while
+// scrolling): a deliberate "it just locked in" cue, not just "you passed a
+// card."
+const snapSettleTimers = {};
+const lastSettledCard = {};
+function scheduleSnapSettle(el) {
+  const type = el.dataset.type;
+  clearTimeout(snapSettleTimers[type]);
+  snapSettleTimers[type] = setTimeout(() => settleCarousel(el), 140);
+}
+
+function settleCarousel(el, attempt = 0) {
+  const type = el.dataset.type;
+  const live = el.querySelector(".card.live");
+  if (!live) return;
+
+  const carRect = el.getBoundingClientRect();
+  const cardRect = live.getBoundingClientRect();
+  const drift = (cardRect.left + cardRect.width / 2) - (carRect.left + carRect.width / 2);
+
+  // Instant, not behavior:"smooth" -- a smooth glide fires many of its own
+  // intermediate "scroll" events, each of which reschedules this same
+  // debounce, so the correction kept chasing itself for a couple of
+  // seconds before ever confirming settled. An instant snap reads as the
+  // deliberate "click into place" this was asked for, not a slow drift.
+  // Verify it actually landed (a couple of retries, not just assumed) --
+  // up to 3 attempts, one rAF apart so layout has caught up each time.
+  if (Math.abs(drift) > 1) {
+    el.scrollLeft += drift;
+    updateLiveCards();
+    if (attempt < 3) {
+      requestAnimationFrame(() => settleCarousel(el, attempt + 1));
+      return;
+    }
+  }
+
+  // Already confirmed this exact card is locked in -- don't re-buzz for a
+  // stray scroll event that didn't actually change which card is centred.
+  const id = live.dataset.cardId;
+  if (lastSettledCard[type] === id) return;
+  lastSettledCard[type] = id;
+
+  live.classList.remove("locked");
+  void live.offsetWidth; // restart the CSS animation even if already "locked"
+  live.classList.add("locked");
+  haptic([14, 40, 14]);
 }
 
 // Drives the tilt/reel look: every card gets a --dist custom property (in
@@ -2088,7 +2141,7 @@ function carousel(type, title, items) {
   // being considered" cue no matter how fast the cards scroll past it.
   // Whichever card is scrolled to centre (scroll-snap-align:center keeps
   // it there) sits inside it.
-  return `<div class="carousel-block"><div class="carousel-title">${title}</div><div class="carousel-wrap"><div class="carousel-frame"></div><div class="carousel" data-type="${type}" onscroll="loopCarousel(this);requestLiveCardsUpdate()">${loop.map(itemData => card(type, itemData)).join("")}</div></div></div>`;
+  return `<div class="carousel-block"><div class="carousel-title">${title}</div><div class="carousel-wrap"><div class="carousel-frame"></div><div class="carousel" data-type="${type}" onscroll="loopCarousel(this);requestLiveCardsUpdate();scheduleSnapSettle(this)">${loop.map(itemData => card(type, itemData)).join("")}</div></div></div>`;
 }
 
 function card(type, itemData) {
